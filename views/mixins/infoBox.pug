@@ -1,0 +1,12 @@
+mixin infoBox(component, template)
+	li.Component.drag.draggable-item(id= component.id)
+		.sub-sortable-container
+			h2 Info box
+			.infoBlock
+				.infoTitle
+				.infoContent
+				.editorSortable
+					.simpleEditor
+						.editorTools.unreset(id= "toolbar_" +component.id)
+						.editorText.unreset(id= "editor_" +component.id)
+							p This is sample text of editor.

@@ -1,0 +1,111 @@
+doctype html
+html
+	head
+		title Curate
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		link(rel='stylesheet' href='/css/reset.css')
+		link(rel='stylesheet', href='/css/unreset.css')
+		link(rel='stylesheet' href='/css/main.css')
+		link(rel='stylesheet' href='/css/registration.css')
+		link(rel='stylesheet' href='/css/navigation.css')
+		link(rel='stylesheet' href='/css/MultiForm.css')
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+
+	body
+		//- .top-bar
+		.nav-container
+			.title-container
+				a.title-btn(href='/') Curata
+			if user
+				.navlinks-container
+					// show menu items based on what the user has (used) and their settings
+					a.navlink(href='/dashboard') Home
+					a.navlink(href='/notes') Browse
+				.logout-container
+					//- #create.drop-down
+					//- 	#create-button.dropDown.drop-down__button.unsortable
+					//- 		a.navlink + Create
+					//- 	.drop-down__menu-box.unsortable
+					//- 		ul.drop-down__menu
+					//- 			li.drop-down__item.DeleteComponent(data-name="delete") Delete
+					//- 			li.drop-down__item Settings
+					//- 			li.drop-down__item Add label
+					//- 			li.drop-down__item Mark as
+					//- 			li.drop-down__item Move to
+					a.navlink(href='/my-curations') My Curations
+					.DropdownX
+						.Dropdown-profile
+							//- img.Photo(src='//s3-us-west-2.amazonaws.com/s.cdpn.io/33381/profile/profile-80.jpg?1')
+							img.Photo(src='https://i.imgur.com/lP63CxJ.png')
+							span.Name Robert Unyx
+							span.MenuIcon
+								span.MenuIcon-line
+								span.MenuIcon-line
+								span.MenuIcon-line
+						nav.Dropdown-nav
+							ul.Dropdown-group
+								li
+									a.entypo-newspaper.NavLinkX(href='#') Profile
+									a.entypo-plus.OptionLink(href='#')
+								li
+									a.entypo-docs.NavLinkX.Upgrade(href='#') Upgrade
+									a.entypo-plus.OptionLink(href='#')
+								li
+									a.entypo-archive.NavLinkX(href='#') Account settings
+									a.entypo-plus.OptionLink(href='#')
+								li
+									a.entypo-docs.NavLinkX(href='#') View mobile site
+									a.entypo-plus.OptionLink(href='#')
+								li
+									a.entypo-logout.NavLinkX(href='/users/logout') Logout
+					//- #create.drop-down
+					//- 	#create-button.dropDown.drop-down__button.unsortable
+					//- 		a.navlink ...
+					//- 	.drop-down__menu-box.unsortable
+					//- 		ul.drop-down__menu
+					//- 			li.drop-down__item Profile
+					//- 			li.drop-down__item Account settings
+					//- 			li.drop-down__item View mobile site
+					//- 			li.drop-down__item Mark as
+					//- 			li.drop-down__item Move to
+					//- 			a.li.drop-down__item(href='/users/logout') Logout
+					//- a.logout-btn(href='/users/logout') Logout
+			else
+				.account-manager 
+					form.signin-form(method='POST', action='/users/login')
+						input.login-input(name='username' type='text' placeholder='Your username' autocomplete="off") 
+						input.login-input(name='password' type='password' placeholder='Your password' autocomplete="off")
+						.submit
+							input(type='submit' value='Log in' class='login-button')
+		if !user
+			.container
+				.registration-block
+					.registration-title
+						h1 Curata - curate anything
+						h2 Sign up and start curating!
+					.registration-form
+						form(method='POST', action='/users/register')
+							.form-groups
+								.form-group
+									input.registration-input.first-input(name='firstname' type='text' placeholder='Your first name' autocomplete="falsess")
+								.form-group
+									input.registration-input(name='lastname' type='text' placeholder='Your last name' autocomplete="falsess")
+								.form-group
+									input.registration-input(name='username' type='text' placeholder='Username, identifier' autocomplete="off")
+								.form-group
+									input.registration-input(name='password' type='password' placeholder='Enter a password for authentication' autocomplete="off")
+								.form-group.last-form-group
+									input.registration-input.last-input(name='passcheck' type='password' placeholder='Confirm your password' autocomplete="off")
+							.submit
+								input(type='submit' value='Create account' class='register-button')
+		else 
+			.container
+				.so-good-container
+					span.so-good Be so good they can't ignore you.
+				block content
+			block scripts
+			script(src='/js/main.js')
+			script(src='/js/MultiForm.js')
+
+
+

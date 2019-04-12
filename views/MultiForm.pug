@@ -1,0 +1,100 @@
+mixin MultiForm
+	.progress
+		.progress-bar(role='progressbar', aria-valuenow='4', aria-valuemin='1', aria-valuemax='100')
+	// email
+	.scroll-view.BackupView
+		fieldset.form-group
+			h1 Hi Robert,
+			.Questions
+				.CurationName 
+					h1 What would you like to curate?
+					.input-holder
+						input.form-control.CurationNameInput(type='text', name='text', placeholder='e.g. Coolest Cats in the World')
+						//- small.text-muted Write specific or choose topic. -- will later put to tooltip or appearing popup infobox
+				.CurationDescription
+					h1 You can also briefly describe it:
+					textarea.CurationDescriptionInput(placeholder='e.g. Legit list of the Coolest Cats in the World')
+		// password
+		fieldset.form-group
+			h1 Awesome! Now, let's give it an address.
+			h2.CurationInstruction Enter your Curata's name or some keywords that describe it to get started.
+			.input-holder.CurationAddressHolder
+				input.form-control.CurationAddressInput(type='text', name='text', placeholder='e.g. coolestkats')
+				h2.CurationAddressEnding .curata.one
+			//- .CurationAlternativeOption
+			//- 	h2 Or choose an address later
+			label.containerX.tooltip
+				h2 Or choose an address later
+				input.ChoiceInput(type='checkbox')
+				span.checkmark
+				span.tooltiptext Your Curata will be accessible through /my-curations/curata-id
+		fieldset.form-group.CurataCreatedField
+			.CurataSuccessHolder
+				h1 Great! You've created a Curata.
+				.UserCurata 
+					p.UserCurataTitle Your Curata
+			h2 Finally, customize your template for Curata entries and start curating!
+			p Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder.
+			p (View examples / Browse template library)
+			.TemplateConstructor
+				.Components
+					ul
+						li.add-section-box.draggable(data-css="headingComponent", data-component-type="heading")
+							span.section-component-text Heading 
+						li.add-section-box.draggable(data-css="mediumHeight", data-component-type="textarea")
+							span.section-component-text Text
+							//- possibility of editing text & background color, adding borders & changing color or width between 1-3px and radius between 0, 1, 2, 3, 4, 5, 6
+						li.add-section-box.draggable(data-css="largeHeight", data-component-type="image")
+							span.section-component-text Image
+						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="image-gallery")
+							span.section-component-text Image Gallery
+						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="question-answer")
+							span.section-component-text Q&A
+						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="expandable")
+							span.section-component-text Expandable
+						li.add-section-box.draggable(data-css="mediumHeight", data-component-type="quote")
+							span.section-component-text Quote
+						li.add-section-box.draggable(data-css="mediumHeight", data-component-type="info-box")
+							span.section-component-text Info Box
+						li.add-section-box.draggable(data-css="mediumHeight", data-component-type="example-box")
+							span.section-component-text Example Box
+						li.add-section-box.draggable(data-css="smallHeight", data-component-type="section-break")
+							span.section-component-text Section break
+				.Template
+					input.TemplateTitle.unsortable
+					ul.sortable
+						//- Description is optional and still possible to edit its placeholder
+						//- It is also possible to edit Name / Title placeholder
+						//- You can also turn the title into an image and give it a subtitle or something
+						li.Component.unsortable.TestHandle Drag blocks here from the left
+				.CreateTemplateArea
+					p.CreateTemplateSmallText Your template is automatically saved. 
+					p.CreateTemplateBigText Once you're done customizing your template, click the button below to go make your first entry!
+					a.CreateTemplateButton(href='/templates/') Go curate!
+					a.goToTemplates Or go to Templates
+			p Some more options that are coming soon: table blocks, list blocks with modals, section blocks, file upload block, columns, enabling an index, a purchase button, a metadata block, a resources used or 'referenced block' or 'fact checked block' or expandable where you have fact in one place, and source(s) listed in the expandable; This is important to make this into a truly fact-oriented space.
+			p LATER I will add boxes on each component with option to 'ADD PLACEHOLDER' and 'MARK REQUIRED' + 'DELETE'
+		//- // birthday
+		//- fieldset.form-group
+		//- 	label(for='bday')
+		//- 		h1 My birthday is
+		//- 	.input-holder
+		//- 		input#bday.form-control(type='date', name='date', onchange='setBday(this);')
+		//- 		small.text-muted Your age will be public
+		//- // gender
+		//- fieldset.form-group
+		//- 	h1 I am a
+		//- 	.input-holder.d-flex.flex-column
+		//- 		button.btn.btn-gender(type='button selected') WOMAN
+		//- 		button.btn.btn-gender(type='button') MAN
+		//- 		button.btn.btn-gender(type='button') OTHER
+		//- // image picker
+		//- fieldset.form-group
+		//- 	h1 My best pic is
+		//- 	.input-holder.img-picker-div
+		//- 		input#img-pk.hide(type='file', onchange='readURL(this);')
+		//- 		label.btn-picker(for='img-pk')
+		//- 			i.fas.fa-plus
+		//- 		p.text-center.text-muted Add your photo
+	button.btn.back-btn Back
+	button.btn.btn-lg.next-btn.font-weight-bold CONTINUE

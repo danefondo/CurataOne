@@ -1,0 +1,14 @@
+mixin questionAnswer(component, template)
+	li.Component.drag.draggable-item(id= component.id)
+		h2 Q&A
+		.questions
+			.questionBlock
+				input.ElementTitle(placeholder="Question" data-type="question")
+				button.collapsible.unsortable
+				.content
+					.editorSortable
+						.simpleEditor
+							.editorTools.unreset(id= "toolbar_" +component.id)
+							.editorText.unreset(id= "editor_" +component.id)
+								p This is sample text of editor.
+		.addNewButton + Add Question

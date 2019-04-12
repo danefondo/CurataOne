@@ -1,0 +1,671 @@
+@font-face {
+  font-family: 'GothamRounded';
+  src: url("https://zephyo.github.io/22Days/code/9/graphics/GothamRounded-Book.otf");
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'GothamRounded';
+  src: url("https://zephyo.github.io/22Days/code/9/graphics/GothamRounded-Medium.otf");
+  font-weight: bold;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+h1 {
+  font-size: 6vh;
+}
+
+body {
+  font-family: 'GothamRounded';
+  position: relative;
+}
+
+.scroll-view {
+  height: 100%;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+fieldset {
+  position: relative;
+  flex: none;
+  flex-basis: 100%;
+  padding-left: 10vh;
+  padding-top: 9vh;
+}
+fieldset .input-holder {
+  margin-top: 10vh;
+}
+
+.btn {
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  user-select: none;
+  border: 1px solid transparent;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn-gender {
+  background: white;
+  border: 0.35vh solid;
+  color: #b2b4ba;
+  border-color: #b2b4ba;
+  border-radius: 10rem;
+  padding: 1.5vh;
+  margin-bottom: 1vh;
+}
+.btn-gender:hover {
+  border-color: #ffb199;
+  color: #ffb199;
+}
+.btn-gender.selected {
+  border-color: #ff0844;
+  color: #ff0844;
+}
+
+.back-btn {
+  position: absolute;
+  top: 85px;
+  padding: 3vh 4vh;
+  color: #555;
+  background: transparent;
+  font-size: 3vh;
+  border: none;
+  display: none;
+}
+
+.back-btn:hover {
+  color: #777;
+  cursor: pointer;
+}
+
+.next-btn {
+  position: absolute;
+  bottom: 6vh;
+  left: 15vh;
+  font-weight: bold;
+  font-size: 20px;
+/*  width: calc(100% - 30vh);*/
+  width: 40vh;
+  height: 50px;
+  color: white;
+  background: linear-gradient(to right, #ff0844 0%, #ffb199 100%);
+  border-radius: 10rem;
+  box-shadow: 0 0.4rem 1rem 0.1rem rgba(255, 8, 68, 0.3);
+  padding: .5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.img-picker-div {
+  position: absolute;
+  top: 18vh;
+  left: 15vh;
+  right: 15vh;
+  border: 0.3vh solid lightgrey;
+  border-radius: 0.6rem;
+  height: 42vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.btn-picker {
+  background: linear-gradient(to bottom, #ff0844 0%, #ffb199 100%);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  width: 12vh;
+  height: 12vh;
+  font-size: 3.5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.hide {
+  display: none;
+}
+
+.hide-children label, .hide-children p {
+  display: none;
+}
+
+.progress, .progress-bar {
+  border-radius: 0;
+}
+
+.progress {
+  height: 15px;
+  width: 100%;
+  background-color: #eee;
+}
+
+.progress-bar {
+  width: 20%;
+  height: 15px;
+  transition: width 1s ease;
+  background: #ff0844;
+}
+
+.final-result {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: linear-gradient(to right, #ff0844, #ffb199);
+}
+.final-result h3 {
+  margin-bottom: 5vh;
+}
+.final-result .profile-pic {
+  background: white;
+  height: 25vh;
+  width: 25vh;
+  border-radius: 50%;
+  margin-bottom: 5vh;
+  background-size: cover;
+  background-position: center;
+}
+.final-result .name {
+  font-weight: bold;
+  letter-spacing: 0.2rem;
+}
+.final-result .try-btn {
+  margin-top: 7vh;
+  color: white;
+  background: transparent;
+  border: 0.35vh solid white;
+  font-size: 0.9rem;
+  border-radius: 5rem;
+}
+
+fieldset.form-group {
+  margin-top: 50px;
+}
+
+.CurataCreatedField {
+  margin-top: 50px !important;
+  padding-top: 10px;
+  background-color: #f9f9f9;
+}
+
+.CurataCreatedField h2 {
+  font-size: 25px;
+}
+
+.UserCurata {
+  width: 300px;
+  height: 90px;
+  margin: 20px 40px 40px 8px;
+  border-radius: 4px;
+  padding: 16px;
+/*  box-shadow: 4px 4px 0px 0px #e0e0e0;*/
+  background-color: #fdfdfd;
+  transition: .2s ease-in-out;
+  border: 1px solid #e4e4e4;
+}
+
+.UserCurata:hover {
+  transform: scale(1.02);
+}
+
+.UserCurata p {
+  font-size: 28px;
+  color: #333;
+  font-weight: bold;
+}
+
+.is-invalid {
+ border: 2px solid #a70000 !important;
+}
+
+.Questions {
+  margin-top: 50px;
+}
+
+.CurationName h1 {
+  font-size: 4vh;
+}
+
+.input-holder {
+  margin-top: 2.5vh !important;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.CurationNameInput {
+  font-size: 26px;
+  border: 2px solid #f1f1f1;
+  border-radius: 2px;
+}
+
+.CurationAddressInput {
+  font-size: 26px;
+  border: 2px solid #f1f1f1;
+  border-radius: 2px;
+  width: 45%;
+  color: #42239a;
+}
+
+.CurationDescription {
+  margin-top: 60px;
+}
+
+.CurationDescription h1 {
+  font-size: 3vh;
+}
+
+.CurationDescriptionInput {
+  border: none;
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+  padding: 16px;
+  font-size: 22px;
+  border: 2px solid #f1f1f1;
+  border-radius: 2px;
+}
+
+.CurationNameInput:focus, .CurationDescriptionInput:focus {
+  border: 2px solid #4725a9;
+  border-radius: 2px;
+}
+
+.CurationInstruction {
+  color: #666;
+  margin-top: 10px;
+  font-size: 22px;
+}
+
+.CurationAddressEnding {
+  vertical-align: middle;
+  line-height: 70px;
+  margin-left: 10px;
+  font-size: 40px;
+}
+
+.CurationAlternativeOption {
+  margin-top: 10px;
+  margin-left: 10px;
+  height: 50px;
+  width: 400px;
+  background-color: #eaeaea;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.CurationAlternativeOption h2 {
+  font-size: 20px;
+  padding: 0px 15px;
+  line-height: 50px;
+  cursor: pointer;
+  text-decoration: underline;
+  color: #828282;
+}
+
+/* CHECKBOX CSS */
+
+.containerX {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-top: 20px;
+  margin-left: 10px;
+  padding: 10px;
+  width: 350px;
+  border-radius: 2px;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+/* Hide the browser's default checkbox */
+.containerX input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.containerX h2 {
+  line-height: 27px;
+  font-weight: 400;
+  margin-left: 35px;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border: 1px solid #d8d8d8;
+  border-radius: 2px;
+}
+
+.CheckedContainer {
+  background-color: #2296f3 !important;
+}
+
+.CheckedContainerHeader {
+  color: white;
+}
+
+/* On mouse-over, add a grey background color */
+.containerX:hover input ~ .checkmark {
+  background-color: #ccc;
+  border: 1px solid transparent;
+}
+
+/* When the checkbox is checked, add a blue background */
+.containerX input:checked ~ .checkmark {
+  background-color: #2196F3;
+  border:1px solid transparent;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.containerX input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.containerX .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+/*  border: solid #00fff0;*/
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 400px;
+  background-color: #ececec;
+  color: #000;
+  border: 2px solid #e2e2e2;
+  border-left: 2px solid #666;
+  border-radius: 2px;
+  padding: 10px 15px;
+  pointer-events: none;
+  cursor: default;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  /* for positioning on the right */
+/*  top: 0px;*/ 
+/*  left: 105%;*/
+
+  top: 100%;
+  left: 50%; 
+  margin-top: 15px;
+  margin-left: -185px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+
+.visible {
+  visibility: visible !important;
+}
+
+
+.sortable {
+  width: 600px;
+  min-height: 150px;
+  margin-top: 10px;
+  padding: 15px;
+  padding-bottom: 45px;
+}
+
+.TestHandle {
+  font-size: 22px;
+  margin-top: 20px;
+  line-height: 50px;
+  margin-left: 25px;
+  color: rgb(49, 49, 49);
+  text-align: center;
+  background-color: white;
+  font-weight: bold;
+  border-radius: 3px;
+  width: 500px;
+  border: 1px solid rgb(228, 228, 228);
+  padding: 20px;
+  height: 50px;
+}
+
+.draggable {
+  padding: 13px;
+  width: 200px;
+  margin: 10px 0px;
+  background-color: white;
+  border-radius: 3px;
+/*  box-shadow: 3px 3px 0px 0px #eaeaea;*/
+  border: 1px solid #e4e4e4;
+}
+
+.draggable span {
+  font-size: 20px;
+}
+
+.BackupView {
+  display: flex;
+  flex-direction: column;
+}
+
+.TemplateConstructor {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.Template {
+  margin-top: 10px;
+  margin-left: 40px;
+  margin-right: 60px;
+  background-color: #f3f3f3;
+  border: 1px solid #ececec;
+  border-radius: 3px;
+}
+
+/*.TemplateTitle {
+  font-size: 30px;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}*/
+
+.TemplateTitle {
+  background: transparent;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 10px 0px 0px 10px;
+  width: 95%;
+  min-height: 24px;
+  padding: 4px 8px;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  font-family: 'GothamRounded';
+  height: 40px;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  text-rendering: auto;
+  cursor: text;
+  white-space: pre-wrap;
+  -webkit-rtl-ordering: logical;
+  flex-direction: column;
+  transition-property: background-color,border-color,box-shadow;
+  transition-duration: 85ms;
+  transition-timing-function: ease;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  border: none;
+}
+
+.TemplateTitle:focus {
+  background: #fff;
+  border: none;
+  box-shadow: inset 0 0 0 2px #4725a9;
+}
+
+.componentStyling {
+  width: 550px;
+  padding: 13px;
+  margin: 10px;
+  background-color: white;
+  border-radius: 3px;
+/*  box-shadow: 3px 3px 0px 0px #eaeaea;*/
+  border: 1px solid #e4e4e4;
+}
+
+.componentStyling span {
+  font-size: 22px;
+}
+
+.mediumHeight {
+  height: 60px;
+}
+
+.largeHeight {
+  height: 90px;
+}
+
+.CreateTemplateArea {
+  width: 375px;
+  height: 175px;
+  border: 1px solid rgb(228, 228, 228);
+  border-radius: 3px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 25px;
+  background-color: white;
+}
+
+.CreateTemplateButton {
+  text-align: center;
+  background-color: #ff0744;
+  padding: 15px;
+  margin: 0 auto;
+  margin-top: 20px;
+  width: 150px;
+  border-radius: 3px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  display: block;
+  color: white;
+  font-weight: bold;
+  font-size: 23px;
+}
+
+.CreateTemplateButton:hover {
+  transform: scale(1.02);
+}
+
+.CreateTemplateBigText {
+  font-size: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.CreateTemplateSmallText {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.addPlaceholder {
+  background-color: gainsboro;
+  padding: 5px 5px;
+  color: #6f6f6f;
+  border-radius: 3px;
+  font-weight: bold;
+  text-align: center;
+/*  display: block;*/
+  display: inline-block;
+  width: 120px;
+  margin: 0px 5px;
+}
+
+.checkRequired {
+  background-color: #607D8B;
+  padding: 5px 5px;
+  color: #f7f7f7;
+  border-radius: 3px;
+  font-weight: bold;
+  text-align: center;
+/*  display: block;*/
+  display: inline-block;
+  width: 75px;
+  margin: 0px 5px;
+}
+
+.deleteComponent {
+  background-color: #3e3e3e;
+  padding: 5px 5px;
+  color: #cccccc;
+  border-radius: 3px;
+  font-weight: bold;
+  text-align: center;
+/*  display: block;*/
+  display: inline-block;
+  width: 60px;
+  margin: 0px 5px;
+  float: right;
+}
+
+
+
+.goToTemplates {
+  margin: 10px auto;
+  display: block;
+  width: 180px;
+  text-align: center;
+  font-size: 15px;
+  color: #969696;
+  text-decoration: underline;
+}

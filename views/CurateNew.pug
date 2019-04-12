@@ -1,0 +1,80 @@
+extends layout
+
+include mixins/heading
+include mixins/image
+include mixins/textarea
+include mixins/gallery
+include mixins/quote
+include mixins/infoBox
+include mixins/exampleBox
+include mixins/expandable
+include mixins/questionAnswer
+include mixins/sectionBreak
+
+//- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
+
+block content
+	.ButtonGroup
+		a.editTemplate.buttonGrey.inline Edit template
+		.showPreview.buttonGrey.inline Show preview
+		p Currently DRAFT, click create to save and publish
+	a.navlink(href='/my-curations') &#63;
+	.TemplateHolder
+		h2 New #{template.name}
+		if (template.components.length)
+			ul.templateComponents.sortable
+				each component in template.components
+					if component.componentType == "heading"
+						+heading(component, template)
+					if component.componentType == "textarea"
+						+text(component, template)
+					if component.componentType == "image"
+						+image(component, template)
+					if component.componentType == "image-gallery"
+						+imageGallery(component, template)
+					if component.componentType == "question-answer"
+						+questionAnswer(component, template)
+					if component.componentType == "expandable"
+						+expandable(component, template)
+					if component.componentType == "quote"
+						+quote(component, template)
+					if component.componentType == "info-box"
+						+infoBox(component, template)
+					if component.componentType == "example-box"
+						+exampleBox(component, template)
+					if component.componentType == "section-break"
+						+sectionBreak(component, template)
+		else
+			.NothingHolder Nothing worked.
+
+
+block scripts
+	script(src='/js/sortable.js')
+
+
+
+//- Curata becomes a logo
+	//- Then next to it will be the current Currata you are in (or could be a sidebar thing and switch)
+	//- Somewhere in the menu bar also the current list switch
+	//- Somewhere a button to quickly visit your Curata 
+	//- Option to change which list is default and its location (essentially extra features become available upon creating another list inside an existing curata)
+
+
+//- You create a template and start curating
+	//- Inside the template
+
+//- At any particular time you are 'in' or 'inside' a specific list, inside a specific curata
+	//- Within which you can make quick entries
+	//- Within which you can quickly change between lists (and thus also entries)
+	//- Within which you can quickly change between curatas and it will give the last used list
+
+//- Library/Templates -- public and personal (private) templates by categories, names and even description for the purpose of the template
+
+//- Browse -- public lists and curatas by categories and other filters
+
+//- Creating an entry
+	//- There is a button for 'show preview'
+	//- It is possible to quickly edit style or design of list
+	//- It is possible to quickly edit the template itself and make this change come to effect with all templates and entries as well. As such, it must change the order number of each particular template.
+
+//- Things will change anyway. If that will happen anyway, I'd like to do it proactively. Albeit that is uncomfortable, scary. and possibly painful.

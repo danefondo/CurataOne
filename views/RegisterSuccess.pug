@@ -1,0 +1,15 @@
+extends initial_layout
+
+include HappyImage
+
+block content
+	.HappyContainer
+		+HappyImage
+	.RegisterSuccessContainer
+		.WelcomeBlock
+			h1.RegisterSuccess.WelcomeMessage Welcome aboard!
+			h1.RegisterSuccess.WelcomeSubtitle You have successfully signed up
+		a.StartCuratingBlock(href='/')
+			h1.StartCurating Start curating
+		.CheckOthersBlock
+			h2.CheckOthers Check out cool curations made by fellow curators:

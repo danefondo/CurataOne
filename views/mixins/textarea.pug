@@ -1,0 +1,7 @@
+mixin text(component, template)
+	li.Component.drag.draggable-item(id= component.id)
+		.editorSortable
+			.editor
+				.editorTools.unreset(id= "toolbar_" +component.id)
+				.editorText.unreset(id= "editor_" +component.id)
+					p This is sample text of editor.

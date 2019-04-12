@@ -1,0 +1,73 @@
+extends layout
+
+block content
+	.sidebar
+		.greetings-container
+			p Hello, #{user.firstname}
+		input#myInput(type='text', placeholder='Search for names..' autocomplete="offffff")
+	.items
+		.projects-block
+			if (spaces)
+				if (spaces.length > 0)
+					.create-new-project-button
+						span.create-new-project-button-text + Create new project
+				ul.projects-container
+					if (spaces.length > 0)
+						//- this must only now get spaces with type project
+						each project, i in spaces
+							li.project.modal-box(id= project.id)
+								.project-box-details
+									span.project-title #{project.meta.spaceName}
+									span.project-description #{project.meta.spaceDescription}
+								.project-box-tools
+									a.go-to-edit-button(href='/projects/' + project.id)
+										span.go-to-edit-text Edit
+									//- a.go-to-edit-button(href='/projects/' + project.id +'/editing')
+					else
+						.no-projects-box
+							.no-projects-box-details
+								span.no-projects-box-title You do not have any projects.
+								.create-new-project-button.custom-create-new-project-button
+									span.create-new-project-button-text.custom-create-new-project-button-text + Create new project
+								//- if note.category
+								//- 	if note.category!="Uncategorized"
+								//- 		span.note-tags Note tags
+								//- 		span.note-category-container
+								//- 			span.note-category=note.category
+								//- if note.project
+								//- 	if note.project!="N/A"
+								//- 		span.note-project-container
+								//- 			span.note-project=note.project
+					//- .no-projects-box 
+					//- 	.no-projects-box-details
+					//- 		span.no-projects-box-title You don't have any projects.
+					//- 		span.no-projects-box-title Create new project +
+					//- #123456.project.modal-box
+					//- 	.project-details
+					//- 		span.project-title Project Name
+					//- 		span.project-description Some description of the project.
+					//- #234567.project.modal-box
+					//- 	.project-details
+					//- 		span.project-title Project Name
+					//- #345678.project.modal-box
+					//- 	.project-details
+					//- 		span.project-title Project Name
+			//- div#myModal.modal
+			//- div#createProject.modal
+			// The Modal
+		#clickModal.modal
+			//- Modal content
+			.create-space-modal-content
+				h1.modal-title New Project 
+				//- dynamically say 'space type' that is capitalized
+				span.close-create-space ×
+				.create-space-form
+					.create-space-form-groups
+						.create-space-form-group
+							h2.modal-subtitle Title
+							input.create-space-title(name='space-name' type='text' placeholder='Project title' data-space-type='project')
+							h2.modal-subtitle Meta 
+							textarea.create-space-description(name='space-description' type='text' placeholder='Describe what your project is about')
+					.create-space-button Create project 
+					//- dynamically say 'space type' that is capitalized
+

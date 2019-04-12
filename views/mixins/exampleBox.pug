@@ -1,0 +1,12 @@
+mixin exampleBox(component, template)
+	li.Component.drag.draggable-item(id= component.id)
+		.sub-sortable-container
+			h2 Example <span style="font-size:15px">&#9432;</span>
+			.exampleBoxBlock
+				.exampleBoxTitle 
+				.exampleBoxContent
+				.editorSortable
+					.simpleEditor
+						.editorTools.unreset(id= "toolbar_" +component.id)
+						.editorText.unreset(id= "editor_" +component.id)
+							p This is sample text of editor.

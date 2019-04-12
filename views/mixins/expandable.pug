@@ -1,0 +1,18 @@
+mixin expandable(component, template)
+	li.Component.drag.draggable-item(id= component.id)
+		h2 Expandable
+		input.ElementTitle(placeholder="Title")
+		.editorSortable
+			.simpleEditor
+				.editorTools.unreset(id= "toolbar_" +component.id)
+				.editorText.unreset(id= "editor_" +component.id)
+					p This is sample text of editor.
+
+
+		//- button.collapsible.unsortable Open Collapsible
+		//- .content
+		//- 	.editorSortable
+		//- 		.simpleEditor
+		//- 			.editorTools.unreset(id= "toolbar_" +component.id)
+		//- 			.editorText.unreset(id= "editor_" +component.id)
+		//- 				p This is sample text of editor.
