@@ -1,34 +1,7 @@
 $(document).ready(function () {	
 
-	let receiveInProgress = false;
-	let componentCount;
-
-
-function createNewComponent(component, type) {
-
-	if (type == "heading") {
-
-	} else if (type == "textarea") {
-
-	} else if (type == "image") {
-
-	} else if (type == "image-gallery") {
-
-	} else if (type == "question-answer") {
-
-	} else if (type == "expandable") {
-
-	} else if (type == "quote") {
-
-	} else if (type == "info-box") {
-
-	} else if (type == "example-box") {
-
-	} else if (type == "section-break") {
-
-	}
-};	
-
+// setting flag
+let receiveInProgress = false;
 
 function updateComponentOrderInDB() {
 	let indexArray = [];
@@ -43,8 +16,7 @@ function updateComponentOrderInDB() {
 			console.log("object: ", obj);
 			indexArray.push(obj);
 		} else {
-			console.log("A component has no id.");
-			return
+			return console.log("Component has no id.");
 		}
 	});
 
@@ -64,16 +36,15 @@ function updateComponentOrderInDB() {
 			console.log("Successfully updated positions.");
 		},
 		error: function(err) {
-			console.log("Failed to update positions.");
-			console.log(err);
+			console.log("Failed to update positions: ", err);
 		}
 	});
 
 };
 
-	$(".sortable").sortable({
-		cancel: "input,textarea,button,select,option,[contenteditable],.editorArea,.unsortable,span,.ListItemText,.NoItems",
-		receive: function(event, ui) {
+$(".sortable").sortable({
+	cancel: "input,textarea,button,select,option,[contenteditable],.editorArea,.unsortable,span,.ListItemText,.NoItems",
+	receive: function(event, ui) {
 			receiveInProgress = true;
 			let originalItem = ui.item;
 			let componentType = originalItem.attr('data-component-type');
@@ -114,25 +85,20 @@ function updateComponentOrderInDB() {
 				url: '/curatas/CreateTemplateWithComponents',
 				success: function(response) {
 					console.log("Successfully created template: ", response.template);
-					$(newItem).attr('id', response.component._id);
-					// give item an id (such as for deleting later)
-					// if no id, don't let delete
+					if (response.component._id) {
+						$(newItem).attr('id', response.component._id);
+						updateComponentOrderInDB();
+						receiveInProgress = false;
+						// give item an id (such as for deleting later)
+						// if no id, don't let delete
+					} else {
+						console.log("Component ID missing.");
+					}
 				},
 				error: function(err) {
 					console.log("Failed to create template: ", err);
 				}
 			})
-
-			// it needs to save it in a way that
-			// once I want to load it again
-			// it has enough information to 
-			// present it in the same order as created
-			// as such, it should be enough 
-			// to say it is a component of type x, order y
-			// then it will later load the components 
-			// based on order give it position,
-			// based on type give it style
-
 
 			// send ajax post for Template
 				// for each component in list
@@ -148,25 +114,23 @@ function updateComponentOrderInDB() {
 
 		// humans forget a lot of stuff and don't have it in their awareness; as such, it is necessary to have some reminders of variables I might forget about life; 
 
-			receiveInProgress = false;
+	},
+	beforeStop: function(event, ui) {
+		newItem = ui.item;
+	},
+	update: function(event, ui) {
+		if (receiveInProgress == true) {
+			console.log("Receive in progress! Update will happen on its own.")
+		} else {
 			updateComponentOrderInDB();
-		},
-		beforeStop: function(event, ui) {
-			newItem = ui.item;
-		},
-		update: function(event, ui) {
-			if (receiveInProgress == true) {
-				console.log("Receive in progress! Update will happen on its own.")
-			} else {
-				updateComponentOrderInDB();
-			}
 		}
-	});
+	}
+});
 
-	$( ".draggable" ).draggable({
-		connectToSortable: ".sortable",
-		helper: "clone",
-		revert: "invalid"
-	});
+$( ".draggable" ).draggable({
+	connectToSortable: ".sortable",
+	helper: "clone",
+	revert: "invalid"
+});
 
 });

@@ -27,24 +27,3 @@ const curataListSchema = new mongoose.Schema({
 });
 
 const curataList = module.exports = mongoose.model('curataList', curataListSchema);
-
-/*
-you get list of components as the template
-
-when a template is requested
-
-the list is accessed
-
-for each item in list
-
-its type and its order position are requested
-
-and then the form is generated
-
-as such
-
-no separate model required for a Template
-
-unless I want many templates
-
-*/

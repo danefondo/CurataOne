@@ -11,6 +11,7 @@
 
 	let editorCount = 0;
 	let editors = {};
+	let creatingListItem = false;
 
 	$(".DropdownX").on("click", function(){
 	  $(this).toggleClass('is-expanded');
@@ -38,6 +39,66 @@
 		})
 	}
 	initQuestionBlocks();
+
+	$('.addNewListItemButton').on('click', function() {
+
+		if (creatingListItem == true) {
+			return console.log("Last list item was still being created, try again.")
+		} else {
+
+			// set flag
+			creatingListItem = true;
+
+			// declare html blocks to insert
+			let listItem = $("<li>", {"class": "listItem", "id": "tempItemId"});
+			let listInput = $("<input>", {"class": "listItemInput"});
+
+			listItem.append(listInput);
+
+			// append to unordered list
+			let listItems = $(this).closest('.Component').find('.listItems');
+			listItems.append(listItem);
+
+
+			let componentId = $(this).closest('.Component').attr('id');
+			let entryId = $('.TemplateHolder').attr('id');
+
+			let componentOrder = $(this).closest('.Component').index();
+			let itemOrder = $('#tempItemId').index();
+			console.log("itemOrder: ", itemOrder);
+
+			// create new list item in database
+			$.ajax({
+			  data: {
+			    entryId: entryId,
+			    componentId: componentId,
+			    itemOrder: itemOrder
+			  },
+			  type: 'POST',
+			  url: '/curatas/CreateNewListItem',
+			  success: function(response){
+			    console.log("Component item successfully created: ", response);
+			    // Display success message?
+
+			    let listItemId = response._id;
+			    $('#tempItemId').attr('id', listItemId);
+			    creatingListItem = false;
+
+				// add list item id to list item  -- Item.
+				// init sortable for list items
+					// upon change push change to database
+				// init listening to each list item
+					// upon change push change to database
+
+			  },
+			  error: function(err){
+			    console.log("Component item creation failed: ", err);
+			    creatingListItem = false;
+			    // Display error message?
+			  }
+			});
+		}
+	})
 
 	$('.addNewButton').on('click', function() {
 
@@ -203,38 +264,40 @@
 		// choose to make each item only direct elsewhere (e.g. like an affiliate product listing)
 
 	function initTitleListening() {
-	$('.ElementTitle').unbind('input change');
-	$('.ElementTitle').bind('input change', function() {
+		$('.ElementTitle').unbind('input change');
+		$('.ElementTitle').bind('input change', function() {
 
-		let ComponentId = $(this).closest('.Component').attr('id');
-		let ComponentTitle = $(this).val();
-		console.log("component id: ", ComponentId);
-		console.log("title: ", ComponentTitle);
+			let ComponentId = $(this).closest('.Component').attr('id');
+			let ComponentTitle = $(this).val();
+			let EntryId = $('.TemplateHolder').attr('id');
+			console.log("component id: ", ComponentId);
+			console.log("title: ", ComponentTitle);
 
-		let dataType = $(this).attr('data-type');
-		if (dataType == 'question') {
-			console.log("This is a question.");
-		} else {
-			console.log("This is not a question.");
-		}
+			let dataType = $(this).attr('data-type');
+			if (dataType == 'question') {
+				console.log("This is a question.");
+			} else {
+				console.log("This is not a question.");
 
-		// $.ajax({
-		//   data: {
-		//     ComponentId: ComponentId,
-		//     ComponentTitle: ComponentTitle,
-		//   },
-		//   type: 'POST',
-		//   url: '/curatas/UpdateComponentTitle',
-		//   success: function(Item){
-		//     console.log("Component title successfully updated.")
-		//     // Display success message?
+				$.ajax({
+				  data: {
+				    ComponentId: ComponentId,
+				    ComponentTitle: ComponentTitle,
+				    EntryId: EntryId
+				  },
+				  type: 'POST',
+				  url: '/curatas/UpdateComponentTitle',
+				  success: function(Item){
+				    console.log("Component title successfully updated.")
+				    // Display success message?
 
-		//   },
-		//   error: function(err){
-		//     console.log("Component title update failed: ", err);
-		//     // Display error message?
-		//   }
-		// });
+				  },
+				  error: function(err){
+				    console.log("Component title update failed: ", err);
+				    // Display error message?
+				  }
+				});
+			}
 
 		});
 	}
@@ -256,24 +319,24 @@
 	}
 	initComponentTitleExit();
 
-	function initEditorListening() {
+	// function initEditorListening() {
 
-		$('.simpleEditor').each(function(index, obj) {
-			let editorText = $(this).find('.editorText');
-			let editorID = editorText.attr('id');
-			// editorID = $('#' + editorID);
-			editorID = '#' + editorID;
-			console.log("THE editorID: ", editorID);
+	// 	$('.simpleEditor').each(function(index, obj) {
+	// 		let editorText = $(this).find('.editorText');
+	// 		let editorID = editorText.attr('id');
+	// 		// editorID = $('#' + editorID);
+	// 		editorID = '#' + editorID;
+	// 		console.log("THE editorID: ", editorID);
 
-			let editor = editors.editorID;
-			console.log("editor: ", editor);
+	// 		let editor = editors.editorID;
+	// 		console.log("editor: ", editor);
 
-			editor.model.document.on( 'change:data', function() {
-			    console.log( 'The data has changed!' );
-			} );
-		})
+	// 		editor.model.document.on( 'change:data', function() {
+	// 		    console.log( 'The data has changed!' );
+	// 		} );
+	// 	})
 
-	}
+	// }
 
 
 	// function initEditorListening() {

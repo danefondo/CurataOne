@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-let entryListSchema = require('./entryList.js').model('EntryList').schema;
+let listItemSchema = require('./listItem.js').model('listItem').schema;
 
 // one component contents
 const entryComponentSchema = new mongoose.Schema({
@@ -13,7 +13,7 @@ const entryComponentSchema = new mongoose.Schema({
 	// can also be used for image storage
 	componentContent: String,
 	// store lists, checklists, image galleries, files
-	componentList: [entryListSchema],
+	componentList: [listItemSchema],
 	componentType: String,
 	// initially initiated through template component order
 	componentOrder: Number,

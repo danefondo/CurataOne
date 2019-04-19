@@ -48,6 +48,10 @@ mixin MultiForm
 							span.section-component-text Image
 						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="image-gallery")
 							span.section-component-text Image Gallery
+						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="list")
+							span.section-component-text List
+						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="checklist")
+							span.section-component-text Checklist
 						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="question-answer")
 							span.section-component-text Q&A
 						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="expandable")
@@ -70,7 +74,7 @@ mixin MultiForm
 				.CreateTemplateArea
 					p.CreateTemplateSmallText Your template is automatically saved. 
 					p.CreateTemplateBigText Once you're done customizing your template, click the button below to go make your first entry!
-					a.CreateTemplateButton(href='/templates/') Go curate!
+					a.CreateTemplateButton Go curate!
 					a.goToTemplates Or go to Templates
 			p Some more options that are coming soon: table blocks, list blocks with modals, section blocks, file upload block, columns, enabling an index, a purchase button, a metadata block, a resources used or 'referenced block' or 'fact checked block' or expandable where you have fact in one place, and source(s) listed in the expandable; This is important to make this into a truly fact-oriented space.
 			p LATER I will add boxes on each component with option to 'ADD PLACEHOLDER' and 'MARK REQUIRED' + 'DELETE'

@@ -735,3 +735,43 @@ h2.CheckOthers {
   border-radius: 3px;
   border: 1px solid #e4e4e4;
 }
+
+.listItemInput {
+  background: transparent;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 10px 0px 0px 10px;
+  width: 95%;
+  min-height: 24px;
+  padding: 4px 8px;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  font-family: 'GothamRounded';
+  height: 40px;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  text-rendering: auto;
+  cursor: text;
+  white-space: pre-wrap;
+  -webkit-rtl-ordering: logical;
+  flex-direction: column;
+  transition-property: background-color,border-color,box-shadow;
+  transition-duration: 85ms;
+  transition-timing-function: ease;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  border: none;
+}
+
+.listItemInput:focus {
+  background: #fff;
+  border: none;
+  box-shadow: inset 0 0 0 2px #4725a9;
+}

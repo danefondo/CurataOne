@@ -7,6 +7,7 @@ let Template = require('../models/template');
 let Component = require('../models/component');
 let Entry = require('../models/entry');
 let entryComponent = require('../models/entryComponent');
+let listItem = require('../models/listItem');
 
 
 
@@ -89,8 +90,7 @@ router.post('/CreateTemplateWithComponents', function(req, res) {
 	        } else {
 	        	template.save(function(err) {
 	        		if (err) {
-	        			console.log(err);
-	        			return;
+	        			return console.log(err);
 	        		} else {
 	        			console.log("Component created in template!");
 	        			data = {
@@ -99,9 +99,9 @@ router.post('/CreateTemplateWithComponents', function(req, res) {
 	        			}
 	        			res.json(data);
 	        		}
-	        });
-		}
-	})
+	        	});
+			}
+		})
 })
 
 router.post('/UpdateComponentPosition', function(req, res) {
@@ -114,10 +114,17 @@ router.post('/UpdateComponentPosition', function(req, res) {
 	    Template.findOneAndUpdate(
 	    	{"_id": TemplateId, "components._id": obj.component_id}, 
 	    	{"$set": {"components.$.componentOrder": obj.new_position }},
-	    	function(err, space) {
+	    	function(err, template) {
 				if (err) {
-					console.log("Did not work: ", err);
-					return;
+					return console.log("Did not work: ", err);
+		        } else {
+		        	template.save(function(err) {
+		        		if (err) {
+		        			return console.log(err);
+		        		} else {
+		        			console.log("Component order successfully updated.");
+		        		}
+		        	})
 		        }
 	    	}
 	    );
@@ -135,13 +142,85 @@ router.post('/UpdateTemplateTitle', function(req, res) {
 
     Template.update({"_id": TemplateId}, {"$set": {"name": TemplateTitle }}, function(err, template) {
 			if (err) {
-				console.log("Did not work: ", err);
-				return;
+				return console.log("Did not work: ", err);
 	        }
     });
 
 	res.status(200).end();
 });
+
+router.post('/UpdateComponentTitle', function(req, res) {
+	
+	let ComponentTitle = req.body.ComponentTitle;
+	let ComponentId = req.body.ComponentId;
+	let EntryId = req.body.EntryId;
+
+
+    Entry.findOneAndUpdate(
+    	{"_id": EntryId, "entryComponents._id": ComponentId}, 
+    	{"$set": {"entryComponents.$.componentTitle": ComponentTitle }},
+    	function(err, entry) {
+			if (err) {
+				console.log("Title update did not work: ", err);
+				return;
+	        } else {
+	        	entry.save(function(err) {
+	        		if (err) {
+	        			return console.log(err);
+	        		} else {
+	        			console.log("Component title successfully updated.");
+	        		}
+	        	})
+	        }
+    	}
+    );
+
+	res.status(200).end();
+});
+
+
+/* == Create new list item */
+
+router.post('/CreateNewListItem', function(req, res) {
+
+	let entryId = req.body.entryId;
+	let componentId = req.body.componentId;
+	let itemOrder = req.body.itemOrder;
+
+	let item = new listItem({
+		itemOrder: itemOrder,
+		listId: componentId
+	})
+
+	// access entry by id
+	Entry.findOneAndUpdate(
+		// access entryComponent by id
+		{"_id": entryId, "entryComponents._id": componentId},
+		// create new listItem
+		{$push: {"entryComponents.$.componentList": item}},
+		{upsert: true},
+		function(err, entry) {
+	        if (err) {
+				return console.log(err);
+	        } else {
+	        	entry.save(function(err) {
+	        		if (err) {
+	        			return console.log(err);
+	        		} else {
+	        			console.log("New list item created!", item);
+	        			res.json(item);
+	        			// return id of created entryListItem
+	        			// data = {
+	        			// 	template: template,
+	        			// 	component: component
+	        			// }
+	        		}
+	        });
+		}
+	})
+
+})
+
 
 /*
 ===========================
@@ -200,16 +279,80 @@ router.post('/curataLists/CreateNewEntry', function(req, res) {
 			})
 
 			entry.entryComponents.push(entryComp);
+
+			if (component.componentType == "list") {
+				let listItem = new listItem({})
+			}
 		}
+
+		console.log("Did entry creation setup");
 
 		entry.save(function(err){
 			if(err) {
 				return console.log("Entry saving error: ", err);
 			}
 		});
+
+		console.log("Did entry save");
+
+		entryId = entry._id;
+		res.json({
+			entry: entry,
+			redirectTo: '/curatas/newEntry/' + entryId
+			// redirectTo: '/' + req.body.type + 's/' + space_id + '/editing'
+		});
+
+		// res.redirect('/curatas/newEntry/' + entry._id);
 	})
 
 });
+
+router.get('/newEntry/:id', function(req, res) {
+
+	// get id for template
+	let entryId = req.params.id;
+	console.log("Inside entry, entryId: ", entryId);
+
+		// next step is setting up questions
+	Entry.findById(entryId, function (err, entry) {
+		
+		if (err) {
+			return console.log("Could not get entry: ", err);
+		}
+
+		console.log("Received entry: ", entry);
+
+		let templateId = entry.linkedTemplateId;
+		let template = {};
+
+
+		Template.findById(templateId, function(err, temp) {
+			if (err) {
+				return console.log("Could not get template: ", err);
+			}
+
+			template = temp;
+			console.log("The Template: ", template);
+		})
+
+		entry.entryComponents.sort(function(a, b) {
+			return a.componentOrder - b.componentOrder;
+		});
+
+		if (template === undefined) {
+			return console.log("Template undefined.");
+		} else {
+			console.log("Proceeding.");
+		}
+
+
+		res.render('CurateNew', {
+			entry: entry,
+			template: template
+		})
+
+	});
+})
 
 
 

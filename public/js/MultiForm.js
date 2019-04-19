@@ -152,14 +152,15 @@ $(document).ready(function () {
       type: 'POST',
       url: '/curatas/createNewCurata',
       success: function(response) {
-        $(".UserCurataTitle").text(response.curata.curataName);
-        $(".TemplateTitle").val(response.template.name + ' Template');
+        $(".UserCurataTitle").text(curataName);
+        $(".TemplateTitle").val(curataName + ' Template');
         $(".Template").attr('id', response.template._id);
         console.log("Success response: ", response);
-        let hrefLink = '/curatas/curate/templates/' + response.template._id;
-        console.log(hrefLink);
+        // let hrefLink = '/curatas/curate/templates/' + response.template._id;
+        // let hrefLink = 'curatas/curataLists/CreateNewEntry'
+        // console.log(hrefLink);
         createEntry();
-        $('.CreateTemplateButton').attr('href', hrefLink);
+        // $('.CreateTemplateButton').attr('href', hrefLink);
       },
       error: function(err) {
         console.log(err);
@@ -254,8 +255,11 @@ $(document).ready(function () {
         },
         type: 'POST',
         url: '/curatas/curataLists/CreateNewEntry',
-        success: function(Item){
-          console.log("Entry draft successfully created.")
+        success: function(response){
+          console.log("Entry draft successfully created.");
+          window.location.href = response.redirectTo;
+          console.log("Response: ", response);
+          console.log("Entry: ", response.entry);
           // Display success message?
 
         },
@@ -266,6 +270,20 @@ $(document).ready(function () {
       })
     });
   }
+
+/*
+TASKS:
+- Listen to editors and get their data per change
+- Lists
+- Checklists
+- Change order of list & checklist items and update in database
+- Change order of questions in a questionBox
+- Listen to question & expandable titles
+- Listen to question & expandable editors
+- Create lists with option to have a title, basically expandable lists & checklists
+
+
+*/
 
 
 });

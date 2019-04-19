@@ -10,6 +10,8 @@ include mixins/exampleBox
 include mixins/expandable
 include mixins/questionAnswer
 include mixins/sectionBreak
+include mixins/list
+include mixins/checklist
 
 //- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
 
@@ -19,31 +21,35 @@ block content
 		.showPreview.buttonGrey.inline Show preview
 		p Currently DRAFT, click create to save and publish
 	a.navlink(href='/my-curations') &#63;
-	.TemplateHolder
+	.TemplateHolder(id= entry.id)
 		h2 New #{template.name}
-		if (template.components.length)
+		if (entry.entryComponents.length)
 			ul.templateComponents.sortable
-				each component in template.components
+				each component in entry.entryComponents
 					if component.componentType == "heading"
-						+heading(component, template)
+						+heading(component, entry, template)
 					if component.componentType == "textarea"
-						+text(component, template)
+						+text(component, entry, template)
 					if component.componentType == "image"
-						+image(component, template)
+						+image(component, entry, template)
 					if component.componentType == "image-gallery"
-						+imageGallery(component, template)
+						+imageGallery(component, entry, template)
 					if component.componentType == "question-answer"
-						+questionAnswer(component, template)
+						+questionAnswer(component, entry, template)
 					if component.componentType == "expandable"
-						+expandable(component, template)
+						+expandable(component, entry, template)
 					if component.componentType == "quote"
-						+quote(component, template)
+						+quote(component, entry, template)
 					if component.componentType == "info-box"
-						+infoBox(component, template)
+						+infoBox(component, entry, template)
 					if component.componentType == "example-box"
-						+exampleBox(component, template)
+						+exampleBox(component, entry, template)
 					if component.componentType == "section-break"
-						+sectionBreak(component, template)
+						+sectionBreak(component, entry, template)
+					if component.componentType == "list"
+						+list(component, entry, template)
+					if component.componentType == "checklist"
+						+checklist(component, entry, template)
 		else
 			.NothingHolder Nothing worked.
 

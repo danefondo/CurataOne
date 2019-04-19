@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-const entryListSchema = new mongoose.Schema({
+const listItemSchema = new mongoose.Schema({
 	// can also be used as placeholder for images
 	listItem: String,
 	listItemState: String,
@@ -10,4 +10,4 @@ const entryListSchema = new mongoose.Schema({
 	listId: String
 });
 
-const EntryList = module.exports = mongoose.model('EntryList', entryListSchema);
+const listItem = module.exports = mongoose.model('listItem', listItemSchema);
