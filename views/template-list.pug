@@ -1,0 +1,108 @@
+extends layout
+
+block heading
+	.helperNavigation
+		.navlinks-container
+			a.navlink &larr;
+			a.navlink Cancel
+
+block content
+	.curataId(data-curataId= curataId)
+	.templateArea
+		.templateDetails
+			p.title4vh Customize your template. 
+			p.inline Don't worry, your template is automatically saved!
+			.tooltip2.inline
+				| ?
+				span.tooltiptext2 Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder. 
+			//- p (View examples / Browse template library)
+			.templateTitleContainer2
+				.title2p5vh Template title:
+				input.templateTitle2.unsortable
+		.TemplateConstructor
+			.Components
+				ul
+					li.add-section-box.draggable(data-css="headingComponent", data-component-type="heading")
+						span.section-component-text Heading 
+					li.add-section-box.draggable(data-css="mediumHeight", data-component-type="textarea")
+						span.section-component-text Text
+						//- possibility of editing text & background color, adding borders & changing color or width between 1-3px and radius between 0, 1, 2, 3, 4, 5, 6
+					li.add-section-box.draggable(data-css="largeHeight", data-component-type="image")
+						span.section-component-text Image
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="image-gallery")
+						span.section-component-text Image Gallery
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="list")
+						span.section-component-text List
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="checklist")
+						span.section-component-text Checklist
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="link")
+						span.section-component-text Link
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="question-answer")
+						span.section-component-text Q&A
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="expandable")
+						span.section-component-text Expandable
+					li.add-section-box.draggable(data-css="mediumHeight", data-component-type="quote")
+						span.section-component-text Quote
+					li.add-section-box.draggable(data-css="mediumHeight", data-component-type="info-box")
+						span.section-component-text Info Box
+					li.add-section-box.draggable(data-css="mediumHeight", data-component-type="example-box")
+						span.section-component-text Example Box
+					li.add-section-box.draggable(data-css="smallHeight", data-component-type="section-break")
+						span.section-component-text Section break
+			.Template
+				ul.sortable
+					li.Component.unsortable.TestHandle Drag blocks here from the left
+				//- if (template.components.length)
+				//- 	ul.sortabletemplateComponents
+				//- 		each component in template.components
+				//- 			if component.componentType == "heading"
+				//- 				li.Component.componentStyling(id= component.id, data-component-type= component.componentType)
+				//- 					span.section-component-text Heading
+				//- 					.addPlaceholder Placeholder
+				//- 					.checkRequired Required?
+				//- 					.deleteComponent Delete
+				//- 			//- if component.componentType == "textarea"
+				//- 			//- 	+text(component, entry, template)
+				//- 			if component.componentType == "image"
+				//- 				li.Component.componentStyling(id= component.id, data-component-type= component.componentType) 
+				//- 					span.section-component-text Image
+				//- 					.addPlaceholder Placeholder
+				//- 					.checkRequired Required?
+				//- 					.deleteComponent Delete
+							//- if component.componentType == "image-gallery"
+							//- 	+imageGallery(component, entry, template)
+							//- if component.componentType == "question-answer"
+							//- 	+questionAnswer(component, entry, template)
+							//- if component.componentType == "expandable"
+							//- 	+expandable(component, entry, template)
+							//- if component.componentType == "quote"
+							//- 	+quote(component, entry, template)
+							//- if component.componentType == "info-box"
+							//- 	+infoBox(component, entry, template)
+							//- if component.componentType == "example-box"
+							//- 	+exampleBox(component, entry, template)
+							//- if component.componentType == "section-break"
+							//- 	+sectionBreak(component, entry, template)
+							//- if component.componentType == "list"
+							//- 	+list(component, entry, template)
+							//- if component.componentType == "checklist"
+							//- 	+checklist(component, entry, template)
+					//- Description is optional and still possible to edit its placeholder
+					//- It is also possible to edit Name / Title placeholder
+					//- You can also turn the title into an image and give it a subtitle or something
+					li.Component.unsortable.TestHandle Drag blocks here from the left
+		.CreateListArea
+			.listDetails
+				p.title20px Give your list a name:
+				input.ListTitle
+			.listDetails
+				p.title20px Describe its purpose:
+				textarea.ListDescription(placeholder= 'What is this list about?')
+			a.CreateListButton Create list!
+			a.goToLists Or go to all lists
+
+
+
+block scripts
+	script(src='/js/sortable.js')
+	script(src='/js/draggable.js')

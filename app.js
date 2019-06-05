@@ -7,7 +7,6 @@ const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
 
-
 // Curata -- modularized content
 
 
@@ -92,6 +91,7 @@ app.get('/my-curations', function(req, res) {
 app.get('/successful-registration', function(req, res) {
 	res.render('RegisterSuccess');
 });
+
 
 
 // app.get('/curatas/curate/templates/:id', ensureAuthenticated, function(req, res) {

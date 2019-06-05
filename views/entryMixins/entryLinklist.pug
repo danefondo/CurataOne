@@ -1,0 +1,15 @@
+mixin entryLinklist(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="linklist" data-order= component.componentOrder)
+		h2 Title 
+		ul.listItems.sortableList(id= "sortable_" +component.id)
+			if (component.componentList.length) 
+				// later make sure to render them using the order, else the db order might change and thus create problems
+				each item, i in component.componentList
+					li.ListItem.sortableListItem(id= item.id)
+						if (item.listItem)
+							.listItemInput #{item.listItem} 
+						else
+							p.errorMessage Nothing in list
+			else
+				p.errorMessage Nothing in list
+

@@ -1,0 +1,4 @@
+mixin entryText(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="textarea" data-order= component.componentOrder)
+		if (component.componentContent)
+			.editorText.unreset !{component.componentContent}

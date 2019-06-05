@@ -11,7 +11,7 @@ const componentSchema = new mongoose.Schema({
 	requiredState: Boolean,
 	componentTitle: String,
 	placeholder: String,
-	componentOrder: Number,
+	componentOrder: Number
 });
 
 const Component = module.exports = mongoose.model('Component', componentSchema);

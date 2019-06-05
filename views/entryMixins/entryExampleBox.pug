@@ -1,0 +1,9 @@
+mixin entryExampleBox(component, entry, template)
+	li.entryComponent(id= "entry_" + component.id, data-component="exampleBox" data-order= component.componentOrder)
+		if (component.componentContent)
+			.editorText.unreset !{component.componentContent}
+		button.expandable
+			.ElementTitle #{component.componentTitle}
+		.content
+			if (component.componentContent)
+				.editorText.unreset !{component.componentContent}

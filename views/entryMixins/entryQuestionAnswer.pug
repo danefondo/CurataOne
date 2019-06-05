@@ -1,0 +1,21 @@
+mixin entryQuestionAnswer(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="questionAnswer" data-order= component.componentOrder)
+		h2 Q&A
+		ul.questions
+			if (component.componentList)
+				each item, i in component.componentList
+					li.questionBlock(id= item.id)
+						button.collapsible.unsortable
+							if (item.listItem)
+								.QuestionTitle #{item.listItem}
+							else 
+								.QuestionTitle
+						.content
+							if (item.listItemContent)
+								.editorText.unreset(id= "editor_" +item.id) !{item.listItemContent}
+							else
+								.editorText.unreset(id= "editor_" +item.id)
+									p Write your answer...!
+			else
+				p.errorMessage Something went wrong... arrgh!
+		.addNewButton + Add Question

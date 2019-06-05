@@ -1,0 +1,12 @@
+mixin entryList(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="list" data-order= component.componentOrder)
+		h2 Title 
+		ul.listItems(id= "sortable_" +component.id)
+			each item, i in component.componentList
+				li.ListItem.sortableListItem(id= item.id)
+					if (item.listItemURL)
+						a.listItemInput(href= item.listItemURL target= "_blank") #{item.listItem} 
+					else
+						.listItemInput #{item.listItem}
+
+

@@ -1,0 +1,20 @@
+extends layout
+
+//- Inside one Curata, opens up the different category lists inside it
+	//- So these links lead to the contents of these lists
+	//- Upon clicking any one of those, you are then greeted with entries
+
+block content
+	.curataContainer
+		ul.curataList
+			each list in curata.curataList
+				li.singleCurata
+					a.navlink(href='/curatas/entries/' + list.id) #{list.listName}
+
+
+//- p My singular Curata list view, with all the entries for a single list, like Failory's startup cemetry, a list only of startups that have failed and their case studies
+//- p Where if settings required, then if user is logged in and is admin for that curata list or for some entry (in which case it is marked for the person specifically that such and such they can edit), then there is a button to add new entry (from template).
+
+//- If only one curataList, display its list items directly, meaning display the list itself as multiple list management is not relevant
+
+//- If multiple lists, create a list of lists OR maybe it would be useful  to also see lists in this management board?

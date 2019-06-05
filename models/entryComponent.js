@@ -10,10 +10,13 @@ const entryComponentSchema = new mongoose.Schema({
 		type: String,
 		size: Number
 	},
-	// can also be used for image storage
 	componentContent: String,
+		// store links, image url's, etc.
+	componentImageKey: String,
+	componentURL: String, 
 	// store lists, checklists, image galleries, files
 	componentList: [listItemSchema],
+	componentLink: String,
 	componentType: String,
 	// initially initiated through template component order
 	componentOrder: Number,
@@ -35,4 +38,8 @@ future upcoming:
 - note box (or color scheme options for info box to turn into note or warning or example)
 - link box
 - CODE block
+
+
+
+I can make a feature of 'Curata feature requests' where people can see public features, people can upvote/downvote these features, to choose what is in active development but to also see what is currently in the making and progress and estimations, deadlines
 */

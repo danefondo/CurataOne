@@ -36,7 +36,10 @@ mixin MultiForm
 			h2 Finally, customize your template for Curata entries and start curating!
 			p Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder.
 			p (View examples / Browse template library)
+			h2 Your template title:
+			input.TemplateTitle.unsortable
 			.TemplateConstructor
+				.OverlayComponents Finishing up Curata creation...
 				.Components
 					ul
 						li.add-section-box.draggable(data-css="headingComponent", data-component-type="heading")
@@ -52,6 +55,8 @@ mixin MultiForm
 							span.section-component-text List
 						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="checklist")
 							span.section-component-text Checklist
+						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="link")
+							span.section-component-text Link
 						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="question-answer")
 							span.section-component-text Q&A
 						li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="expandable")
@@ -64,8 +69,11 @@ mixin MultiForm
 							span.section-component-text Example Box
 						li.add-section-box.draggable(data-css="smallHeight", data-component-type="section-break")
 							span.section-component-text Section break
+				//- .baseStructure
+				//- 	h2 Base structure
+				//- 	.Component.unsortable.TestHandle Entry title
+				//- 	.Component.unsortable.TestHandle Description
 				.Template
-					input.TemplateTitle.unsortable
 					ul.sortable
 						//- Description is optional and still possible to edit its placeholder
 						//- It is also possible to edit Name / Title placeholder

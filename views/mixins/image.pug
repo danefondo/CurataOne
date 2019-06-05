@@ -1,6 +1,55 @@
 mixin image(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id)
+	li.Component.drag.draggable-item(id= component.id, data-component="image" data-order= component.componentOrder)
 		.sub-sortable-container
 			h2 Image 
-			.imageBlock + Upload Image
-				.imageMeta
+			if (component.componentURL)
+				.imageBlock(data-image-key= component.componentImageKey style='background-image: url(' + component.componentURL + ');') + Upload Image
+					.deleteImage x
+					form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+						input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+				if (component.componentTitle)
+					.ImageTitleBlock
+						input.ElementTitle.ImageTitleInput(value= component.componentTitle)
+						.deleteImageTitle Delete
+					.ImageTitleAddingBlock
+				else
+					.ImageTitleBlock
+					.ImageTitleAddingBlock
+						.addImageTitle + Add Title
+				if (component.componentContent)
+					.ImageDescriptionBlock
+						.editorSortable
+							.simpleEditor
+								.editorTools.unreset(id= "toolbar_" +component.id)
+								.editorText.unreset(id= "editor_" +component.id) !{component.componentContent}
+						.deleteImageDescription Delete
+					.ImageDescriptionAddingBlock
+				else
+					.ImageDescriptionBlock
+					.ImageDescriptionAddingBlock
+						.addImageDescription + Add Description
+			else 
+				.imageBlock + Upload Image
+					form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+						input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+				if (component.componentTitle)
+					.ImageTitleBlock
+						input.ElementTitle.ImageTitleInput(value= component.componentTitle)
+						.deleteImageTitle Delete
+					.ImageTitleAddingBlock
+				else
+					.ImageTitleBlock
+					.ImageTitleAddingBlock
+						.addImageTitle + Add Title
+				if (component.componentContent)
+					.ImageDescriptionBlock
+						.editorSortable
+							.simpleEditor
+								.editorTools.unreset(id= "toolbar_" +component.id)
+								.editorText.unreset(id= "editor_" +component.id) !{component.componentContent}
+						.deleteImageDescription Delete
+					.ImageDescriptionAddingBlock
+				else
+					.ImageDescriptionBlock
+					.ImageDescriptionAddingBlock
+						.addImageDescription + Add Description

@@ -1,0 +1,11 @@
+//- Turns out it is necessary to first have all the Curatas listed
+//- So that there'd be a place from where I could access
+extends layout
+
+block content
+	.curataContainer
+		h2 All my Curatas
+		ul.curataList
+			each curata in curatas
+				li.singleCurata
+					a.navlink(href='/curatas/' + user.username + '/curatas/' + curata.id) #{curata.curataName}

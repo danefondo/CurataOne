@@ -9,7 +9,8 @@ $(document).ready(function () {
       maxForms=forms.length -1,
       backBtn = $('.back-btn'),
       nextBtn = $('.next-btn'),
-      scrolling = false;
+      scrolling = false,
+      curataReady = false;
 
   backBtn.click(()=>{
    if (scrolling == true || currentForm === 0){
@@ -142,6 +143,9 @@ $(document).ready(function () {
     // create ref in template for components
 
     // as such, send enough information to create all of those
+
+    $(".UserCurataTitle").text(curataName);
+    $(".TemplateTitle").val(curataName + ' Template');
     
     $.ajax({
       data: {
@@ -152,14 +156,14 @@ $(document).ready(function () {
       type: 'POST',
       url: '/curatas/createNewCurata',
       success: function(response) {
-        $(".UserCurataTitle").text(curataName);
-        $(".TemplateTitle").val(curataName + ' Template');
         $(".Template").attr('id', response.template._id);
         console.log("Success response: ", response);
         // let hrefLink = '/curatas/curate/templates/' + response.template._id;
         // let hrefLink = 'curatas/curataLists/CreateNewEntry'
         // console.log(hrefLink);
-        createEntry();
+        initCreateEntry();
+        initDraggable();
+        $('.OverlayComponents').remove();
         // $('.CreateTemplateButton').attr('href', hrefLink);
       },
       error: function(err) {
@@ -168,6 +172,14 @@ $(document).ready(function () {
     });
 
   }
+
+function initDraggable() {
+  $( ".draggable" ).draggable({
+    connectToSortable: ".sortable",
+    helper: "clone",
+    revert: "invalid"
+  });
+}
 
 
   $(".ChoiceInput").change(function() {
@@ -243,15 +255,17 @@ $(document).ready(function () {
     });
   }
 
-  function createEntry() {
+  function initCreateEntry() {
     $('.CreateTemplateButton').on('click', function() {
 
       let TemplateId = $('.Template').attr('id');
+      let currentDateTime = new Date();
 
 
       $.ajax({
         data: {
-          TemplateId: TemplateId
+          TemplateId: TemplateId,
+          creationTime: currentDateTime
         },
         type: 'POST',
         url: '/curatas/curataLists/CreateNewEntry',
@@ -273,13 +287,6 @@ $(document).ready(function () {
 
 /*
 TASKS:
-- Listen to editors and get their data per change
-- Lists
-- Checklists
-- Change order of list & checklist items and update in database
-- Change order of questions in a questionBox
-- Listen to question & expandable titles
-- Listen to question & expandable editors
 - Create lists with option to have a title, basically expandable lists & checklists
 
 

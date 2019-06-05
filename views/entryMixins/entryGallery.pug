@@ -1,0 +1,6 @@
+mixin entryImageGallery(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="gallery" data-order= component.componentOrder)
+		.sub-sortable-container
+			h2 Image Gallery 
+			.imageBlock + Click to upload
+				.imageMeta

@@ -1,0 +1,28 @@
+extends layout
+
+//- Inside one Curata, opens up the different category lists inside it
+	//- So these links lead to the contents of these lists
+	//- Upon clicking any one of those, you are then greeted with entries
+
+block content
+	.sideNav
+		.currentCurataSwitch #{curata.curataName}
+		.goToAllCuratas
+			a.allCuratasLink(href='/curatas/' + user.username + '/curatas') View all my Curatas
+		//- if curata exists & selected, display 
+		ul.sideNavButtons
+			li.sideNavLinkContainer
+				a.navlink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id) Lists
+				a.navlink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/entries') Entries
+				a.navlink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/templates') Templates
+				a.navlink.size18.block Appearance
+				a.navlink.size18.block Collaborators
+				a.navlink.size18.block Settings
+	.entriesContainer.sideNavMargin(id= list.id data-curataId= curata.id)
+		h2 Entries
+		.createNewEntry(data-multi-template= 'false', data-default-template= list.defaultTemplate) + New Entry
+		ul.entriesList
+			each entry in entries
+				li.singleEntry
+					a.navlink(href='/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+

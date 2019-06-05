@@ -18,7 +18,8 @@ const UserSchema = new mongoose.Schema({
 	password: {
 		type: String,
 		required: true
-	}
+	},
+	defaultCurata: String
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);

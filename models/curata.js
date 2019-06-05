@@ -3,6 +3,7 @@ let Schema = mongoose.Schema;
 
 const User = require('./user.js');
 const curataList = require('./curataList.js');
+const Template = require('./template.js');
 
 // User Schema
 const CurataSchema = new mongoose.Schema({
@@ -12,10 +13,15 @@ const CurataSchema = new mongoose.Schema({
 	},
 	curataDescription: String,
 	curataAddress: String,
+	templates: [{type: Schema.Types.ObjectId, ref: 'Template'}],
 	curataList: [{type: Schema.Types.ObjectId, ref: 'curataList'}],
+	curataFiles: {
+		images: [{type: Schema.Types.ObjectId, ref: 'image'}]
+	},
 	category: String,
 	private: Boolean,
 	purpose: String,
+	dateCreated: Date,
 	creator: {
 		type: String,
 		required: true
@@ -31,16 +37,5 @@ const Curata = module.exports = mongoose.model('Curata', CurataSchema);
 
 /*
 
-load curata
-pull list(s)
-load list items
-
-
-
-modify / change template -> update template
-
--> go to create entry (load template)
-write entry (save as draft)
-submit entry (remove draft status)
 
 */

@@ -1,5 +1,5 @@
 mixin heading(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id)
+	li.Component.drag.draggable-item(id= component.id, data-component="heading" data-order= component.componentOrder)
 		.sub-sortable-container
 			h2 Title 
-			input.ElementTitle(placeholder= template.name)
+			input.ElementTitle(placeholder= "Write something..." value= component.componentTitle)

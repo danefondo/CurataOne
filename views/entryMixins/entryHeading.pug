@@ -1,0 +1,4 @@
+mixin entryHeading(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="heading" data-order= component.componentOrder)
+		h2 Title 
+		.ElementTitle #{component.componentTitle}

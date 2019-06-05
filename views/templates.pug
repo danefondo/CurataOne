@@ -1,0 +1,11 @@
+extends layout
+
+block content
+	.entriesContainer
+		h2 Templates
+		p + New Template
+		ul.entriesList
+			each template in templates
+				li.singleEntry
+					a.navlink(href='/curatas/templates/' + template.id) #{template.name}
+

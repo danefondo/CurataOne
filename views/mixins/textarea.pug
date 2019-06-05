@@ -1,7 +1,10 @@
 mixin text(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id)
+	li.Component.drag.draggable-item(id= component.id, data-component="textarea" data-order= component.componentOrder)
 		.editorSortable
 			.editor
 				.editorTools.unreset(id= "toolbar_" +component.id)
-				.editorText.unreset(id= "editor_" +component.id)
-					p This is sample text of editor.
+				if (component.componentContent)
+					.editorText.unreset(id= "editor_" +component.id) !{component.componentContent}
+				else
+					.editorText.unreset(id= "editor_" +component.id)
+						p Write something here...

@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-let entryComponentSchema = require('./entryComponent.js').model('EntryComponent').schema;
+// let entryComponentSchema = require('./entryComponent.js').model('EntryComponent').schema;
+const EntryComponent = require('./entryComponent.js');
+
 
 /*
 Possible ways to implement schema:
@@ -74,7 +76,15 @@ const entrySchema = new mongoose.Schema({
 		size: Number
 	},
 	entryText: String,
-	entryComponents: [entryComponentSchema],
+	entryIconURL: String,
+	entryIconKey: String,
+	entryLink: String,
+	entryImageURL: String,
+	entryImageKey: String,
+	imageFeaturedState: String,
+	//- State to check whether private special access public or public for all
+	// entryComponents: [entryComponentSchema],
+	entryComponents: [{type: Schema.Types.ObjectId, ref: 'EntryComponent'}],
 	// Meta data, for side section
 	design: {
 		backgroundColor: String,
@@ -90,7 +100,18 @@ const entrySchema = new mongoose.Schema({
 	entryCategory: String,
 	entryTags: [String],
 	linkedTemplateId: String,
-	curataListId: String
+	curataListId: String,
+	curataId: String,
+	dateCreated: Date,
+	creator: {
+		type: String,
+		required: true
+	},
+	owner: {
+		type: String,
+		required: true
+	},
+	contributors: [{type: Schema.Types.ObjectId, ref: 'Contributor'}]
 });
 
 const Entry = module.exports = mongoose.model('Entry', entrySchema);

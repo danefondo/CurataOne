@@ -1,0 +1,14 @@
+mixin entryExpandable(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="expandable" data-order= component.componentOrder)
+		h2 Expandable
+		button.expandable.unsortable
+			input.ElementTitle(placeholder="Title", value= component.componentTitle)
+		.content
+			.editorSortable
+				.simpleEditor
+					.editorTools.unreset(id= "toolbar_" +component.id)
+					if (component.componentContent)
+						.editorText.unreset(id= "editor_" +component.id) !{component.componentContent}
+					else
+						.editorText.unreset(id= "editor_" +component.id)
+							p Write something here...

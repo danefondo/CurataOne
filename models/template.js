@@ -20,12 +20,10 @@ let componentSchema = require('./component.js').model('Component').schema;
 
 // Template schema uses an array of components to construct a template
 const templateSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: true
-	},
+	name: String,
 	components: [componentSchema],
 	curataListId: String,
+	curataId: String,
 	creator: String,
 	category: String
 });

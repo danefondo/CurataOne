@@ -1,0 +1,87 @@
+extends layout
+
+include entryMixins/entryHeading
+include entryMixins/entryImage
+include entryMixins/entryTextarea
+include entryMixins/entryGallery
+include entryMixins/entryQuote
+include entryMixins/entryInfoBox
+include entryMixins/entryExampleBox
+include entryMixins/entryExpandable
+include entryMixins/entryQuestionAnswer
+include entryMixins/entrySectionBreak
+include entryMixins/entryList
+include entryMixins/entryChecklist
+
+
+//- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
+
+block content
+	.TopBar
+		.TopBarMessage.inline This is a draft preview.
+		.closeWindowBtn.inline Close preview
+	.entryPreviewArea
+		if (entry.entryTitle) 
+			.EntryTitle #{entry.entryTitle}
+		else
+			.EntryTitle Untitled
+		if (entry.entryText)
+			.editorText.unreset(id= "editor_" +entry.id) !{entry.entryText}
+		if (entry.entryComponents.length)
+			ul.entryComponents
+				each component in entry.entryComponents
+					if component.componentType == "heading"
+						+entryHeading(component, entry, template)
+					if component.componentType == "textarea"
+						+entryText(component, entry, template)
+					if component.componentType == "image"
+						+entryImage(component, entry, template)
+					if component.componentType == "image-gallery"
+						+entryImageGallery(component, entry, template)
+					if component.componentType == "question-answer"
+						+entryQuestionAnswer(component, entry, template)
+					if component.componentType == "expandable"
+						+entryExpandable(component, entry, template)
+					if component.componentType == "quote"
+						+entryQuote(component, entry, template)
+					if component.componentType == "info-box"
+						+entryInfoBox(component, entry, template)
+					if component.componentType == "example-box"
+						+entryExampleBox(component, entry, template)
+					if component.componentType == "section-break"
+						+entrySectionBreak(component, entry, template)
+					if component.componentType == "list"
+						if component.componentList.length
+							+entryList(component, entry, template)
+					if component.componentType == "checklist"
+						if component.componentList.length
+							+entryChecklist(component, entry, template)
+
+
+
+
+//- Curata becomes a logo
+	//- Then next to it will be the current Currata you are in (or could be a sidebar thing and switch)
+	//- Somewhere in the menu bar also the current list switch
+	//- Somewhere a button to quickly visit your Curata 
+	//- Option to change which list is default and its location (essentially extra features become available upon creating another list inside an existing curata)
+
+
+//- You create a template and start curating
+	//- Inside the template
+
+//- At any particular time you are 'in' or 'inside' a specific list, inside a specific curata
+	//- Within which you can make quick entries
+	//- Within which you can quickly change between lists (and thus also entries)
+	//- Within which you can quickly change between curatas and it will give the last used list
+
+//- Library/Templates -- public and personal (private) templates by categories, names and even description for the purpose of the template
+
+//- Browse -- public lists and curatas by categories and other filters
+
+//- Creating an entry
+	//- There is a button for 'show preview'
+	//- It is possible to quickly edit style or design of list
+	//- It is possible to quickly edit the template itself and make this change come to effect with all templates and entries as well. As such, it must change the order number of each particular template.
+
+//- Things will change anyway. If that will happen anyway, I'd like to do it proactively. Albeit that is uncomfortable, scary. and possibly painful.

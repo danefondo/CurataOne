@@ -1,14 +1,26 @@
 mixin questionAnswer(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id)
+	li.Component.drag.draggable-item(id= component.id, data-component="questionAnswer" data-order= component.componentOrder)
 		h2 Q&A
-		.questions
-			.questionBlock
-				input.ElementTitle(placeholder="Question" data-type="question")
-				button.collapsible.unsortable
-				.content
-					.editorSortable
-						.simpleEditor
-							.editorTools.unreset(id= "toolbar_" +component.id)
-							.editorText.unreset(id= "editor_" +component.id)
-								p This is sample text of editor.
+		ul.questions.sortableList(id= "sortable_" +component.id)
+			if (component.componentList)
+				each item, i in component.componentList
+					li.questionBlock.sortableListItem(id= item.id)
+						button.collapsible.unsortable
+							if (item.listItem)
+								input.QuestionTitle(placeholder="Question", value= item.listItem, data-type="question")
+								.deleteQuestion Delete
+							else 
+								input.QuestionTitle(placeholder="Question", data-type="question")
+								.deleteQuestion Delete
+						.content
+							.editorSortable
+								.simpleEditor
+									.editorTools.unreset(id= "toolbar_" +item.id)
+									if (item.listItemContent)
+										.editorText.unreset(id= "editor_" +item.id) !{item.listItemContent}
+									else
+										.editorText.unreset(id= "editor_" +item.id)
+											p Write your answer...!
+			else
+				p.errorMessage Something went wrong... arrgh!
 		.addNewButton + Add Question

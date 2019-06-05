@@ -25,7 +25,6 @@ html
 					// show menu items based on what the user has (used) and their settings
 					a.navlink(href='/dashboard') Home
 					a.navlink(href='/notes') Browse
-					a.navlink(href='/notes') Templates
 				.logout-container
 					//- #create.drop-down
 					//- 	#create-button.dropDown.drop-down__button.unsortable
@@ -48,12 +47,12 @@ html
 									a.entypo-docs.NavLinkX(href='#') New list
 								li
 									a.entypo-docs.NavLinkX(href='#') New Curata
-					a.navlink(href='/my-curations') My Curations
+					a.navlink(href='/curatas/' + user.username + '/curatas') My Curatas
 					.DropdownX
 						.Dropdown-profile
 							//- img.Photo(src='//s3-us-west-2.amazonaws.com/s.cdpn.io/33381/profile/profile-80.jpg?1')
 							img.Photo(src='https://i.imgur.com/lP63CxJ.png')
-							span.Name #{user.firstname}
+							span.Name.userId(id= user.id, data-username= user.username) #{user.firstname}
 							span.MenuIcon
 								span.MenuIcon-line
 								span.MenuIcon-line
@@ -95,6 +94,7 @@ html
 						input.login-input(name='password' type='password' placeholder='Your password' autocomplete="off")
 						.submit
 							input(type='submit' value='Log in' class='login-button')
+		block heading
 		if !user
 			.container
 				.registration-block
@@ -119,7 +119,8 @@ html
 		else 
 			.container
 				.so-good-container
-					span.so-good Be phenomenal, everything depends on it.
+					//- span.so-good Be phenomenal, everything depends on it.
+					span.so-good Let's put an end to information pollution.
 				block content
 			block scripts
 			script(src='/js/main.js')

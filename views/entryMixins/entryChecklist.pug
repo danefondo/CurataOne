@@ -1,0 +1,19 @@
+mixin entryChecklist(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="checklist" data-order= component.componentOrder)
+		h2 Title 
+		ul.listItems(id= "sortable_" +component.id)
+			each item, i in component.componentList
+					li.ListItem.ChecklistItem.sortableListItem(id= item.id)
+						if (item.listItemState == "Checked")
+							input.checklistBox(type="checkbox" checked disabled="disabled")
+							if (item.listItemURL)
+								a.listItemInput(href= item.listItemURL target= "_blank") #{item.listItem} 
+							else
+								.listItemInput #{item.listItem}
+						else
+							input.checklistBox(type="checkbox" disabled="disabled") 
+							if (item.listItemURL)
+								a.listItemInput(href= item.listItemURL target= "_blank") #{item.listItem} 
+							else
+								.listItemInput #{item.listItem}
+

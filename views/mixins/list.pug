@@ -1,8 +1,51 @@
 mixin list(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id)
+	li.Component.drag.draggable-item(id= component.id, data-component="list" data-order= component.componentOrder)
 		h2 Title 
-		ul.listItems
-			li.ListItem
-				input.listItemInput(placeholder= "Write something")
+		ul.listItems.sortableList(id= "sortable_" +component.id)
+			if (component.componentList) 
+				if (component.componentList.length)
+					each item, i in component.componentList
+						if (item.listItem)
+							li.ListItem.sortableListItem(id= item.id)
+								input.listItemInput(placeholder= "Write something", value= item.listItem) 
+								if (item.listItemURL)
+									.showLinkContainer View link
+								else
+									.showLinkContainer Add Link
+								.deleteItem x
+								.linkContainer.hidden
+									if (item.listItemURL)
+										a.listItemLink(href= item.listItemURL target="_blank") #{item.listItemURL}
+										.hideLinkContainer Hide
+										.removeListItemLink Remove link
+									else
+										input.linkInput(placeholder= "Your link")
+										.saveListItemLink Save
+										.cancelListItemLink Cancel
+						else
+							li.ListItem.sortableListItem(id= item.id)
+								input.listItemInput(placeholder= "Write something")
+								if (item.listItemURL)
+									.showLinkContainer View link
+								else
+									.showLinkContainer Add Link
+								.deleteItem x 
+								.linkContainer.hidden
+									if (item.listItemURL)
+										a.listItemLink(href= item.listItemURL target="_blank") #{item.listItemURL}
+										.hideLinkContainer Hide
+										.removeListItemLink Remove link
+									else
+										input.linkInput(placeholder= "Your link")
+										.saveListItemLink Save
+										.cancelListItemLink Cancel
+				else
+					li.ListItem.sortableListItem
+						input.listItemInput(placeholder= "Write something")
+						.showLinkContainer Add link
+						.linkContainer.hidden
+							input.linkInput(placeholder= "Your link")
+							.saveListItemLink Save
+							.cancelListItemLink Cancel
 		.addNewListItemButton + Add Item
 

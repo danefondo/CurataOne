@@ -2,6 +2,7 @@ $(document).ready(function () {
 
 // setting flag
 let receiveInProgress = false;
+let tempBeingCreated = false;
 
 function updateComponentOrderInDB() {
 	let indexArray = [];
@@ -31,21 +32,27 @@ function updateComponentOrderInDB() {
 			TemplateId: TemplateId
 		},
 		type: 'POST',
-		url: '/curatas/updateComponentPosition',
+		url: '/curatas/UpdateComponentPosition',
 		success: function(response) {
 			console.log("Successfully updated positions.");
+			if (receiveInProgress == true) {
+				receiveInProgress = false;
+			}
 		},
 		error: function(err) {
 			console.log("Failed to update positions: ", err);
+			if (receiveInProgress == true) {
+				receiveInProgress = false;
+			}
 		}
 	});
-
 };
 
 $(".sortable").sortable({
 	cancel: "input,textarea,button,select,option,[contenteditable],.editorArea,.unsortable,span,.ListItemText,.NoItems",
 	receive: function(event, ui) {
 			receiveInProgress = true;
+
 			let originalItem = ui.item;
 			let componentType = originalItem.attr('data-component-type');
 
@@ -61,44 +68,90 @@ $(".sortable").sortable({
 				placeholderBtn.text("+ Placeholder");
 				let requiredBtn = $("<div>", {"class": "checkRequired"});
 				requiredBtn.text("Required?");
-				let deleteBtn = $("<div>", {"class": "deleteComponent"});
-				deleteBtn.text("Delete");
 				$(newItem).append(placeholderBtn);
 				$(newItem).append(requiredBtn);
-				$(newItem).append(deleteBtn);
 			}
 
+			let deleteBtn = $("<div>", {"class": "deleteComponent"});
+			deleteBtn.text("Delete");
+			$(newItem).append(deleteBtn);
 
 			let componentOrder = newItem.index();
 
 			let TemplateId = $('.Template').attr('id');
+			if (!TemplateId) {
+				console.log("Template does not exist yet or has not yet finished being created. Will auto-update later.");
 
-			$.ajax({
-				data: {
-					componentOrder: componentOrder,
-					componentType: componentType,
-					// componentTitle: componentTitle,
-					// placeholder: placeholder,
-					TemplateId:  TemplateId
-				},
-				type: 'POST',
-				url: '/curatas/CreateTemplateWithComponents',
-				success: function(response) {
-					console.log("Successfully created template: ", response.template);
-					if (response.component._id) {
-						$(newItem).attr('id', response.component._id);
-						updateComponentOrderInDB();
-						receiveInProgress = false;
-						// give item an id (such as for deleting later)
-						// if no id, don't let delete
-					} else {
-						console.log("Component ID missing.");
-					}
-				},
-				error: function(err) {
-					console.log("Failed to create template: ", err);
+				let curataId = $('.curataId').attr('data-curataId');
+
+				if (!curataId) {
+					return console.log("Curata id not loaded.");
 				}
-			})
+
+				if (tempBeingCreated == true) {
+					// Template is being created.
+					console.log("Template still being created. Will auto-update once done.");
+				} else {
+					// Template does not exist and is not being created.
+					// Create template and component
+					tempBeingCreated = true;
+					$.ajax({
+					  data: {
+					    componentOrder: componentOrder,
+					    componentType: componentType,
+					    curataId: curataId
+					  },
+					  type: 'POST',
+					  url: '/curatas/createNewTemplateWithComponent',
+					  success: function(data){
+					    console.log("Template created.", data);
+					    $('.Template').attr('id', data.template._id);
+						if (data.component._id) {
+							$(newItem).attr('id', data.component._id);
+							updateComponentOrderInDB();
+						} else {
+							console.log("Component ID missing.");
+							receiveInProgress = false;
+						}
+					    // Display success message?
+					    tempBeingCreated = false;
+
+					  },
+					  error: function(err){
+					    console.log("Template creation failed: ", err);
+					    // Display error message?
+					    tempBeingCreated = false;
+					    receiveInProgress = false;
+					  }
+					});
+				}
+			} else {
+				$.ajax({
+					data: {
+						componentOrder: componentOrder,
+						componentType: componentType,
+						// componentTitle: componentTitle,
+						// placeholder: placeholder,
+						TemplateId:  TemplateId
+					},
+					type: 'POST',
+					url: '/curatas/updateTemplateComponent',
+					success: function(response) {
+						console.log("Successfully updated template: ", response.template);
+						if (response.component._id) {
+							$(newItem).attr('id', response.component._id);
+							updateComponentOrderInDB();
+						} else {
+							console.log("Component ID missing.");
+							receiveInProgress = false;
+						}
+					},
+					error: function(err) {
+						console.log("Failed to update template: ", err);
+						receiveInProgress = false;
+					}
+				})
+			}
 
 			// send ajax post for Template
 				// for each component in list
@@ -127,10 +180,15 @@ $(".sortable").sortable({
 	}
 });
 
-$( ".draggable" ).draggable({
-	connectToSortable: ".sortable",
-	helper: "clone",
-	revert: "invalid"
-});
+
+function initDraggable() {
+	$( ".draggable" ).draggable({
+		connectToSortable: ".sortable",
+		helper: "clone",
+		revert: "invalid"
+	});
+}
+
+
 
 });

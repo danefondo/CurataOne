@@ -1,5 +1,5 @@
 mixin exampleBox(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id)
+	li.Component.drag.draggable-item(id= component.id, data-component="exampleBox" data-order= component.componentOrder)
 		.sub-sortable-container
 			h2 Example <span style="font-size:15px">&#9432;</span>
 			.exampleBoxBlock
@@ -8,5 +8,8 @@ mixin exampleBox(component, entry, template)
 				.editorSortable
 					.simpleEditor
 						.editorTools.unreset(id= "toolbar_" +component.id)
-						.editorText.unreset(id= "editor_" +component.id)
-							p This is sample text of editor.
+						if (component.componentContent)
+							.editorText.unreset(id= "editor_" +component.id) !{component.componentContent}
+						else
+							.editorText.unreset(id= "editor_" +component.id)
+								p Write something here...

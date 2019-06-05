@@ -12,19 +12,71 @@ include mixins/questionAnswer
 include mixins/sectionBreak
 include mixins/list
 include mixins/checklist
+include mixins/link
 
 //- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
 
+block heading
+	.helperNavigation
+		.navlinks-container
+			a.goBack.navlink(href= '/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) &larr; Go back
+			a.goBack.buttonGrey.inline(href= '/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) Go back
+			.editTemplate.buttonGrey.inline Edit template
+			.showPreview.buttonGrey.inline Show preview
+			.cancelDeleteEntry.buttonGrey.inline Cancel & delete
+			.entryState.inline(data-entryState= entry.entryState) Entry is #{entry.entryState}.
+			if (entry.entryState == "Draft") 
+				.publishEntry.buttonGrey.inline Publish
+			else
+				.makeDraft.buttonGrey.inline Revert to draft
+			.statusMessage.inline
+			a.navlink(href='/my-curations') &#63;
+
 block content
-	.ButtonGroup
-		a.editTemplate.buttonGrey.inline Edit template
-		.showPreview.buttonGrey.inline Show preview
-		p Currently DRAFT, click create to save and publish
-	a.navlink(href='/my-curations') &#63;
+	.emptyModal
+		.modalBackground
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to delete this entry?
+				.msg-body The entry will be removed and you will not be able to restore it.
+				.action-group
+					.cancelEntryDelete.button-outline CANCEL
+					.confirmEntryDelete.button-filled DELETE
+	.switchButtons
+		a.navlink.entryView.inline Entry
+		a.navlink.settingsView.inline Settings
+		//- Settings enables turning on/off whether description, image, link, other is displayed in the final outcome
 	.TemplateHolder(id= entry.id)
-		h2 New #{template.name}
+		if (entry.entryTitle)
+			input.EntryTitle(placeholder= "Write something..." value= entry.entryTitle)
+		else
+			input.EntryTitle(placeholder= "Write something...")
+		.mainEditor
+			.editorTools.unreset(id= "toolbar_" +entry.id)
+			if (entry.entryText)
+				.editorText.unreset(id= "editor_" +entry.id) !{entry.entryText}
+			else
+				.editorText.unreset(id= "editor_" +entry.id)
+					p Write something here...
+		.mainImage(id= "imageArea_" +entry.id)
+			if (entry.entryImageURL)
+				.imageBlock(data-type= "mainImage" data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+					.deleteMainImage x
+					form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+						input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+			else 
+				.imageBlock(data-type= "mainImage")
+					form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+						input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+		.linkContainer
+			if (entry.entryLink)
+				a.EntryLink(href= entry.entryLink target="_blank") #{entry.entryLink}
+				.removeLink Remove link
+			else
+				.addEntryLink + Add link
+		h2.TemplateId(id= template.id) New #{template.name}
 		if (entry.entryComponents.length)
-			ul.templateComponents.sortable
+			ul.templateComponents
 				each component in entry.entryComponents
 					if component.componentType == "heading"
 						+heading(component, entry, template)
@@ -50,12 +102,9 @@ block content
 						+list(component, entry, template)
 					if component.componentType == "checklist"
 						+checklist(component, entry, template)
-		else
-			.NothingHolder Nothing worked.
+					if component.componentType == "link"
+						+link(component, entry, template)
 
-
-block scripts
-	script(src='/js/sortable.js')
 
 
 

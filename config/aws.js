@@ -1,0 +1,6 @@
+module.exports = {
+	SECRET_ACCESS_KEY: '+TWR87N5GUX5JE7S5PreZz3sl4cY4soCub7BrK9A',
+	ACCESS_KEY_ID: 'AKIAIYGD5OR2P6CUI6BA',
+	REGION: 'us-east-1',
+	BUCKET: 'curata'
+}

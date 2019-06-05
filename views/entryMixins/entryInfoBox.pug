@@ -1,0 +1,15 @@
+mixin entryInfoBox(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="infoBox" data-order= component.componentOrder)
+		.sub-sortable-container
+			h2 Info box
+			.infoBlock
+				.infoTitle
+				.infoContent
+				.editorSortable
+					.simpleEditor
+						.editorTools.unreset(id= "toolbar_" +component.id)
+						if (component.componentContent)
+							.editorText.unreset(id= "editor_" +component.id) !{component.componentContent}
+						else
+							.editorText.unreset(id= "editor_" +component.id)
+								p Write something here...

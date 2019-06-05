@@ -32,6 +32,10 @@
   box-sizing: border-box;
 }
 
+.activeNav {
+  background-color: rgba(0,0,0,0.08);
+}
+
 .navlink:hover {
   background-color: rgba(0,0,0,0.08);
 }

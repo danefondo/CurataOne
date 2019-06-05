@@ -1,0 +1,19 @@
+mixin linklist(component, entry, template)
+	li.Component.drag.draggable-item(id= component.id, data-component="linklist" data-order= component.componentOrder)
+		h2 Title 
+		ul.listItems.sortableList(id= "sortable_" +component.id)
+			if (component.componentLinklist) 
+				// later make sure to render them using the order, else the db order might change and thus create problems
+				each item, i in component.componentLinklist
+					li.ListItem.sortableListItem(id= item.id)
+						.linkContainer
+							if (component.componentLink)
+								a.ComponentLink(href= component.componentLink target="_blank") #{component.componentLink}
+								.removeLink Remove
+							else
+								input.ComponentLink(placeholder= "Your link")
+								.saveComponentLink Save
+			else
+				p.errorMessage Something went wrong...
+		.addNewListItemButton + Add Item
+

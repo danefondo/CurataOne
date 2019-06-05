@@ -1,0 +1,12 @@
+mixin entryImage(component, entry, template)
+	li.entryComponent.drag.draggable-item(id= "entry_" + component.id, data-component="image" data-order= component.componentOrder)
+		.sub-sortable-container
+			h2 Image 
+			if (component.componentURL)
+				.imageBlock(data-image-key= component.componentImageKey style='background-image: url(' + component.componentURL + ');')
+				if (component.componentTitle)
+					.ImageTitleBlock
+						.ElementTitle.ImageTitleInput #{component.componentTitle}
+				if (component.componentContent)
+					.ImageDescriptionBlock
+						.editorText.unreset(id= "editor_" +component.id) !{component.componentContent}
