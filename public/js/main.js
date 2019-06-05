@@ -2417,7 +2417,7 @@ initSortable()
 			let listDescription = $('.ListDescription').val();
 
 			let templateId = $('.Template').attr('id');
-			let curataId = $('.curataId').attr('id');
+			let curataId = $('.curataId').attr('data-curataId');
 
 			if (!templateId) {
 				return console.log("Template is empty! Give your template a title or add a component!");

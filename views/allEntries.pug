@@ -18,11 +18,32 @@ block content
 				a.navlink.size18.block Appearance
 				a.navlink.size18.block Collaborators
 				a.navlink.size18.block Settings
-	.entriesContainer.sideNavMargin(id= list.id data-curataId= curata.id)
+	if (list)
+		.entriesContainer.sideNavMargin(id= list.id data-curataId= curata.id)
 		h2 Entries
-		.createNewEntry(data-multi-template= 'false', data-default-template= list.defaultTemplate) + New Entry
+		if (list)
+			.createNewEntry(data-multi-template= 'false', data-default-template= list.defaultTemplate) + New Entry
+		else 
+			.createNewEntry(data-multi-template= 'false') + New Entry
 		ul.entriesList
-			each entry in entries
-				li.singleEntry
-					a.navlink(href='/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+			if (entries)
+				each entry in entries
+					li.singleEntry
+						a.navlink(href='/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+			else 
+				p You got no entires yet, bro!
+	else
+		.entriesContainer.sideNavMargin(data-curataId= curata.id)
+		h2 Entries
+		if (list)
+			.createNewEntry(data-multi-template= 'false', data-default-template= list.defaultTemplate) + New Entry
+		else 
+			.createNewEntry(data-multi-template= 'false') + New Entry
+		ul.entriesList
+			if (entries)
+				each entry in entries
+					li.singleEntry
+						a.navlink(href='/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+			else 
+				p You got no entires yet, bro!
 

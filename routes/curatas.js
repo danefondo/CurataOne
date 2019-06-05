@@ -1811,7 +1811,7 @@ router.get('/:username/curatas/:curataId', function(req, res) {
 
 
 // Get all the content of a specific Curata list (all the entries of a list)
-router.get('/:username/curatas/:curataId/lists/:listId', function(req, res) {
+router.get('/:username/curatas/:curataId/lists/:listId', ensureAuthenticated, function(req, res) {
 
 	// get id for template
 	let username = req.params.username;
@@ -1852,9 +1852,8 @@ router.get('/:username/curatas/:curataId/lists/:listId', function(req, res) {
 })
 
 // Get all the entries of all lists of a Curata
-router.get('/:username/curatas/:curataId/entries', function(req, res) {
+router.get('/:username/curatas/:curataId/entries', ensureAuthenticated, function(req, res) {
 
-	// get id for template
 	let username = req.params.username;
 	let curataId = req.params.curataId;
 
@@ -1870,7 +1869,7 @@ router.get('/:username/curatas/:curataId/entries', function(req, res) {
 				return console.log("Could not get entries: ", err);
 			}
 
-			if (!err && entries) {
+			if (!err && entries && entries.length) {
 				console.log("Received entry lists: ", entries);
 
 				entries.sort(function(a, b) {
@@ -1878,8 +1877,10 @@ router.get('/:username/curatas/:curataId/entries', function(req, res) {
 				});
 
 				let entry = entries[0];
+				console.log('entry:', entry);
 				let listId = entry.curataListId;
 				console.log("My list id: ", listId);
+				console.log('entry:', entry.curataListId);
 
 				curataList.findById(listId, function(err, list) {
 					if (err) {
@@ -1899,7 +1900,9 @@ router.get('/:username/curatas/:curataId/entries', function(req, res) {
 
 			} else {
 				console.log("Entries not found.");
-				res.redirect('/');
+				res.render('allEntries.pug', {
+					curata: curata
+				})
 			}
 		});
 	})
@@ -1949,7 +1952,12 @@ router.post('/createNewTemplate', function(req, res) {
 		name: templateTitle,
 		curataId: curataId,
 		creator: userId
-	})
+	});
+	template.save(function(err) {
+		if (err) {
+			return console.log(err);
+		}
+	});
 
 	Curata.findById(curataId, function(err, curata) {
 		if (err) {
@@ -1993,7 +2001,7 @@ router.post('/createNewList', function(req, res) {
 
 	Curata.findById(curataId, function(err, curata) {
 		if (err) {
-			return console.log("Could not find entry: ", err);
+			return console.log("Could not find curata: ", err);
 		}
 
 		curata.curataList.push(list._id);
@@ -2072,8 +2080,10 @@ router.get('/:username/curatas/:curataId/templates/newTemplateWithList', functio
 /*====== Access control  ======*/
 function ensureAuthenticated(req, res, next){
   if(req.isAuthenticated()){
+  	console.log("Authentication successful.");
     return next();
   } else {
+  	console.log("Authentication failed.");
     res.redirect(301, '/');
   }
 }
