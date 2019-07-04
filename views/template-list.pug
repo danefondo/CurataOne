@@ -3,8 +3,8 @@ extends layout
 block heading
 	.helperNavigation
 		.navlinks-container
-			a.navlink &larr;
-			a.navlink Cancel
+			a.navlink(href='/curatas/' + user.username + '/curatas/' + curataId) &larr; Back to lists
+			//- a.navlink Cancel
 
 block content
 	.curataId(data-curataId= curataId)

@@ -180,12 +180,12 @@ html.unreset {
   margin: 1em 0;
   white-space: pre;
 }
-.unreset mark {
+/*.unreset mark {
   background-color: yellow;
   color: black;
   font-style: normal;
   font-weight: inherit;
-}
+}*/
 .unreset big {
   font-size: larger;
   font-weight: inherit;

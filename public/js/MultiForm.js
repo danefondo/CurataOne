@@ -130,7 +130,10 @@ $(document).ready(function () {
 
   function createCurata() {
     $('.CurataCreatedField').removeClass('form-group');
+    $('.CurataCreatedField').addClass('autoSideMargins');
+    $('.BackupView').addClass('zeroSideMargins');
     $('fieldset.form-group').remove();
+    $('fieldset').css('padding-left', '0px');
     $('.scroll-view').removeClass('scroll-view');
     $('.back-btn').remove();
     $('.next-btn').remove();
@@ -143,9 +146,7 @@ $(document).ready(function () {
     // create ref in template for components
 
     // as such, send enough information to create all of those
-
-    $(".UserCurataTitle").text(curataName);
-    $(".TemplateTitle").val(curataName + ' Template');
+    $(".TemplateTitle").val(curataName);
     
     $.ajax({
       data: {
@@ -212,7 +213,7 @@ function initDraggable() {
           TemplateTitle: TemplateTitle,
         },
         type: 'POST',
-        url: '/curatas/UpdateComponentTitle',
+        url: '/curatas/UpdateTemplateTitle',
         success: function(Item){
           console.log("Template title successfully updated.")
           // Display success message?
@@ -240,7 +241,7 @@ function initDraggable() {
           TemplateTitle: TemplateTitle,
         },
         type: 'POST',
-        url: '/curatas/UpdateTemplateTitle',
+        url: '/curatas/UpdateComponentTitle',
         success: function(Item){
           console.log("Template title successfully updated.")
           // Display success message?

@@ -12,3 +12,38 @@
 #editor li {
 	margin-top: 5px;
 }
+
+.editor p {
+    font-size: 18px;
+    margin: 0.8em 0;
+    font-family: Verdana;
+}
+
+.editorText {
+	border-radius: 6px;
+	padding-left: 22px;
+	padding-right: 22px;
+	background-color: white;
+	margin-top: 5px;
+}
+
+.editorText img {
+	background-size: contain;
+    background: no-repeat;
+    max-width: 650px;
+}
+
+.editorTools {
+/*	background-color: #f9f9f9;*/
+}
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable):focus {
+	outline: none;
+	border-radius: 0px;
+	border: none;
+	box-shadow: none;
+}
+
+.ck.ck-editor__editable_inline {
+	border: none;
+}

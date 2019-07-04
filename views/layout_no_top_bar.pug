@@ -1,0 +1,32 @@
+doctype html
+html
+	head
+		title Curata
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		link(rel='stylesheet' href='/css/reset.css')
+		link(rel='stylesheet', href='/css/unreset.css')
+		link(rel='stylesheet' href='/css/main.css')
+		link(rel='stylesheet' href='/css/registration.css')
+		link(rel='stylesheet' href='/css/navigation.css')
+		link(rel='stylesheet' href='/css/MultiForm.css')
+		link(rel='stylesheet' href='/css/browse.css')
+		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css')
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js')
+		script(src='https://cdn.ckeditor.com/ckeditor5/11.2.0/decoupled-document/ckeditor.js')
+		link(rel='stylesheet' href='/css/ckeditor.css')
+
+	body
+		block heading
+		if user
+			.container
+				.so-good-container
+					//- span.so-good Be phenomenal, everything depends on it.
+					span.so-good Let's put an end to information pollution.
+				block content
+			block scripts
+			script(src='/js/main.js')
+			script(src='/js/MultiForm.js')
+
+
+

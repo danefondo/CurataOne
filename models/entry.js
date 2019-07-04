@@ -24,23 +24,6 @@ each or some component(s) need(s):
 	title (for those with a title)
 	list schema (for those like questions, lists, checklists, galleries)
 
-	I don't understand what I need or want to do right now.
-	I know so much that I want to be  able to 
-		create an entry through the mongoose model that
-			contains multiple components
-				each component contains its order? or should it get order from template?
-				each contains possible slot for content, title and lists
-
-
-			as such, I think it only needs one example model for a component
-			should or can this component be the same as the template one?
-				but template one is connected to template
-					which would make sense
-					if a template is deleted or modified
-						should content be deleted? probably actually not even?
-							so content deletion should be a separate matter
-							perhaps deleting all from x category
-
 			if entry deleted, all its components also get deleted
 
 			there is an entry
@@ -60,11 +43,9 @@ each or some component(s) need(s):
 
 					or I could upon change order and then in entry components find item where order number is the old number of the template, and switch it to the new one, but this would make it much harder to switch or change all the other component orders. as such my first proposed solution would make it significantly easier
 
-
 how do I do supporting?
 	e.g. buy me a coffee / donate
 		 subscribe
-
 
 */
 
@@ -85,6 +66,7 @@ const entrySchema = new mongoose.Schema({
 	//- State to check whether private special access public or public for all
 	// entryComponents: [entryComponentSchema],
 	entryComponents: [{type: Schema.Types.ObjectId, ref: 'EntryComponent'}],
+	archivedComponents: [{type: Schema.Types.ObjectId, ref: 'EntryComponent'}],
 	// Meta data, for side section
 	design: {
 		backgroundColor: String,
@@ -115,25 +97,3 @@ const entrySchema = new mongoose.Schema({
 });
 
 const Entry = module.exports = mongoose.model('Entry', entrySchema);
-
-
-// future upcoming:
-// - data grid
-// - calendar
-
-// 		headings: [],
-// 		textareas: [],
-// 		expandables: [],
-// 		questionAnswers: [],
-// 		quotes: [],
-// 		infoBoxes: [],
-// 		exampleBoxes: [],
-// 		sectionBreaks: [],
-// 		images: [],
-// 		galleries: [],
-// 		lists: [],
-// 		checklists: [],
-// 		files: [],
-// 		fileGalleries: [],
-// 		tables: [],
-// 		surverys: []

@@ -1,89 +1,140 @@
-extends layout
+extends layout_buttonless
+
+block heading
+	.helperNavigation
+		.navlinks-container
+			a.navlink(href= '/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + listId + '/entries/' + entry.id + '/editing/') &larr;
+			//- a.navlink.inline Cancel
 
 block content
-	h2 Customize your template for Curata entries and start curating!
-	p Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder. Note: If you
-	p (View examples / Browse template library)
-	.TemplateConstructor
-		.Components
-			ul
-				li.add-section-box.draggable(data-css="headingComponent", data-component-type="heading")
-					span.section-component-text Heading 
-				li.add-section-box.draggable(data-css="mediumHeight", data-component-type="textarea")
-					span.section-component-text Text
-					//- possibility of editing text & background color, adding borders & changing color or width between 1-3px and radius between 0, 1, 2, 3, 4, 5, 6
-				li.add-section-box.draggable(data-css="largeHeight", data-component-type="image")
-					span.section-component-text Image
-				li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="image-gallery")
-					span.section-component-text Image Gallery
-				li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="list")
-					span.section-component-text List
-				li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="checklist")
-					span.section-component-text Checklist
-				li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="link")
-					span.section-component-text Link
-				li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="linklist")
-					span.section-component-text Link list
-				li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="question-answer")
-					span.section-component-text Q&A
-				li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="expandable")
-					span.section-component-text Expandable
-				li.add-section-box.draggable(data-css="mediumHeight", data-component-type="quote")
-					span.section-component-text Quote
-				li.add-section-box.draggable(data-css="mediumHeight", data-component-type="info-box")
-					span.section-component-text Info Box
-				li.add-section-box.draggable(data-css="mediumHeight", data-component-type="example-box")
-					span.section-component-text Example Box
-				li.add-section-box.draggable(data-css="smallHeight", data-component-type="section-break")
-					span.section-component-text Section break
-		.Template
-			input.TemplateTitle.unsortable
-			//- if (template.components.length)
-			//- 	ul.sortabletemplateComponents
-			//- 		each component in template.components
-			//- 			if component.componentType == "heading"
-			//- 				li.Component.componentStyling(id= component.id, data-component-type= component.componentType)
-			//- 					span.section-component-text Heading
-			//- 					.addPlaceholder Placeholder
-			//- 					.checkRequired Required?
-			//- 					.deleteComponent Delete
-			//- 			//- if component.componentType == "textarea"
-			//- 			//- 	+text(component, entry, template)
-			//- 			if component.componentType == "image"
-			//- 				li.Component.componentStyling(id= component.id, data-component-type= component.componentType) 
-			//- 					span.section-component-text Image
-			//- 					.addPlaceholder Placeholder
-			//- 					.checkRequired Required?
-			//- 					.deleteComponent Delete
-						//- if component.componentType == "image-gallery"
-						//- 	+imageGallery(component, entry, template)
-						//- if component.componentType == "question-answer"
-						//- 	+questionAnswer(component, entry, template)
-						//- if component.componentType == "expandable"
-						//- 	+expandable(component, entry, template)
-						//- if component.componentType == "quote"
-						//- 	+quote(component, entry, template)
-						//- if component.componentType == "info-box"
-						//- 	+infoBox(component, entry, template)
-						//- if component.componentType == "example-box"
-						//- 	+exampleBox(component, entry, template)
-						//- if component.componentType == "section-break"
-						//- 	+sectionBreak(component, entry, template)
-						//- if component.componentType == "list"
-						//- 	+list(component, entry, template)
-						//- if component.componentType == "checklist"
-						//- 	+checklist(component, entry, template)
-				//- Description is optional and still possible to edit its placeholder
-				//- It is also possible to edit Name / Title placeholder
-				//- You can also turn the title into an image and give it a subtitle or something
-				li.Component.unsortable.TestHandle Drag blocks here from the left
-		.CreateTemplateArea
-			p.CreateTemplateSmallText Your template is automatically saved. 
-			p.CreateTemplateBigText Once you're done customizing your template, click the button below to go make your first entry!
-			a.CreateTemplateButton Go curate!
-			a.goToTemplates Or go to Templates
+	.curataId(data-curataId= entry.curataId)
+	.entryId(data-entryId= entry.id)
+	.emptyConfirmModal
+		.confirmBackground
+		.deleteModal.z-index1300
+			.content-wrapper
+				.msg-title Are you sure you want to permanently delete this archived component?
+				.msg-body The component will be removed and you will not be able to restore it. If you delete a component here, you delete it everywhere, along with any linked content.
+				.action-group
+					.cancelComponentDelete.button-outline CANCEL
+					.confirmComponentDelete.button-filled DELETE
+	.emptyModal
+		.modalBackground
+		.createModal.templateArchives.z-index1200
+			.cancelListCreating x
+			.big-content-wrapper.wrapperWidth
+				//- a.createNewTemplate(href= '/curatas/' + user.username + '/curatas/' + curata.id + '/templates/newTemplateWithList')
+					.createNewTemplateText + Create new template
+				.msg-title Archived components of your template by component type
+				//- For each componentType, create one div with that componentType name
+				//- And inside each div, you list for each component in list, all the components that equal that componentType
+				.emptyArchives One moment! Fetching archives...
+				.archiveContainer
+				//- if (template.archivedComponents && template.archivedComponents.length)
+				//- 	.archiveContainer
+				//- 		each type in componentTypes
+				//- 			h2.componentCategory #{type}
+				//- 			.componentsByCategory
+				//- 				each component in template.archivedComponents
+				//- 					if (component.componentType == type)
+				//- 						.archivedComp(data-templateComponentId= component.templateComponentId data-entryComponentId= component.id)
+				//- 							p.archivedText #{component.componentType}
+				//- 							.deleteArchived Delete
+				//- else 
+				//- 	.emptyArchives One moment! Fetching archives...
+				//- 	.archiveContainer
+	.templateArea
+		.templateDetails
+			p.title4vh Customize your template. 
+			p.inline Don't worry, your template is automatically saved!
+			.tooltip2.inline
+				| ?
+				span.tooltiptext2 Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder. 
+			//- p (View examples / Browse template library)
+			.templateTitleContainer2
+				.title2p5vh Template title:
+				input.templateTitle2.unsortable(placeholder= "Your template title" value= template.name)
+			.addArchivedComponent Component archives
+		.TemplateConstructor
+			.Components
+				ul
+					li.add-section-box.draggable(data-css="headingComponent", data-component-type="heading")
+						span.section-component-text Heading 
+					li.add-section-box.draggable(data-css="mediumHeight", data-component-type="textarea")
+						span.section-component-text Text
+						//- possibility of editing text & background color, adding borders & changing color or width between 1-3px and radius between 0, 1, 2, 3, 4, 5, 6
+					li.add-section-box.draggable(data-css="largeHeight", data-component-type="image")
+						span.section-component-text Image
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="image-gallery")
+						span.section-component-text Image Gallery
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="list")
+						span.section-component-text List
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="checklist")
+						span.section-component-text Checklist
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="link")
+						span.section-component-text Link
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="question-answer")
+						span.section-component-text Q&A
+					li.add-section-box.draggable(data-html="<textarea>1</textarea>", data-component-type="expandable")
+						span.section-component-text Expandable
+					li.add-section-box.draggable(data-css="mediumHeight", data-component-type="quote")
+						span.section-component-text Quote
+					li.add-section-box.draggable(data-css="mediumHeight", data-component-type="info-box")
+						span.section-component-text Info Box
+					li.add-section-box.draggable(data-css="mediumHeight", data-component-type="example-box")
+						span.section-component-text Example Box
+					li.add-section-box.draggable(data-css="smallHeight", data-component-type="section-break")
+						span.section-component-text Section break
+			.Template(id= template.id)
+				ul.sortable
+					if (template.components.length)
+						each component in template.components
+							li.Component(id= component.id)
+								span.componentType #{component.componentType}
+								if (component.componentTitle)
+									input.componentTitle(placeholder= "Component title" value= component.componentTitle)
+								else 
+									input.componentTitle(placeholder= "Component title")
+								if (component.componentDescription)
+									textarea.componentDescription(placeholder= "Describe the purpose of this component.") #{component.componentDescription}
+								if (component.requiredState == true)
+									.IsRequired Required
+								//- p #{component.componentType}
+								.drop-down2
+									.dropDown.drop-down__button2.unsortable
+										span.component-more ...
+									.drop-down__menu-box2.unsortable
+										ul.drop-down__menu2
+											if (component.componentDescription && component.componentDescription.length)
+												li.drop-down__item2.RemoveDescription Remove description
+											else
+												li.drop-down__item2.AddDescription Add description
+											if (component.requiredState == true)
+												li.drop-down__item2.MarkRequired Unmark as required
+											else
+												li.drop-down__item2.MarkRequired Mark as required
+											li.drop-down__item2.ArchiveComponent Archive component
+					else
+						li.Component.unsortable.TestHandle Drag blocks here from the left
+					//- Description is optional and still possible to edit its placeholder
+					//- It is also possible to edit Name / Title placeholder
+					//- You can also turn the title into an image and give it a subtitle or something
+			.tooltip3.inline
+				| ?
+				span.tooltiptext3 
+					h2 Instructions for using the template editor.
+					p Component title is used for
+					h2 Requiring components
+					p Under the three dotted menu, you can choose to mark a component as 'required'. If you do this, it means you won't be able to publish en entry without having filled in that component. This can be useful when you want to add collaborators and want to ensure they write something. If you don't want a component to be required anymore, you'll find an option in the same menu to 'Unmark as required'.
+					h2 Adding descriptions
+					p In the case you want to write an explanation for what purpose a specific component is to serve in the template, you can do that by clicking on 'Add description', which you can find under the three dotted menu. These descriptions will later be accessible in the entry editor area under an equivalent question mark.
+					h2 Assigning entries
+					p Sometimes you delete components without deleting associated entries. And then other times, you might want to make use of those entries again. In such cases, you can 'reassign' old, idle entries belonging to a previous component of an equivalent component type to the component you are trying to assign entries to.
+					h2 Deleting components
+					p By clicking on the three dots, you will find an option to remove a component. Often, several entries are associated with these components. As such, to prevent content loss, removing the component this way will move it to 'Component archives'. There it is possible to delete the component with all the content associated with it. Alternatively, you can also restore the component from there.
 
 
 
 block scripts
 	script(src='/js/sortable.js')
+	script(src='/js/draggable.js')

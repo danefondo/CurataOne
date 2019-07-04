@@ -1,6 +1,5 @@
 mixin linklist(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id, data-component="linklist" data-order= component.componentOrder)
-		h2 Title 
+	li.Component.componentCSS.drag.draggable-item(id= component.id, data-component="linklist" data-order= component.componentOrder)
 		ul.listItems.sortableList(id= "sortable_" +component.id)
 			if (component.componentLinklist) 
 				// later make sure to render them using the order, else the db order might change and thus create problems

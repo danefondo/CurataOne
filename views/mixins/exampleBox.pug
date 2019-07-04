@@ -1,7 +1,6 @@
 mixin exampleBox(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id, data-component="exampleBox" data-order= component.componentOrder)
+	li.Component.componentCSS.drag.draggable-item(id= component.id, data-component="exampleBox" data-order= component.componentOrder)
 		.sub-sortable-container
-			h2 Example <span style="font-size:15px">&#9432;</span>
 			.exampleBoxBlock
 				.exampleBoxTitle 
 				.exampleBoxContent

@@ -1,4 +1,4 @@
-extends layout
+extends layout_buttonless
 
 //- Inside one Curata, opens up the different category lists inside it
 	//- So these links lead to the contents of these lists
@@ -20,27 +20,42 @@ block content
 					.templateContainer 
 						p.templateName #{template.name}
 	.sideNav
-		.currentCurataSwitch(id= curata.id) #{curata.curataName}
+		.curataName #{curata.curataName}
+		.curataSwitcher
+			.currentCurataSwitch(id= curata.id) Switch Curata
+			.drop-down__menu-box3.unsortable.drop-down-extra-width
+				.curataSwitchHeader Switch current Curata
+				if (user.defaultCurataId && curata.id == user.defaultCurataId)
+					.defaultCurata Default Curata
+				else
+					.makeDefault Make default
+				ul.drop-down__menu3
+					each curata in curatas
+						li.drop-down__item3.drop-down-extra-styling
+							a.curata-link(href='/curatas/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
 		.goToAllCuratas
 			a.allCuratasLink(href='/curatas/' + user.username + '/curatas') View all my Curatas
 		//- if curata exists & selected, display 
 		ul.sideNavButtons
 			li.sideNavLinkContainer
-				a.navlink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id) Lists
-				a.navlink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/entries') Entries
-				a.navlink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/templates') Templates
-				a.navlink.size18.block Appearance
-				a.navlink.size18.block Collaborators
-				a.navlink.size18.block Settings
-		.viewCurataLive View live
-	.curataContainer.largeSideNavMargin
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id) Curations
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/templates') Templates
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/files') Files
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/appearance') Appearance
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/collaborators') Collaborators
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+		a.viewCurataLive(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+	.curataContainer.sideNavMargin
+		.curataPageTitle My curations
 		.addNewList 
-			p.addNewListText + New list
-		h2 Lists
+			p.addNewListText + New category group
 		ul.curataList
 			each list in curata.curataList
 				li.singleList
-					a.navlink.ribbonList(href='/curatas/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id) #{list.listName}
+					a.ribbonList(href='/curatas/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id) #{list.listName}
+
+//- If only one category/group/list, then show entries and option to add new entry or create new list/category (from template, not quite a category)
+	//- else, show the many different groups
 
 
 //- p My singular Curata list view, with all the entries for a single list, like Failory's startup cemetry, a list only of startups that have failed and their case studies

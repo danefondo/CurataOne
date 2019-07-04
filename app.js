@@ -81,7 +81,11 @@ app.get('*', function(req, res, next){
 
 // Home route
 app.get('/', function(req, res) {
-	res.render('index');
+  if (req.isAuthenticated()) {
+    res.redirect('/browse');
+  } else {
+    res.render('index');
+  }
 });
 
 app.get('/my-curations', function(req, res) {
@@ -127,10 +131,14 @@ app.get('/successful-registration', function(req, res) {
 
 
 /*====== ROUTE FILES ======*/
-let users = require('./routes/users');
+let accounts = require('./routes/accounts');
 let curatas = require('./routes/curatas');
-app.use('/users', users);
+let browse = require('./routes/browse');
+let public = require('./routes/public');
+app.use('/accounts', accounts);
 app.use('/curatas', curatas);
+app.use('/browse', browse);
+app.use('/public', public);
 
 
 /*====== Access control  ======*/

@@ -22,6 +22,7 @@ let componentSchema = require('./component.js').model('Component').schema;
 const templateSchema = new mongoose.Schema({
 	name: String,
 	components: [componentSchema],
+	archivedComponents: [componentSchema],
 	curataListId: String,
 	curataId: String,
 	creator: String,

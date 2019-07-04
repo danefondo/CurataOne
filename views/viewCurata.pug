@@ -1,0 +1,57 @@
+//- If user is authorized version
+
+//- If user is not authorized version (public Curata)
+
+//- If user is authorized && curata is live but private to only admins
+
+//- If user is authorized && curata is live but unlisted
+
+//- If user authorized and browsing through Curata main area VS browsing the individual curata, which is all about that curata, so there is no 'users' required at a curata, or if there are contributors, then it'd still be along the lines of curata.one/curataId/contributors
+
+//- None of them contain or have anything to do with 'login' or 'registration'
+	//- To access editable areas, one would have to go to the edit mode
+
+//- As such, a Curata, truly is a Curata, simply some versions don't have the 'affiliation' of 'Made With Curata' and with official ones, maybe a marker that it is 'Official' and then top ones might have an option marker of 'top X' or with 'top upvotes' etc
+
+//- Different browse modes while browsing THROUGH Curata and being ON a separate Curata altgoether
+
+//- List on Curata About page one of my personal wishlists... to curate, organize all the world's productivity information across a few Curatas so as to make it unnecessary to have this informations scattered around blogs, Quora posts, wikipedias, books, etc. -- and that people would have the best of the best information on the matter, so everybody doesn't have to go through that journey again and again and they could comfortably know that this is as good as it gets and the rest is implementation. I believe this is possible and that it is good. As all perspectives still get represented.
+
+extends layout_public
+
+include entryDesigns/entryOne
+
+block heading
+	.helperNavigation
+		.navlinks-container
+			a.navlink &larr;
+			p.inline 5213 Hearts
+			p.inline #2 Curata This Month
+			p.inline View independent version
+
+block content
+	//- if public, show | if not, display message
+	.curataTitleArea
+		p.curataTitle #{curata.curataName}
+		p.curataDescription #{curata.curataDescription}
+	.curataListsArea
+		.curataLists
+			if (lists)
+				each list in lists
+					.curataListGroup
+						p.curataListTitle #{list.listName}
+						.curataList(id= list.id)
+							if (list.entries)
+								each entry in list.entries
+									if (entry.entryState == "Published")
+										.curataListEntry(id= entry.id href='/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
+											if (entry.entryLink)
+												a.curataEntryLink(href= entry.entryLink target="_blank") Link
+											if (entry.entryTitle)
+													a.curataEntryTitle(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
+											else
+													a.curataEntryTitle(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled category
+											if (entry.entryImageURL)
+												.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+			else 
+				Curata is empty.

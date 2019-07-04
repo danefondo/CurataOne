@@ -1,6 +1,5 @@
 mixin link(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id, data-component="link" data-order= component.componentOrder)
-		h2 Title 
+	li.Component.componentCSS.drag.draggable-item(id= component.id, data-component="link" data-order= component.componentOrder)
 		.linkContainer
 			if (component.componentLink)
 				a.ComponentLink(href= component.componentLink target="_blank") #{component.componentLink}

@@ -1,11 +1,37 @@
-//- Turns out it is necessary to first have all the Curatas listed
-//- So that there'd be a place from where I could access
-extends layout
+extends layout_buttonless
 
 block content
-	.curataContainer
-		h2 All my Curatas
-		ul.curataList
-			each curata in curatas
-				li.singleCurata
-					a.navlink(href='/curatas/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+	.allCuratasContainer
+		if (error && error == "error")
+			.errorContainer
+				.errorBox.inline
+					.errorText You are not authorized to access this user's Curatas.
+					.errorTextSmall Please check that the name in the URL matches your username. If it does and you still get this error, please contact us at:
+					.errorTextEmail support@curata.one
+				img.errorImage.inline(src= '/images/ginger-cat-error.png')
+			.contactSubmitError
+				.submitErrorText 
+		else if (curatas && curatas.length)
+			.allCuratas
+				.curataPageTitle All my Curatas
+				if (user.defaultCurataId == none || user.defaultCurataId == undefined || !user.defaultCurataId)
+					a.addNewCurata.alteredNewCurata.blackBackground(href='/curatas/' + user.username + '/curatas/curate') + New Curata
+						.addNewCurataText
+					.noDefaultCurata
+						p.noDefaultCurataText You have no default Curata.
+						p.noDefaultCurataTextSmall If you want to the dashboard button to take you to a specific Curata, rather than all of your Curatas, then set your desired Curata as default Curata.
+				else
+					a.addNewCurata.alteredNewCurata(href='/curatas/' + user.username + '/curatas/curate') + New Curata
+						.addNewCurataText
+				ul.curatasList
+					each curata in curatas
+						li.singleCurata
+							a.curataLink(href='/curatas/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+		else
+			.allCuratas
+				.curataPageTitle All my Curatas
+				.noCuratas
+					.noCuratasText You have no Curatas.
+					.noCuratasTextSmall Why not create one?
+					a.addNewCurata(href='/curatas/' + user.username + '/curatas/curate') + New Curata
+						.addNewCurataText

@@ -1,0 +1,61 @@
+.curataListsArea {
+	width: 100%;
+}
+
+.curataTitleArea {
+	height: 100px;
+	width: 100%;
+	padding-top: 50px;
+}
+
+.curataLists {
+	margin: 0 auto;
+	width: 800px;
+	text-align: center;
+}
+
+.curataListTitle {
+	font-size: 30px;
+}
+
+.curataTitle {
+	font-size: 35px;
+	text-align: center;
+}
+
+.curataDescription {
+	font-size: 20px;
+	text-align: center;
+}
+
+.curataListEntry {
+    height: 150px;
+    width: 225px;
+    padding-top: 50px;
+    border: 1px solid #eee;
+    display: inline-block;
+    margin: 15px auto;
+}
+
+.curataEntryTitle {
+	font-size: 22px;
+	display: block;
+}
+
+.curataListGroup {
+	margin-bottom: 60px;
+}
+
+.curataEntryImage {
+	background-repeat: no-repeat;
+    margin: auto;
+    width: 150px;
+    height: 150px;
+    background-size: contain;
+}
+
+.editorText img {
+	background-size: contain;
+    background: no-repeat;
+    max-width: 650px;
+}

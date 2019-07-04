@@ -4,6 +4,9 @@ const multer  = require('multer');
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
 const path = require('path');
+const assert = require('assert');
+const mongoose = require('mongoose');
+mongoose.Promise = Promise;
 
 const config = require('../config/aws');
 
@@ -44,6 +47,14 @@ const s3 = new aws.S3();
 // 		cb(null, false) // ignore the file
 // 	}
 // }
+
+const fileFilter = function(req, file, cb) {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true)
+    } else {
+        cb(null, false)
+    }
+}
 
 // // Check file type
 // function checkFileType(file, cb) {
@@ -97,7 +108,8 @@ const upload = multer({
 			 cb(null, Date.now().toString());
 			// cb(null, path.basename(file.originalname, path.extname(file.originalname)) + '-' + Date.now() + path.extname(file.originalname))
 		}
-	})
+	}),
+	fileFilter: fileFilter
 	// limits: {fileSize: 2000000},
 	// limits: {fileSize: 1024 * 1024 * 5},
 	// fileFilter: fileFilter,
@@ -122,9 +134,7 @@ const singleUpload = upload.single('image');
 */
 
 router.post('/UploadSingleImage', function(req, res) {
-	console.log("Made it here.");
 	singleUpload(req, res, function(err) {
-		console.log('Req file: ', req)
 		if (err) {
 			// return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}] });
 			console.log('Error: ', err);
@@ -144,6 +154,45 @@ router.post('/UploadSingleImage', function(req, res) {
 				// If success
 				const imageName = req.file.key;
 				const imageLocation = req.file.location; // url of the uploaded image
+				console.log("Made it here.");
+				let curataId = req.body.curataId;
+				let componentId = req.body.componentId;
+				let entryId = req.body.entryId;
+				console.log("My CUrata: ", curataId);
+				console.log("req.body", req.body);
+				if (curataId && curataId.length) {
+					console.log("YO!", curataId);
+					Curata.findById(curataId, function(err, curata) {
+						if (err) {
+							return console.log("Could not find entry: ", err);
+						}
+
+						let image = new curataImage();
+						image.entryId = entryId;
+						if (componentId && componentId.length && componentId !== null) {
+							console.log("componentId exists: ", componentId);
+							image.componentId = componentId;
+						}
+						image.imageKey = imageName;
+						image.imageURL = imageLocation;
+						image.curataId = curataId;
+
+						image.save(function(err) {
+							if (err) {
+								return console.log(err);
+							}
+						});
+
+						curata.curataFiles.images.push(image._id);
+
+						curata.save(function(err) {
+							if (err) {
+								return console.log(err);
+							}
+						});
+					})
+
+				}
 				res.json({
 					image: imageName,
 					location: imageLocation
@@ -166,6 +215,14 @@ router.post('/AddImageToCurataFiles', function(req, res) {
 	let imageKey = req.body.imageKey;
 	let imageURL = req.body.imageURL;
 
+	if (!imageKey) {
+		return console.log("No image key.");
+	}
+
+	if (!imageURL) {
+		return console.log("No image URL.");
+	}
+
 	if (req.body.componentId) {
 		console.log("Req has componentId: ", req.body.componentId);
 		componentId = req.body.componentId;
@@ -184,7 +241,7 @@ router.post('/AddImageToCurataFiles', function(req, res) {
 
 			let image = new curataImage();
 			image.entryId = entryId;
-			if (componentId !== null) {
+			if (componentId && componentId.length && componentId !== null) {
 				console.log("componentId exists: ", componentId);
 				image.componentId = componentId;
 			}
@@ -255,6 +312,7 @@ router.post('/UpdateEntryMainImage', function(req, res) {
 		{"_id": entryId},
 		// update
 		{$set: {"entryImageKey": entryImageKey, "entryImageURL": entryImageURL}},
+		{new: true},
 		function(err, entry) {
 			if (err) {
 				return console.log("Entry image update failed: ", err);
@@ -298,10 +356,29 @@ Currently they are all entries inside a Curata essentially
 */
 
 
+// Take to Curate page
+router.get('/:username/curatas/curate', ensureAuthenticated, function(req, res) {
+	res.render('curate');
+})
+
+// Take to Curate page
+router.get('/dashboard', ensureAuthenticated, function(req, res) {
+	// either always switch the 'currentCurata'
+	// or have a 'default curata' and an option to set any curata as the 'default'
+
+	// this is a question of where does the 'dashboard' button take you
+	// you can always set a curata as the 'default' and then still keep open the option to switch or visit other curatas, clicking those buttons is essentially just going to some specific curata
+
+	// should these take you to another curata?
+
+
+	res.render('curate');
+})
+
 
 
 // Create new curata with list and template
-router.post('/createNewCurata', function(req, res){
+router.post('/createNewCurata', ensureAuthenticated, function(req, res){
 
 	let curata = new Curata();
 	curata.creator = req.user._id;
@@ -309,6 +386,28 @@ router.post('/createNewCurata', function(req, res){
 	curata.curataName = req.body.curataName;
 	curata.curataDescription = req.body.curataDescription;
 	curata.curataAddress = req.body.curataAddress;
+
+	let defaultCurata = req.user.defaultCurataId;
+
+	if ((!defaultCurata) || defaultCurata == "N/A") {
+
+			User.findOneAndUpdate(
+				{_id: req.user._id},
+				{$set: {defaultCurataId: curata._id}},
+				{new: true},
+				function(err, user) {
+					if (err) {
+						return console.log(err);
+					}
+					user.save(function(err) {
+						if (err) {
+							return console.log(err);
+						}
+						console.log("Default Curata added: ", user.defaultCurataId);
+					})
+				}
+			)
+	}
 
 	let list = new curataList();
 	list.creator = req.user._id;
@@ -363,6 +462,7 @@ router.post('/updateTemplateComponent', function(req, res) {
 	let componentOrder = req.body.componentOrder;
 	let componentType = req.body.componentType;
 	let TemplateId = req.body.TemplateId;
+	let entryId = req.body.entryId;
 
 	let component = new Component({
 		componentOrder: componentOrder,
@@ -374,29 +474,70 @@ router.post('/updateTemplateComponent', function(req, res) {
 		{$push: {components: component}},
 		function(err, template) {
 	        if (err) {
-				console.log(err);
-				return;
-	        } else {
-	        	template.save(function(err) {
-	        		if (err) {
-	        			return console.log(err);
-	        		} else {
-	        			console.log("Component created in template!");
-	        			data = {
-	        				template: template,
-	        				component: component
-	        			}
-	        			res.json(data);
-	        		}
-	        	});
-			}
-		})
+				return console.log(err);
+	        } 
+        	template.save(function(err) {
+        		if (err) {
+        			return console.log(err);
+        		} 
+    			console.log("Component created in template!");
+
+				// if editing existing entry, add component to entry as well
+				if (entryId && entryId !== 'N/A') {
+					let entryComp = new entryComponent({
+						componentOrder: componentOrder,
+						componentType: componentType,
+						templateComponentId: component._id,
+						entryId: entryId,
+						curataId: template.curataId
+					})
+
+					entryComp.save(function(err){
+						if (err) { 
+							return console.log("Entry saving error: ", err);
+						}
+
+						Entry.findOneAndUpdate(
+							{_id: entryId},
+							{$push: {entryComponents: entryComp._id}},
+							function(err, entry) {
+								if (err) {
+									return console.log(err);
+								}
+
+								entry.save(function(err) {
+									if (err) {
+										return console.log(err);
+									} 
+									console.log("Component id added to entry");
+
+					    			data = {
+					    				template: template,
+					    				component: component,
+					    				entry: entry,
+					    			}
+					    			res.json(data);
+								})
+							}
+						)
+					});
+				} else {
+	    			data = {
+	    				template: template,
+	    				component: component,
+	    			}
+	    			res.json(data);
+				}
+        	});
+		}
+	)
 })
 
 router.post('/UpdateComponentPosition', function(req, res) {
 	console.log("req body array: ", req.body.indexArray);
 	let indexArray = JSON.parse(req.body.indexArray);
 	let TemplateId = req.body.TemplateId;
+	let entryId = req.body.entryId;
 
 	// could I make a change where I first query the Template and then do the forEach loop on indexArray and then do the updates and then do the save after the loop? This way I could avoid querying and saving so many times
 
@@ -405,18 +546,42 @@ router.post('/UpdateComponentPosition', function(req, res) {
 	    Template.findOneAndUpdate(
 	    	{"_id": TemplateId, "components._id": obj.component_id}, 
 	    	{"$set": {"components.$.componentOrder": obj.new_position }},
+	    	{ new: true},
 	    	function(err, template) {
 				if (err) {
 					return console.log("Did not work: ", err);
-		        } else {
-		        	template.save(function(err) {
-		        		if (err) {
-		        			return console.log(err);
-		        		} else {
-		        			console.log("Component order successfully updated.");
-		        		}
-		        	})
-		        }
+		        } 
+
+	        	template.save(function(err) {
+	        		if (err) {
+	        			return console.log(err);
+	        		} 
+
+	        		console.log("Component order successfully updated.");
+
+					// if editing existing entry or entries template, push order change to entry or entires as well
+					if (entryId && entryId.length && entryId !== "N/A") {
+
+						console.log("Entry id exists: ", entryId);
+						entryComponent.findOneAndUpdate(
+							{"templateComponentId": obj.component_id},
+							{"$set": {"componentOrder": obj.new_position}}, 
+							{ new: true},
+							function(err, entryComponent) {
+								if (err) {
+									return console.log(err);
+								}
+								console.log("entryComponent")
+								entryComponent.save(function(err) {
+									if (err) {
+										return console.log(err);
+									}
+								})
+							}
+						)
+					}
+
+	        	})
 	    	}
 	    );
 	});
@@ -500,6 +665,187 @@ router.post('/UpdateEntryLink', function(req, res) {
 	res.status(200).end();
 });
 
+router.post('/UpdateTemplateComponentDescription', function(req, res) {
+	
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+	let componentDescription = req.body.componentDescription;
+
+	// access component by id
+	Template.findOneAndUpdate(
+		{"_id": templateId, "components._id": templateComponentId},
+		{"$set": {"components.$.componentDescription": componentDescription}},
+		{ new: true },
+		function(err, template) {
+			if (err) {
+				return console.log("Template component description update failed: ", err);
+			} else {
+				template.save(function(err) {
+					if (err) {
+						return console.log("Template component description save failed: ", err);
+					} else {
+						console.log("Template component description successfully updated: ", template);
+					}
+				});
+			}
+		}
+	)
+
+	res.status(200).end();
+});
+
+router.post('/UpdateTemplateComponentTitle', function(req, res) {
+	
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+	let componentTitle = req.body.componentTitle
+
+	// access component by id
+	Template.findOneAndUpdate(
+		{"_id": templateId, "components._id": templateComponentId},
+		{"$set": {"components.$.componentTitle": componentTitle}},
+		{ new: true },
+		function(err, template) {
+			if (err) {
+				return console.log("Template component title update failed: ", err);
+			} else {
+				template.save(function(err) {
+					if (err) {
+						return console.log("Template component title save failed: ", err);
+					} else {
+						console.log("Template component title successfully updated: ", template);
+					}
+				});
+			}
+		}
+	)
+
+	res.status(200).end();
+});
+
+router.post('/removeTemplateComponentDescription', function(req, res) {
+	
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+
+	// access component by id
+	Template.findOneAndUpdate(
+		{"_id": templateId, "components._id": templateComponentId},
+		// update
+		{$set: {"components.$.componentDescription": undefined}},
+		function(err, template) {
+			if (err) {
+				return console.log("Template component description remove failed: ", err);
+			} else {
+				template.save(function(err) {
+					if (err) {
+						return console.log("Template save failed: ", err);
+					} else {
+						console.log("Template component description successfully removed: ", template);
+					}
+				});
+			}
+		}
+	)
+
+	res.status(200).end();
+});
+
+/*
+===========================
+== Curata Settings
+===========================
+*/
+
+
+// Update Curata Name
+router.post('/UpdateCurataName', function(req, res) {
+	
+	let curataName = req.body.curataName;
+	let curataId = req.body.curataId;
+
+	// access curata by id
+	Curata.findOneAndUpdate(
+		{"_id": curataId},
+		// update
+		{$set: {"curataName": curataName}},
+		function(err, curata) {
+			if (err) {
+				return console.log("Curata name update failed: ", err);
+			} else {
+				curata.save(function(err) {
+					if (err) {
+						return console.log("Curata save failed: ", err);
+					} else {
+						console.log("Curata name successfully updated: ", curata);
+					}
+				});
+			}
+		}
+	)
+
+	res.status(200).end();
+});
+
+// Update Curata Name
+router.post('/UpdateCurataDescription', function(req, res) {
+	
+	let curataDescription = req.body.curataDescription;
+	let curataId = req.body.curataId;
+
+	// access curata by id
+	Curata.findOneAndUpdate(
+		{"_id": curataId},
+		// update
+		{$set: {"curataDescription": curataDescription}},
+		function(err, curata) {
+			if (err) {
+				return console.log("Curata description update failed: ", err);
+			} else {
+				curata.save(function(err) {
+					if (err) {
+						return console.log("Curata save failed: ", err);
+					} else {
+						console.log("Curata description successfully updated: ", curata);
+					}
+				});
+			}
+		}
+	)
+
+	res.status(200).end();
+});
+
+// Update Curata Name
+router.post('/UpdateCurataAddress', function(req, res) {
+	
+	let curataAddress = req.body.curataAddress;
+	let curataId = req.body.curataId;
+
+	// access curata by id
+	Curata.findOneAndUpdate(
+		{"_id": curataId},
+		// update
+		{$set: {"curataAddress": curataAddress}},
+		function(err, curata) {
+			if (err) {
+				return console.log("Curata address update failed: ", err);
+			} else {
+				curata.save(function(err) {
+					if (err) {
+						return console.log("Curata save failed: ", err);
+					} else {
+						console.log("Curata address successfully updated: ", curata);
+					}
+				});
+			}
+		}
+	)
+
+	res.status(200).end();
+});
+
+
 
 router.post('/UpdateEntryTitle', function(req, res) {
 	
@@ -528,6 +874,73 @@ router.post('/UpdateEntryTitle', function(req, res) {
 
 	res.status(200).end();
 });
+
+router.post('/markComponentRequired', function(req, res) {
+	
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+	let requiredState = req.body.requiredState;
+	let entryId = req.body.entryId;
+
+	Template.findOneAndUpdate(
+		{"_id": templateId, "components._id": templateComponentId},
+		{"$set": {"components.$.requiredState": requiredState}},
+		{ new: true },
+		function(err, template) {
+	        if (err) {
+				return console.log(err);
+	        } 
+        	template.save(function(err) {
+        		if (err) {
+        			return console.log(err);
+        		} 
+        		console.log("Component requiredState updated: ", template.components);
+
+				if (entryId && entryId.length && entryId !== "N/A") {
+					// access component by id
+					entryComponent.findOneAndUpdate(
+						{"templateComponentId": templateComponentId},
+						// update
+						{$set: {"requiredState": requiredState}},
+						{new: true},
+						function(err, component) {
+							if (err) {
+								return console.log("Component requiredState update failed: ", err);
+							} else {
+								component.save(function(err) {
+									if (err) {
+										return console.log("Component save failed: ", err);
+									} else {
+										console.log("Component requiredState successfully updated: ", component);
+									}
+								});
+							}
+						}
+					)
+				}
+        	});
+		}
+	)
+	res.status(200).end();
+});
+
+router.post('/checkIfRequired', function(req, res) {
+	
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+
+	Template.findById(templateId, function(err, template) {
+		if (err) {
+			return console.log("Couldn't find template: ", err);
+		}
+		let component = template.components.id(templateComponentId);
+
+		res.json({
+			component: component
+		})
+	})
+});
+
 
 router.post('/UpdateComponentTitle', function(req, res) {
 	
@@ -887,6 +1300,33 @@ router.post('/CreateNewQuestion', function(req, res) {
 
 // later for preview, if something has no content, it's just not shown
 
+router.post('/makeDefaultCurata', function(req, res) {
+
+	let curataId = req.body.curataId;
+
+	User.findOneAndUpdate(
+		{"_id": req.user._id},
+		{$set: {"defaultCurataId": curataId}},
+		{new: true},
+		function(err, user) {
+			if (err) {
+				return console.log("User default Curata update failed: ", err);
+			} else {
+				user.save(function(err) {
+					if (err) {
+						return console.log("User save failed: ", err);
+					} else {
+						console.log("User default Curata successfully updated: ", user);
+					}
+
+					res.json(user);
+
+				});
+			}
+		}
+	)
+})
+
 router.post('/RevertEntryToDraft', function(req, res) {
 
 	let entryId = req.body.entryId;
@@ -939,11 +1379,6 @@ router.post('/PublishEntry', function(req, res) {
 })
 
 router.post('/:username/curatas/:curataId/lists/:listId/createNewEntry', ensureAuthenticated, function(req, res) {
-	if (!req.user._id) {
-		res.redirect('/');
-	}
-
-	console.log(req.user);
 
 	let listId = req.params.listId;
 	let username = req.params.username;
@@ -972,13 +1407,16 @@ router.post('/:username/curatas/:curataId/lists/:listId/createNewEntry', ensureA
 		var createComponentsAndSaveEntry = function(i) {
 			if (i < template.components.length) {
 				let component = template.components[i]
+				let entryComp;
 
-				let entryComp = new entryComponent({
+				entryComp = new entryComponent({
 					componentOrder: component.componentOrder,
 					componentType: component.componentType,
 					templateComponentId: component._id,
-					entryId: entry._id
+					entryId: entry._id,
+					curataId: template.curataId
 				})
+
 
 				// if (component.componentType == "list") {
 				// 	let listObj = new listItem({
@@ -1077,12 +1515,25 @@ router.post('/curataLists/CreateNewEntry', function(req, res) {
 			if (i < template.components.length) {
 				let component = template.components[i]
 
-				let entryComp = new entryComponent({
-					componentOrder: component.componentOrder,
-					componentType: component.componentType,
-					templateComponentId: component._id,
-					entryId: entry._id
-				})
+				if (component.requiredState) {
+					console.log("template component state: ", component.requiredState);
+					entryComp = new entryComponent({
+						componentOrder: component.componentOrder,
+						componentType: component.componentType,
+						templateComponentId: component._id,
+						entryId: entry._id,
+						requiredState: component.requiredState,
+						curataId: template.curataId
+					})
+				} else {
+					entryComp = new entryComponent({
+						componentOrder: component.componentOrder,
+						componentType: component.componentType,
+						templateComponentId: component._id,
+						entryId: entry._id,
+						curataId: template.curataId
+					})
+				}
 
 				// if (component.componentType == "list") {
 				// 	let listObj = new listItem({
@@ -1161,7 +1612,7 @@ router.get('/:username/curatas/:curataId/lists/:listId/entries/:id/editing', ens
 	Entry.findById(entryId).populate('entryComponents').exec(function (err, entry) {
 		
 		if (err) {
-			return console.log("Could not get entry: ", err);
+			return console.log("1 Could not get entry: ", err);
 		}
 
 		if (!err && entry) {
@@ -1203,8 +1654,298 @@ router.get('/:username/curatas/:curataId/lists/:listId/entries/:id/editing', ens
 	});
 })
 
+// Delete component from template
+router.delete('/deleteTemplateComponent', ensureAuthenticated, function(req, res) {
+
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+
+	Template.findOneAndUpdate(
+		{ _id: templateId },
+		{ $pull: { components: { _id: templateComponentId} } },
+		{ new: true },
+		function(err, removed) {
+			if (err) { console.log(err) }
+			res.status(200).send(removed);
+		}
+	)
+
+});
+
+// Archive component in template and all entries that use said component
+router.delete('/archiveComponent', ensureAuthenticated, function(req, res) {
+
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+
+	Template.findOne({_id: templateId}, function(err, template) {
+		let templateComponent = template.components.id(templateComponentId);
+		template.archivedComponents.push(templateComponent);
+		template.components.pull(templateComponent);
+		template.save(function(err) {
+			if (err) {
+				return console.log("Failed to archive template component: ", err);
+			}
+			console.log("Successfully archived template component.");
+
+			Entry.find({"linkedTemplateId": templateId}).populate('entryComponents').exec(function(err, data) {
+
+				// for each entry
+				// there can be one component with the templateComponentId
+					// but when i archive the templateComponent
+					// I must archive every single component in every single entry that sues that component
+
+				entryComponent.find({"templateComponentId": templateComponentId}, function(err, component) {
+					if (err) {
+						return console.log("Couldn't get entry component: ", err);
+					}
+					entryComp = component;
+				})
+
+				data.forEach(function(entry) {
+
+					// let us find the proper component of THIS particular entry
+					let entryComponentId;
+					for (var i=0; i<entry.entryComponents.length; i++) {
+						let oneComponent = entry.entryComponents[i];
+						if (oneComponent.templateComponentId == templateComponentId) {
+							console.log("Correct one: ", oneComponent);
+							entryComponentId = oneComponent._id;
+						}
+					}
+
+					entry.archivedComponents.push(entryComponentId);
+					entry.entryComponents.pull(entryComponentId);
+					entry.save(function(err) {
+						if (err) {
+							return console.log("Failed to archive component: ", err);
+						}
+						console.log("Successfully archived component.");
+					})
+				});
+			})
+		});
+	})
+	res.status(200).end();
+});
+
+// Archive component in template and all entries that use said component
+router.post('/unarchiveComponent', ensureAuthenticated, function(req, res) {
+
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+
+	Template.findOne({_id: templateId}, function(err, template) {
+		let templateComponent = template.archivedComponents.id(templateComponentId);
+		template.components.push(templateComponent);
+		template.archivedComponents.pull(templateComponent);
+		template.save(function(err) {
+			if (err) {
+				return console.log("Failed to unarchive template component: ", err);
+			}
+			console.log("Successfully unarchived template component.");
+
+			Entry.find({"linkedTemplateId": templateId}).populate('archivedComponents').exec(function(err, data) {
+
+				data.forEach(function(entry) {
+					console.log("Entry before unarchiving: ", entry);
+					// let us find the proper component of THIS particular entry
+					let entryComponentId;
+					for (var i=0; i<entry.archivedComponents.length; i++) {
+						let oneComponent = entry.archivedComponents[i];
+						console.log("Before check one component: ", oneComponent);
+						if (oneComponent.templateComponentId == templateComponentId) {
+							console.log("Correct one: ", oneComponent);
+							entryComponentId = oneComponent._id;
+						}
+					}
+					entry.archivedComponents.pull(entryComponentId);
+					entry.entryComponents.push(entryComponentId);
+					entry.save(function(err) {
+						if (err) {
+							return console.log("Failed to unarchive component: ", err);
+						}
+						console.log("Successfully unarchived component.");
+					})
+				});
+
+				res.json({
+					templateComponent: templateComponent
+				})
+			})
+		});
+	})
+});
+
+// Delete archived component
+router.delete('/permaDeleteComponent', ensureAuthenticated, function(req, res) {
+
+	let templateId = req.body.templateId;
+	let templateComponentId = req.body.templateComponentId;
+
+	Template.findOne({_id: templateId}, function(err, template) {
+		let templateComponent = template.archivedComponents.id(templateComponentId);
+		template.archivedComponents.pull(templateComponent);
+		template.save(function(err) {
+			if (err) {
+				return console.log("Failed to remove template component: ", err);
+			}
+			console.log("Successfully removed template component.");
+
+			Entry.find({"linkedTemplateId": templateId}).populate('archivedComponents').exec(function(err, data) {
+
+				data.forEach(function(entry) {
+
+					// let us find the proper component of THIS particular entry
+					let entryComponentId;
+					for (var i=0; i<entry.entryComponents.length; i++) {
+						let oneComponent = entry.entryComponents[i];
+						if (oneComponent.templateComponentId == templateComponentId) {
+							console.log("Correct one: ", oneComponent);
+							entryComponentId = oneComponent._id;
+						}
+					}
+
+					entry.archivedComponents.pull(entryComponentId);
+					entry.save(function(err) {
+						if (err) {
+							return console.log("Failed to remove component: ", err);
+						}
+						console.log("Successfully removed component.");
+					})
+				});
+
+				entryComponent.deleteMany({templateComponentId: templateComponentId}).exec(function(err, results) {
+
+					if (err) {
+						return console.log(err);
+					} else {
+						console.log("Related entryComponents successfully removed.", results);
+						res.status(200).send(results);
+					}
+
+				});
+			})
+		});
+	})
+});
+
+// Archive Curata and all the curataLists, entries, entryComponents, listItems, images linked to it
+
+/** @return {Promise} */
+function findCurata(curataId) {
+	return Curata.findOne({_id: curataId}).exec()
+}
+
+/** @return {Promise} */
+function findImages(curataId) {
+	return curataImage.find({"curataId": curataId}).exec()
+}
+
+// Delete curata
+router.delete('/permaDeleteCurata', ensureAuthenticated, function(req, res) {
+
+	let curataId = req.body.curataId;
+
+	return findCurata(curataId).then(function(curata) {
+		console.log("Made it here, curata: ", curata);
+		findImages(curataId)
+	}).then(function(images) {
+		if (images && images.length) {
+			var deleteCurataImages = function(i) {
+				if (i < images.length) {
+					images.forEach(function(image) {
+						let imageKey = image.imageKey;
+
+						s3.deleteObject({
+						  Bucket: 'curata',
+						  Key: '' + imageKey
+						}, function (err, data) {
+							if (err) {
+								console.log("Error: ", err);
+							}
+						})
+					})
+					deleteCurataImages(i+1);
+				} else {
+
+					curataImage.deleteMany({ "curataId": curataId}).exec(function(err) {
+						if (err) {
+							return console.log(err);
+						} else {
+							console.log("Curata images successfully removed.");
+						}
+					});
+				}
+			}
+			deleteCurataImages(0);
+		}
+	}).then(function() {
+		curataList.deleteMany({ "curataId": curataId}).exec(function(err) {
+			if (err) {
+				return console.log(err);
+			} else {
+				console.log("Curata lists successfully removed.");
+			}
+
+			Entry.deleteMany({ "curataId": curataId}).exec(function(err) {
+				if (err) {
+					return console.log(err);
+				} else {
+					console.log("Curata entries successfully removed.");
+				}
+
+				entryComponent.deleteMany({ "curataId": curataId}).exec(function(err) {
+					if (err) {
+						return console.log(err);
+					} else {
+						console.log("Curata entry components successfully removed.");
+					}
+
+					Curata.deleteOne({ _id: curataId }).exec(function (err, removed) {
+						if (err)  {
+							return console.log(err);
+						}
+
+						let defaultCurata = req.user.defaultCurataId;
+						console.log("User default Curata: ", defaultCurata);
+
+						if (defaultCurata == curataId) {
+							User.findOneAndUpdate(
+								{"_id": req.user._id},
+								{$set: {"defaultCurataId": undefined}},
+								{new: true},
+								function(err, user) {
+									if (err) {
+										return console.log("User default Curata remove failed: ", err);
+									} else {
+										user.save(function(err) {
+											if (err) {
+												return console.log("User save failed: ", err);
+											} else {
+												console.log("User default Curata successfully removed: ", user);
+											}
+										});
+									}
+								}
+							)
+						}
+						console.log("Successfully removed Curata.");
+						res.status(200).send(removed);
+						// res.redirect('/');
+					});
+
+				});
+			});
+		});
+	}).catch(function(err) {
+		res.status(500).json(null);
+	})
+});
+
+
 // Delete list item from component
-router.delete('/DeleteListItem', function(req, res) {
+router.delete('/DeleteListItem', ensureAuthenticated, function(req, res) {
 
 	// if (!req.user._id) {
 	// 	res.status(500).send();
@@ -1268,7 +2009,7 @@ router.delete('/DeletePreviousImage', function(req, res) {
 			}
 		);
 
-		curataImage.deleteOne({ id: image._id }, function (err) {
+		curataImage.deleteOne({ _id: image._id }, function (err) {
 		  if (err) return console.log(err);
 		  console.log("Successfully removed image.");
 		});
@@ -1411,7 +2152,7 @@ router.delete('/DeleteImage', function(req, res) {
 			}
 		})
 
-		curataImage.deleteOne({ id: image._id }, function (err) {
+		curataImage.deleteOne({ _id: image._id }, function (err) {
 		  if (err) return console.log(err);
 		  console.log("Successfully removed image.");
 		});
@@ -1563,39 +2304,146 @@ router.delete('/CancelAndDeleteEntry', function(req, res) {
 
 });
 
-router.get('/templates/:id', function(req, res) {
+router.get('/:username/curatas/:curataId/lists/:listId/entries/:entryId/template/:templateId', ensureAuthenticated, function(req, res) {
 
 	// get id for template
-	let templateId = req.params.id;
+	let templateId = req.params.templateId;
+	let listId = req.params.listId;
+	let entryId = req.params.entryId;
+	let template;
+	let componentTypes = [];
 
-		// next step is setting up questions
-	Template.findById(templateId, function (err, template) {
-		
+	Template.findById(templateId, function(err, temp) {
 		if (err) {
-			return console.log("Could not get entry: ", err);
+			return console.log("Could not get template", err);
 		}
-
+		template = temp;
 
 		template.components.sort(function(a, b) {
 			return a.componentOrder - b.componentOrder;
 		});
 
-		if (template === undefined) {
-			return console.log("Template undefined.");
-		} else {
-			console.log("Proceeding.");
+		if (template.archivedComponents.length) {
+			template.archivedComponents.forEach(function(component) {
+
+				let status = false;
+
+				for (var i=0; i<componentTypes.length; i++) {
+					let arrayItem = componentTypes[i];
+					if (arrayItem == component.componentType) {
+						console.log("Type already exists!");
+						status = true;
+						break;
+					}
+				}
+
+				if (status == false) {
+					componentTypes.push(component.componentType);
+				}
+			})
 		}
 
-		console.log("Components: ", template.components);
+		Entry.findById(entryId).populate('entryComponents').populate('archivedComponents').exec(function(err, entry) {
+			if (err) {
+				return console.log("3 Could not get entry: ", err);
+			}
 
-		res.render('template', {
-			template: template
+			entry.entryComponents.sort(function(a, b) {
+				return a.componentOrder - b.componentOrder;
+			});
+
+			res.render('template', {
+				template: template,
+				listId: listId,
+				entry: entry,
+				componentTypes: componentTypes
+			})
 		})
 
-	});
+	})
 })
 
+		// next step is setting up questions
+	// Template.findById(templateId, function (err, template) {
+		
+	// 	if (err) {
+	// 		return console.log("4 Could not get entry: ", err);
+	// 	}
 
+
+	// 	template.components.sort(function(a, b) {
+	// 		return a.componentOrder - b.componentOrder;
+	// 	});
+
+	// 	if (template === undefined) {
+	// 		return console.log("Template undefined.");
+	// 	} else {
+	// 		console.log("Proceeding.");
+	// 	}
+
+	// 	res.render('template', {
+	// 		template: template,
+	// 		listId: listId,
+	// 		entryId: entryId
+	// 	})
+
+	// });
+
+router.post('/checkTemplateArchives', ensureAuthenticated, function(req, res) {
+
+	// get id for template
+	let templateId = req.body.templateId;
+	// let archivedTemplateComponents = [];
+	let archivedTemplateComponents = [];
+
+	console.log("tempId", templateId);
+
+	Template.findById(templateId, function(err, template) {
+		if (err) {
+			return console.log("Could not get template", err);
+		}
+		console.log("Template: ", template);
+
+		if (template.archivedComponents.length) {
+			var createArchivesList = function(i) {
+				if (i < template.archivedComponents.length) {
+					let component = template.archivedComponents[i]
+					archivedTemplateComponents.push(component);
+					createArchivesList(i+1);
+				} else {
+					let componentTypes = [];
+					template.archivedComponents.forEach(function(component) {
+
+						let status = false;
+
+						for (var i=0; i<componentTypes.length; i++) {
+							let arrayItem = componentTypes[i];
+							if (arrayItem == component.componentType) {
+								console.log("Type already exists!");
+								status = true;
+								break;
+							}
+						}
+
+						if (status == false) {
+							componentTypes.push(component.componentType);
+						}
+					})
+					res.json({
+						archivedTemplateComponents: archivedTemplateComponents,
+						componentTypes: componentTypes
+					})
+				}
+			}
+			createArchivesList(0);
+		} else {
+			console.log("Template has no archived components.");
+			res.json({
+				message: "Template has no archived components."
+			})
+		}
+	})
+})
 
 
 router.get('/drafts/:id', function(req, res) {
@@ -1607,7 +2455,7 @@ router.get('/drafts/:id', function(req, res) {
 	Entry.findById(entryId).populate('entryComponents').exec(function (err, entry) {
 		
 		if (err) {
-			return console.log("Could not get entry: ", err);
+			return console.log("5 Could not get entry: ", err);
 		}
 
 		if (!err && entry) {
@@ -1657,7 +2505,7 @@ router.get('/:username/curatas/:curataId/lists/:listId/entries/:entryId', functi
 	Entry.findById(entryId).populate('entryComponents').exec(function (err, entry) {
 		
 		if (err) {
-			return console.log("Could not get entry: ", err);
+			return console.log("6 Could not get entry: ", err);
 		}
 
 		if (!err && entry) {
@@ -1700,15 +2548,17 @@ router.get('/:username/curatas/:curataId/lists/:listId/entries/:entryId', functi
 
 
 // Get all Curatas by user (later by joint users)
-router.get('/:username/curatas', function(req, res) {
+router.get('/:username/curatas', ensureAuthenticated, function(req, res) {
 
-	if (!req.user) {
-		res.redirect('/');
+	// Ensure only owner has access, else render error message
+	if (req.user.username !== req.params.username) {
+
+		res.render('curatas', {
+			error: "error"
+		})
 	}
-	// get id for template
-	let username = req.params.username;
 
-	let userId =  req.user._id
+	let userId =  req.user._id;
 
 		// next step is setting up questions
 	Curata.find({"owner": userId}, function (err, curatas) {
@@ -1745,7 +2595,7 @@ router.get('/:username/curatas', function(req, res) {
 
 			// })
 
-			res.render('curatas.pug', {
+			res.render('curatas', {
 				curatas: curatas
 			})
 
@@ -1757,7 +2607,7 @@ router.get('/:username/curatas', function(req, res) {
 })
 
 // Get the contents of a specific, single Curata of a user  (all the lists)
-router.get('/:username/curatas/:curataId', function(req, res) {
+router.get('/:username/curatas/:curataId', ensureAuthenticated, function(req, res) {
 
 	// get id for template
 	let username = req.params.username;
@@ -1790,17 +2640,26 @@ router.get('/:username/curatas/:curataId', function(req, res) {
 
 			// let templateId = entry.linkedTemplateId;
 
-			Template.find({"curataId": curataId}, function(err, templates) {
+			Curata.find({"owner": req.user._id}, function (err, curatas) {
+				
 				if (err) {
-					 return console.log("Could not get templates", err);
+					return console.log("Could not get curatas: ", err);
 				}
 
-				res.render('curata.pug', {
-					curata: curata,
-					templates: templates
+				Template.find({"curataId": curataId}, function(err, templates) {
+					if (err) {
+						 return console.log("Could not get templates", err);
+					}
+
+					res.render('curata', {
+						curata: curata,
+						templates: templates,
+						curatas: curatas
+					})
+
 				})
 
-			})
+			});
 
 		} else {
 			console.log("Curata not found.");
@@ -1837,10 +2696,19 @@ router.get('/:username/curatas/:curataId/lists/:listId', ensureAuthenticated, fu
 					return console.log("Could not get Curata", err);
 				}
 
-				res.render('entries.pug', {
-					entries: entries,
-					curata: curata
-				})
+				Curata.find({"owner": req.user._id}, function (err, curatas) {
+					
+					if (err) {
+						return console.log("Could not get curatas: ", err);
+					}
+
+					res.render('entries', {
+						curata: curata,
+						entries: entries,
+						curatas: curatas
+					})
+					
+				});
 			})
 
 
@@ -1891,7 +2759,7 @@ router.get('/:username/curatas/:curataId/entries', ensureAuthenticated, function
 					console.log("My curata: ", curata);
 					console.log("My list: ", list);
 
-					res.render('allEntries.pug', {
+					res.render('curataEntries', {
 						entries: entries,
 						curata: curata,
 						list: list
@@ -1900,7 +2768,7 @@ router.get('/:username/curatas/:curataId/entries', ensureAuthenticated, function
 
 			} else {
 				console.log("Entries not found.");
-				res.render('allEntries.pug', {
+				res.render('curataEntries', {
 					curata: curata
 				})
 			}
@@ -1909,7 +2777,7 @@ router.get('/:username/curatas/:curataId/entries', ensureAuthenticated, function
 })
 
 // Get all the entries of all lists of a Curata
-router.get('/:username/curatas/:curataId/templates', function(req, res) {
+router.get('/:username/curatas/:curataId/templates', ensureAuthenticated, function(req, res) {
 
 	// get id for template
 	let username = req.params.username;
@@ -1925,15 +2793,36 @@ router.get('/:username/curatas/:curataId/templates', function(req, res) {
 		}
 
 		if (!err && templates) {
-			console.log("Received templates: ", templates);
-
 			// templates.sort(function(a, b) {
 			// 	return a.dateCreated - b.dateCreated;
 			// });
+			Curata.findById(curataId, function (err, curata) {
+				
+				if (err) {
+					return console.log("Could not get curata: ", err);
+				}
 
-			res.render('templates.pug', {
-				templates: templates
-			})
+				if (!err && curata) {
+
+					Curata.find({"owner": req.user._id}, function (err, curatas) {
+						
+						if (err) {
+							return console.log("Could not get curatas: ", err);
+						}
+
+						res.render('curataTemplates', {
+							curata: curata,
+							templates: templates,
+							curatas: curatas
+						})
+						
+					});
+
+				} else {
+					console.log("Curata not found.");
+					res.redirect('/');
+				}
+			});
 
 		} else {
 			console.log("Templates not found.");
@@ -1999,21 +2888,35 @@ router.post('/createNewList', function(req, res) {
 		}
 	});
 
-	Curata.findById(curataId, function(err, curata) {
+	Template.findById(templateId, function(err, template) {
 		if (err) {
-			return console.log("Could not find curata: ", err);
+			return console.log("Could not find template: ", err);
 		}
 
-		curata.curataList.push(list._id);
-
-		curata.save(function(err) {
+		template.curataListId = list._id;
+		template.save(function(err) {
 			if (err) {
 				return console.log(err);
 			}
 
-			res.json(list);
+			Curata.findById(curataId, function(err, curata) {
+				if (err) {
+					return console.log("Could not find curata: ", err);
+				}
 
-		});
+				curata.curataList.push(list._id);
+
+				curata.save(function(err) {
+					if (err) {
+						return console.log(err);
+					}
+
+					res.json(list);
+
+				});
+			})
+
+		})
 	})
 })
 
@@ -2023,6 +2926,7 @@ router.post('/createNewTemplateWithComponent', function(req, res) {
 	let componentType = req.body.componentType;
 	let curataId = req.body.curataId;
 	let userId = req.user._id;
+	let entryId = req.body.entryId;
 
 	let component = new Component({
 		componentOrder: componentOrder,
@@ -2040,39 +2944,236 @@ router.post('/createNewTemplateWithComponent', function(req, res) {
 		}
 	});
 
-	Curata.findById(curataId, function(err, curata) {
-		if (err) {
-			return console.log("Could not find entry: ", err);
-		}
+	if (entryId && entryId !== 'N/A') {
+		let entryComp = new entryComponent({
+			componentOrder: componentOrder,
+			componentType: componentType,
+			templateComponentId: component._id,
+			entryId: entryId,
+			curataId: curataId
+		})
 
-		curata.templates.push(template._id);
-
-		curata.save(function(err) {
-			if (err) {
-				return console.log(err);
+		entryComp.save(function(err){
+			if (err) { 
+				return console.log("Entry saving error: ", err);
 			}
 
-			data = {
-				template: template,
-				component: component
-			}
+			Entry.findOneAndUpdate(
+				{_id: entryId},
+				{$push: {entryComponents: entryComp._id}},
+				function(err, entry) {
+					if (err) {
+						return console.log(err);
+					}
 
-			res.json(data);
+					entry.save(function(err) {
+						if (err) {
+							return console.log(err);
+						} 
+						console.log("Component id added to entry");
+
+						Curata.findById(curataId, function(err, curata) {
+							if (err) {
+								return console.log("Could not find entry: ", err);
+							}
+
+							curata.templates.push(template._id);
+
+							curata.save(function(err) {
+								if (err) {
+									return console.log(err);
+								}
+
+								data = {
+									template: template,
+									component: component,
+								}
+
+								res.json(data);
+							});
+						})
+					})
+				}
+			)
 		});
-	})
+	} else {
+		Curata.findById(curataId, function(err, curata) {
+			if (err) {
+				return console.log("Could not find entry: ", err);
+			}
+
+			curata.templates.push(template._id);
+
+			curata.save(function(err) {
+				if (err) {
+					return console.log(err);
+				}
+
+				data = {
+					template: template,
+					component: component
+				}
+
+				res.json(data);
+			});
+		})
+	}
 })
 
 
-router.get('/:username/curatas/:curataId/templates/newTemplateWithList', function(req, res) {
+router.get('/:username/curatas/:curataId/templates/newTemplateWithList', ensureAuthenticated, function(req, res) {
 
 	let username = req.params.username;
 	let curataId = req.params.curataId;
 
 
-	res.render('template-list.pug', {
+	res.render('template-list', {
 		curataId: curataId
 	})
 })
+
+// Get all the entries of all lists of a Curata
+router.get('/:username/curatas/:curataId/collaborators', ensureAuthenticated, function(req, res) {
+
+	let curataId = req.params.curataId;
+
+	Curata.findById(curataId, function (err, curata) {
+		
+		if (err) {
+			return console.log("Could not get curata: ", err);
+		}
+
+		if (!err && curata) {
+
+			Curata.find({"owner": req.user._id}, function (err, curatas) {
+				
+				if (err) {
+					return console.log("Could not get curatas: ", err);
+				}
+
+				res.render('curataCollaborators', {
+					curata: curata,
+					curatas: curatas
+				})
+				
+			});
+
+		} else {
+			console.log("Curata not found.");
+			res.redirect('/');
+		}
+	});
+})
+
+// Get all the entries of all lists of a Curata
+router.get('/:username/curatas/:curataId/settings', ensureAuthenticated, function(req, res) {
+
+	let curataId = req.params.curataId;
+
+	Curata.findById(curataId, function (err, curata) {
+		
+		if (err) {
+			return console.log("Could not get curata: ", err);
+		}
+
+		if (!err && curata) {
+
+			Curata.find({"owner": req.user._id}, function (err, curatas) {
+				
+				if (err) {
+					return console.log("Could not get curatas: ", err);
+				}
+
+				res.render('curataSettings', {
+					curata: curata,
+					curatas: curatas
+				})
+				
+			});
+
+		} else {
+			console.log("Curata not found.");
+			res.redirect('/');
+		}
+	});
+})
+
+
+// Get all the entries of all lists of a Curata
+router.get('/:username/curatas/:curataId/files', ensureAuthenticated, function(req, res) {
+
+	let curataId = req.params.curataId;
+
+	Curata.findById(curataId, function (err, curata) {
+		
+		if (err) {
+			return console.log("Could not get curata: ", err);
+		}
+
+		if (!err && curata) {
+
+			curataImage.find({"curataId": curata._id}, function(err, images) {
+				if (err) {
+					return console.log("Couldn't get images: ", err);
+				}
+
+				console.log("Images", images);
+
+				Curata.find({"owner": req.user._id}, function (err, curatas) {
+					
+					if (err) {
+						return console.log("Could not get curatas: ", err);
+					}
+
+					res.render('curataFiles', {
+						curata: curata,
+						images: images,
+						curatas: curatas
+					})
+					
+				});
+			})
+
+		} else {
+			console.log("Curata not found.");
+			res.redirect('/');
+		}
+	});
+})
+
+// Get all the entries of all lists of a Curata
+router.get('/:username/curatas/:curataId/appearance', ensureAuthenticated, function(req, res) {
+
+	let curataId = req.params.curataId;
+
+	Curata.findById(curataId, function (err, curata) {
+		
+		if (err) {
+			return console.log("Could not get curata: ", err);
+		}
+
+		if (!err && curata) {
+
+			Curata.find({"owner": req.user._id}, function (err, curatas) {
+				
+				if (err) {
+					return console.log("Could not get curatas: ", err);
+				}
+
+				res.render('curataAppearance', {
+					curata: curata,
+					curatas: curatas
+				})
+
+			});
+
+		} else {
+			console.log("Curata not found.");
+			res.redirect('/');
+		}
+	});
+})
+
 
 
 

@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	defaultCurata: String
+	defaultCurataId: String
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);

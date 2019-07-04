@@ -1,7 +1,6 @@
 mixin image(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id, data-component="image" data-order= component.componentOrder)
+	li.Component.componentCSS.drag.draggable-item(id= component.id, data-component="image" data-order= component.componentOrder)
 		.sub-sortable-container
-			h2 Image 
 			if (component.componentURL)
 				.imageBlock(data-image-key= component.componentImageKey style='background-image: url(' + component.componentURL + ');') + Upload Image
 					.deleteImage x

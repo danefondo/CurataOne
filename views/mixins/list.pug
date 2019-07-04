@@ -1,6 +1,5 @@
 mixin list(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id, data-component="list" data-order= component.componentOrder)
-		h2 Title 
+	li.Component.componentCSS.drag.draggable-item(id= component.id, data-component="list" data-order= component.componentOrder)
 		ul.listItems.sortableList(id= "sortable_" +component.id)
 			if (component.componentList) 
 				if (component.componentList.length)

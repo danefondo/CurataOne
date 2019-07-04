@@ -1,6 +1,5 @@
 mixin questionAnswer(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id, data-component="questionAnswer" data-order= component.componentOrder)
-		h2 Q&A
+	li.Component.componentCSS.drag.draggable-item(id= component.id, data-component="questionAnswer" data-order= component.componentOrder)
 		ul.questions.sortableList(id= "sortable_" +component.id)
 			if (component.componentList)
 				each item, i in component.componentList

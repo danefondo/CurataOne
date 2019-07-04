@@ -43,7 +43,7 @@ initEntryLinkSave()
 initEntryLinkExit()
 initEntryLinkRemove()
 initEntryTitleListening()
-initTitleListening()
+initComponentTitleListening()
 initImageInputsListening()
 initQuestionDeleting()
 initQuestionTitleListening()
@@ -65,6 +65,7 @@ initSortable()
 	let enableDisableInProgress = false;
 	let firstCreationInProgress = false;
 	let deletionModal = $('.emptyModal');
+	let lastUsedEditorComponentId;
 
 	let entryId = $('.TemplateHolder').attr('id');
 	let tempId = $('.TemplateId').attr('id');
@@ -76,10 +77,6 @@ initSortable()
 	});
 
 	function initPreviewButton() {
-		$('.showPreview').off('click');
-		$('.showPreview').on('click', function() {
-			window.open('/curatas/drafts/' + entryId, '_blank');
-		})
 
 		$('.closeWindowBtn').on('click', function() {
 			window.top.close();
@@ -167,6 +164,31 @@ initSortable()
 	}
 	initCancelAndDeleteEntry();
 
+	function initMakeDefaultCurata() {
+		$('.makeDefault').on('click', function() {
+			let btn = this
+			let curataId = $('.currentCurataSwitch').attr('id');
+
+	    	$.ajax({
+	    		data: {
+	    			curataId: curataId
+	    		},
+	    		type:'POST',
+	    		url: '/curatas/makeDefaultCurata',
+	    		success: function(response) {
+	    			$(btn).removeClass('makeDefault').addClass('defaultCurata');
+	    			$(btn).text('Default Curata');
+	    			$('.dashboardBtn').attr('href', '/curatas/' + userId + '/curatas/' + curataId);
+	    		},
+	    		error: function(err) {
+	    			console.log("Failed to make Curata default: ", err);
+	    			// Display error not being able to publish
+	    		}
+	    	});
+		})
+	}
+	initMakeDefaultCurata();
+
 	function initRevertToDraft() {
 		$('.makeDraft').on('click', function() {
 			let btn = this;
@@ -179,10 +201,11 @@ initSortable()
 	    		url: '/curatas/RevertEntryToDraft',
 	    		success: function(response) {
 	    			console.log("Reverted entry back to draft.", response)
-	    			let publishBtn = $("<div>", {"class": "publishEntry buttonGrey inline"});
+	    			let publishBtn = $("<div>", {"class": "publishEntry inline"});
 	    			publishBtn.text("Publish");
-	    			$(btn).replaceWith(publishBtn);
-	    			$('.entryState').text('Entry is a Draft.');
+	    			$('.viewLive').replaceWith(publishBtn);
+	    			$(btn).closest('.entrySettingsBlock').remove();
+	    			$('.entryState').text('Status: Draft');
 	    			initPublishAndCreateEntry();
 	    		},
 	    		error: function(err) {
@@ -193,16 +216,31 @@ initSortable()
 		})
 	}
 
-	function initGoToEditTemplate() {
-		$('.editTemplate').on('click', function() {
-			if (savingInProgress == true) {
-				alert('Wait! Save in progress!');
-			} else {
-				window.location.href = '/curatas/templates/' + tempId;
-			}
-		}) 
-	}
-	initGoToEditTemplate();
+	$(window).scroll(function() {
+
+	    //After scrolling 100px from the top...
+	    if ( $(window).scrollTop() >= 57 ) {
+	        $('.settingsSideNav').css('top', '0');
+	        $('.entrySettingsDelete').css('bottom', '0');
+
+	    //Otherwise remove inline styles and thereby revert to original stying
+	    } else {
+	        $('.settingsSideNav').css('top', '57px');
+	        $('.entrySettingsDelete').css('bottom', '57px');
+
+	    }
+	});
+
+	// function initGoToEditTemplate() {
+	// 	$('.editTemplate').on('click', function() {
+	// 		if (savingInProgress == true) {
+	// 			alert('Wait! Save in progress!');
+	// 		} else {
+	// 			window.location.href = '/curatas/templates/' + tempId;
+	// 		}
+	// 	}) 
+	// }
+	// initGoToEditTemplate();
 
 	if ($('.navlink').length) {
 	    $(".navlink").each(function() {
@@ -211,6 +249,30 @@ initSortable()
 	        }
 	    });
 	}
+
+	if ($('.sidelink').length) {
+	    $(".sidelink").each(function() {
+	        if (this.href == window.location.href) {
+	            $(this).addClass("activeSideLink");
+	        }
+	    });
+	}
+
+	function initCloseEntrySettings() {
+		$('.closeEntrySettings').on('click', function() {
+			$('.settingsSideNav').hide();
+			$('.sectionArea').removeClass('recalculatedWidth');
+		})
+	}
+	initCloseEntrySettings();
+
+	function initToggleEntrySettings() {
+		$('.settingsButton').on('click', function() {
+			$('.settingsSideNav').toggle();
+			$('.sectionArea').toggleClass('recalculatedWidth');
+		})
+	}
+	initToggleEntrySettings();
 
 
 	function initPublishAndCreateEntry() {
@@ -270,22 +332,20 @@ initSortable()
 			} else if (savingInProgress == false) {
 				if ($('.entryState').attr('data-entryState') == "Draft") {
 					initPublishAndCreateEntry();
-					initGoToEditTemplate();
 					// $('.publishEntry').css();
 					$('.publishEntry').text("Publish");
 					$('.statusMessage').text("All changes saved.")
-					$('.publishEntry').css('background-color', 'gainsboro');
-					$('.publishEntry').css('color', '#6f6f6f');
-					$('.editTemplate').css('background-color', 'gainsboro');  
-					$('.editTemplate').css('color', '#6f6f6f'); 
+					$('.publishEntry').css('background-color', '#ffffff');
+					$('.publishEntry').css('color', '#333333');
+					$('.editTemplate').css('background-color', '#ffffff');  
+					$('.editTemplate').css('color', '#333333'); 
 					enableDisableInProgress = false;
 				} else {
 					initRevertToDraft();
-					initGoToEditTemplate();
-					$('.editTemplate').css('background-color', 'gainsboro'); 
-					$('.publishEntry').css('background-color', 'gainsboro');
-					$('.editTemplate').css('color', '#6f6f6f'); 
-					$('.publishEntry').css('color', '#6f6f6f');
+					$('.editTemplate').css('background-color', '#ffffff'); 
+					$('.publishEntry').css('background-color', '#ffffff');
+					$('.editTemplate').css('color', '#333333'); 
+					$('.publishEntry').css('color', '#333333');
 					$('.makeDraft').text("Revert to draft");
 					$('.statusMessage').text("All changes saved.")
 					enableDisableInProgress = false;
@@ -365,7 +425,7 @@ initSortable()
 			Component.find('.ImageTitleBlock').append(ImageTitle);
 			Component.find('.ImageTitleBlock').append(deleteBtn)
 
-		    initTitleListening();
+		    initTitleListening(elementTitleInput, elementTitleURL, typePOST, 'componentTitle');
 		    initComponentTitleExit();
 			initImageTitleDelete();
 			$(this).remove();
@@ -783,7 +843,7 @@ initSortable()
 				    let questionBlock = $('#' + QuestionId);
 				    questionBlock.find('.editorText').attr('id', newEditorId);
 				    questionBlock.find('.editorTools').attr('id', newToolsId);
-				    initQuestionTitleListening();
+				    initTitleListening(questionTitleInput, questionTitleURL, typePOST, 'question');
 				    initQuestionTitleExit();
 				    findAndInitSimpleEditors();
 					let deleteBtn = $("<div>", {"class": "deleteQuestion"});
@@ -805,6 +865,94 @@ initSortable()
 	}
 	initNewQuestionAdding()
 
+	class MyUploadAdapter {
+	    constructor( loader ) {
+	        // CKEditor 5's FileLoader instance.
+	        this.loader = loader;
+
+	        // URL where to send files.
+	        this.url = '/curatas/UploadSingleImage';
+	    }
+
+	    // Starts the upload process.
+	    upload() {
+	        return new Promise( ( resolve, reject ) => {
+	            this._initRequest();
+	            this._initListeners( resolve, reject );
+	            this._sendRequest();
+	        } );
+	    }
+
+	    // Aborts the upload process.
+	    abort() {
+	        if ( this.xhr ) {
+	            this.xhr.abort();
+	        }
+	    }
+
+	    // Example implementation using XMLHttpRequest.
+	    _initRequest() {
+	        const xhr = this.xhr = new XMLHttpRequest();
+
+	        xhr.open( 'POST', this.url, true );
+	        xhr.responseType = 'json';
+	    }
+
+	    // Initializes XMLHttpRequest listeners.
+	    _initListeners( resolve, reject ) {
+	        const xhr = this.xhr;
+	        const loader = this.loader;
+	        const genericErrorText = 'Couldn\'t upload file:' + ` ${ loader.file.name }.`;
+
+	        xhr.addEventListener( 'error', () => reject( genericErrorText ) );
+	        xhr.addEventListener( 'abort', () => reject() );
+	        xhr.addEventListener( 'load', () => {
+	            const response = xhr.response;
+
+	            if ( !response || response.error ) {
+	                return reject( response && response.error ? response.error.message : genericErrorText );
+	            }
+
+	            // If the upload is successful, resolve the upload promise with an object containing
+	            // at least the "default" URL, pointing to the image on the server.
+	            resolve( {
+	                default: response.location
+	            } );
+	        } );
+
+	        if ( xhr.upload ) {
+	            xhr.upload.addEventListener( 'progress', evt => {
+	                if ( evt.lengthComputable ) {
+	                    loader.uploadTotal = evt.total;
+	                    loader.uploaded = evt.loaded;
+	                }
+	            } );
+	        }
+	    }
+
+	    // Prepares the data and sends the request.
+	    _sendRequest() {
+	        const data = new FormData();
+
+	        data.append( 'image', this.loader.file );
+	        let curataId = $('.curataId').attr('id');
+	        let componentId = lastUsedEditorComponentId;
+	        let entryId = $('.TemplateHolder').attr('id');
+	        data.append('curataId', curataId);
+	        data.append('componentId', componentId);
+	        data.append('entryId', entryId);
+
+	        this.xhr.send( data );
+	    }
+	}
+
+	function MyCustomUploadAdapterPlugin( editor ) {
+	    editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
+	        return new MyUploadAdapter( loader );
+	    };
+	}
+
+	// CKEditor meant only as the editor for an entry's default description
 	function initMainEditor(editorID, toolbarID) {
 	    DecoupledEditor
 	        .create( document.querySelector( editorID ), {
@@ -857,8 +1005,9 @@ initSortable()
 	function initializeEditor(editorID, toolbarID, ComponentId) {
 	    DecoupledEditor
 	        .create( document.querySelector( editorID ), {
-	        removePlugins: [ 'FontSize', 'MediaEmbed', 'insertTable', 'Heading', 'alignment', 'Undo', 'Redo', 'FontFamily' ],
-	        toolbar: ['bold', 'italic', 'highlight', '|' ,'bulletedList', 'numberedList', 'Link', 'blockQuote' ]
+	        removePlugins: [ 'FontSize', 'MediaEmbed', 'insertTable', 'Heading', 'alignment', 'Undo', 'Redo', 'FontFamily', 'ImageCaption', 'ImageTextAlternative' ],
+	        toolbar: ['bold', 'italic', 'highlight', '|' ,'bulletedList', 'numberedList', 'Link', 'blockQuote', 'ImageUpload' ],
+	        extraPlugins: [ MyCustomUploadAdapterPlugin ]
 	    }  )
 	        .then( editor => {
 	            const toolbarContainer = document.querySelector( toolbarID );
@@ -876,6 +1025,7 @@ initSortable()
 				    console.log( 'The data has changed!' );
 				    console.log("editorID: ", editorID);
 				    console.log("cID", ComponentId);
+				    lastUsedEditorComponentId = ComponentId;
 				    let ComponentContent = editor.getData();
 				    console.log("Content: ", ComponentContent);
 
@@ -1191,77 +1341,244 @@ initSortable()
 	}
 	initEntryLinkRemove();
 
-	function initEntryTitleListening() {
-		$('.EntryTitle').unbind('input change');
-		$('.EntryTitle').bind('input change', function() {
-			enableDisablePublish();
+	// Init listening to any title input change for all title types found on any particular page
+	function initTitleListening(titleElement, ajaxURL, ajaxType, titleGroup) {
+		titleElement.off('input change');
+		titleElement.on('input change', function() {
 
-			let entryTitle = $(this).val();
+			let element = $(this);
+			let entryId = $('.TemplateHolder').attr('id');
+			let component = element.closest('.Component');
+			let componentId;
+			if (component && component.length) {
+				componentId = component.attr('id');
+			}
+			let question = element.closest('.questionBlock');
+			let questionId;
+			if (question && question.length) {
+				questionId = question.attr('id');
+			}
+			let curataId = $('.curataId');
+
+			if (curataId && curataId.length) {
+				curataId = curataId.attr('id');
+			} else  {
+				// first element does not exist, look for other element
+				let otherElement = $('.currentCurataSwitch');
+				if (otherElement && otherElement.length) {
+					curataId = otherElement.attr('id');
+				}
+			}
+
+			let title = element.val();
+
+			let data = {}
+
+			if (titleGroup == "componentTitle") {
+				enableDisablePublish();
+				data.ComponentTitle = title;
+				data.ComponentId = componentId
+				data.entryId = entryId;
+
+			} else if (titleGroup == "entryTitle") {
+				enableDisablePublish();
+				data.entryTitle = title;
+				data.entryId = entryId;
+
+			} else if (titleGroup == "curataName") {
+				data.curataName = title;
+				data.curataId = curataId;
+
+			} else if (titleGroup == "curataAddress") {
+				data.curataAddress = title;
+				data.curataId = curataId;
+
+			} else if (titleGroup == "question") {
+				enableDisablePublish();
+				data.ComponentId = componentId;
+				data.EntryId = entryId;
+				data.QuestionId = questionId;
+				data.QuestionTitle = title;
+			}
 
 			$.ajax({
-			  data: {
-			    entryTitle: entryTitle,
-			    entryId: entryId
-			  },
-			  type: 'POST',
-			  url: '/curatas/UpdateEntryTitle',
-			  success: function(Item){
-			    console.log("Entry title successfully updated.")
-			    // Display success message?
-			    enableDisablePublish();
+				data: data,
+				type: ajaxType,
+				url: '' + ajaxURL,
+				success: function(data) {
+					console.log("Update successful");
+					if (titleGroup == "componentTitle" || titleGroup == "entryTitle" || titleGroup == "question") {
+						enableDisablePublish();
+					}
+					if (titleGroup == "curataName") {
+						$('.curataName').text(title);
+					}
+				},
+				error: function(err) {
+					console.log("Update failed:", err);
+					if (titleGroup == "componentTitle" || titleGroup == "entryTitle" || titleGroup == "question") {
+						enableDisablePublish();
+					}
+				}
+			})
 
-			  },
-			  error: function(err){
-			    console.log("Entry title update failed: ", err);
-			    // Display error message?
-			    enableDisablePublish();
-			  }
-			});
-
-		});
+		})
 	}
-	initEntryTitleListening();
 
-	function initTitleListening() {
-		$('.ElementTitle').unbind('input change');
-		$('.ElementTitle').bind('input change', function() {
-			enableDisablePublish();
+	let typePOST = 'POST';
 
-			let Component = $(this).closest('.Component')
-			let ComponentId = Component.attr('id');
-			let ComponentOrder = Component.attr('data-order');
-			let ComponentTitle = $(this).val();
-			let dataType = $(this).attr('data-type');
+	let elementTitleInput = $('.ElementTitle');
+	let elementTitleURL = '/curatas/UpdateComponentTitle';
+	initTitleListening(elementTitleInput, elementTitleURL, typePOST, 'componentTitle');
 
-			// LiveEditPreview:
+	let entryTitleInput = $('.EntryTitle');
+	let entryTitleURL = '/curatas/UpdateEntryTitle';
+	initTitleListening(entryTitleInput, entryTitleURL, typePOST, 'entryTitle');
 
-			// let matchingPreviewElement = $('.entryPreviewArea').find("[data-order='" +ComponentOrder +"']").find('.ElementTitle');
-			// matchingPreviewElement.text(ComponentTitle);
+	let curataName = $('.curataSettingsTitle');
+	let curataURL = '/curatas/UpdateCurataName';
+	initTitleListening(curataName, curataURL, typePOST, 'curataName');
+
+	let curataAddress = $('.curataSettingsAddress');
+	let curataAddressURL = '/curatas/UpdateCurataAddress';
+	initTitleListening(curataAddress, curataAddressURL, typePOST, 'curataAddress');
+
+	let questionTitleInput = $('.QuestionTitle');
+	let questionTitleURL = '/curatas/UpdateQuestionTitle';
+	initTitleListening(questionTitleInput, questionTitleURL, typePOST, 'question');
+
+
+
+	function initDescriptionListening(descElement, ajaxURL, ajaxType, group) {
+		descElement.on('input selectionchange propertychange', function() {
+
+			let element = $(this);
+			let value = element.val();
+			let data = {};
+
+			if (group == "curataDescription") {
+				data.curataDescription = value;
+				data.curataId = $('.currentCurataSwitch').attr('id');
+			}
 
 			$.ajax({
-			  data: {
-			    ComponentId: ComponentId,
-			    ComponentTitle: ComponentTitle,
-			    entryId: entryId
-			  },
-			  type: 'POST',
-			  url: '/curatas/UpdateComponentTitle',
-			  success: function(Item){
-			    console.log("Component title successfully updated.")
-			    // Display success message?
-			    enableDisablePublish();
+				data: data,
+				type: ajaxType,
+				url: '' + ajaxURL,
+				success: function(data) {
+					console.log("Update successful");
+				},
+				error: function(err) {
+					console.log("Update failed:", err);
+				}
+			})
 
-			  },
-			  error: function(err){
-			    console.log("Component title update failed: ", err);
-			    // Display error message?
-			    enableDisablePublish();
-			  }
-			});
-
-		});
+		})
 	}
-	initTitleListening();
+
+	let curataDescription = $('.curataDescription')
+	let curataDescriptionURL = '/curatas/UpdateCurataDescription'
+	initDescriptionListening(curataDescription, curataDescriptionURL, typePOST, 'curataDescription')
+
+
+
+	// function initEntryTitleListening() {
+	// 	$('.EntryTitle').unbind('input change');
+	// 	$('.EntryTitle').bind('input change', function() {
+	// 		enableDisablePublish();
+
+	// 		let entryTitle = $(this).val();
+
+	// 		$.ajax({
+	// 		  data: {
+	// 		    entryTitle: entryTitle,
+	// 		    entryId: entryId
+	// 		  },
+	// 		  type: 'POST',
+	// 		  url: '/curatas/UpdateEntryTitle',
+	// 		  success: function(Item){
+	// 		    console.log("Entry title successfully updated.")
+	// 		    // Display success message?
+	// 		    enableDisablePublish();
+
+	// 		  },
+	// 		  error: function(err){
+	// 		    console.log("Entry title update failed: ", err);
+	// 		    // Display error message?
+	// 		    enableDisablePublish();
+	// 		  }
+	// 		});
+
+	// 	});
+	// }
+	// initEntryTitleListening();
+
+	// function initComponentTitleListening() {
+	// 	$('.ElementTitle').unbind('input change');
+	// 	$('.ElementTitle').bind('input change', function() {
+	// 		enableDisablePublish();
+
+	// 		let Component = $(this).closest('.Component')
+	// 		let ComponentId = Component.attr('id');
+	// 		let ComponentTitle = $(this).val();
+
+	// 		$.ajax({
+	// 		  data: {
+	// 		    ComponentId: ComponentId,
+	// 		    ComponentTitle: ComponentTitle,
+	// 		    entryId: entryId
+	// 		  },
+	// 		  type: 'POST',
+	// 		  url: '/curatas/UpdateComponentTitle',
+	// 		  success: function(Item){
+	// 		    console.log("Component title successfully updated.")
+	// 		    // Display success message?
+	// 		    enableDisablePublish();
+
+	// 		  },
+	// 		  error: function(err){
+	// 		    console.log("Component title update failed: ", err);
+	// 		    // Display error message?
+	// 		    enableDisablePublish();
+	// 		  }
+	// 		});
+
+	// 	});
+	// }
+	// initComponentTitleListening();
+
+	// function initQuestionTitleListening() {
+	// 	$('.QuestionTitle').unbind('input change');
+	// 	$('.QuestionTitle').bind('input change', function() {
+	// 		enableDisablePublish();
+	// 		let ComponentId = $(this).closest('.Component').attr('id');
+	// 		let EntryId = $('.TemplateHolder').attr('id');
+	// 		let QuestionId = $(this).closest('.questionBlock').attr('id');
+	// 		let QuestionTitle = $(this).val();
+
+	// 		$.ajax({
+	// 			data: {
+	// 				ComponentId: ComponentId,
+	// 				EntryId: EntryId,
+	// 				QuestionId: QuestionId,
+	// 				QuestionTitle: QuestionTitle
+	// 			},
+	// 			type: 'POST',
+	// 			url: '/curatas/UpdateQuestionTitle',
+	// 			success: function(Item) {
+	// 				console.log("Question title successfully updated.");
+	// 				// display success or show 'entry saved' like in google docs
+	// 				enableDisablePublish();
+	// 			},
+	// 			error: function(err) {
+	// 				console.log("Question title update failed: ", err);
+	// 				// display error or show 'entry save failed' like in google docs
+	// 				enableDisablePublish();
+	// 			}
+	// 		})
+	// 	})
+	// }
+	// initQuestionTitleListening();
 
 	function initImageInputsListening() {
 		$('.ImageInput').off('change');
@@ -1367,6 +1684,8 @@ initSortable()
 							complete: function() {
 								let imageKey = responseData.entry.entryImageKey;
 								let imageURL = responseData.entry.entryImageURL;
+								console.log("TEST imageKey: ", imageKey);
+								console.log("TEST imageURL: ", imageURL);
 								$.ajax({
 									data: {
 										entryId: entryId,
@@ -1425,6 +1744,8 @@ initSortable()
 							complete: function() {
 								let imageKey = responseData.component.componentImageKey;
 								let imageURL = responseData.component.componentURL;
+								console.log("TEST imageKey: ", imageKey);
+								console.log("TEST imageURL: ", imageURL);
 								$.ajax({
 									data: {
 										entryId: entryId,
@@ -1471,9 +1792,27 @@ initSortable()
 	}
 	initImageInputsListening();
 
-	// function addImageToCurataFiles() {
+	function initPermaDeleteCurata() {
+		$('.deleteCurataButton').on('click', function() {
+			let curataId = $('.currentCurataSwitch').attr('id');
 
-	// }
+	    	$.ajax({
+	    		data: {
+	    			curataId: curataId
+	    		},
+	    		type:'DELETE',
+	    		url: '/curatas/permaDeleteCurata',
+	    		success: function(response) {
+	    			console.log("Deleted Curata.");
+	    			window.location.href = '/';
+	    		},
+	    		error: function(err) {
+	    			console.log("Failed to delete Curata: ", err);
+	    		}
+	    	});
+		})
+	}
+	initPermaDeleteCurata();
 
 	function initQuestionDeleting() {
 		$('.deleteQuestion').off('click');
@@ -1522,40 +1861,6 @@ initSortable()
 		})
 	}
 	initQuestionDeleting();
-
-	function initQuestionTitleListening() {
-		$('.QuestionTitle').unbind('input change');
-		$('.QuestionTitle').bind('input change', function() {
-			enableDisablePublish();
-			let ComponentId = $(this).closest('.Component').attr('id');
-			let EntryId = $('.TemplateHolder').attr('id');
-			let QuestionId = $(this).closest('.questionBlock').attr('id');
-			let QuestionTitle = $(this).val();
-			console.log('Got QuestionTitle: ', QuestionTitle);
-
-			$.ajax({
-				data: {
-					ComponentId: ComponentId,
-					EntryId: EntryId,
-					QuestionId: QuestionId,
-					QuestionTitle: QuestionTitle
-				},
-				type: 'POST',
-				url: '/curatas/UpdateQuestionTitle',
-				success: function(Item) {
-					console.log("Question title successfully updated.");
-					// display success or show 'entry saved' like in google docs
-					enableDisablePublish();
-				},
-				error: function(err) {
-					console.log("Question title update failed: ", err);
-					// display error or show 'entry save failed' like in google docs
-					enableDisablePublish();
-				}
-			})
-		})
-	}
-	initQuestionTitleListening();
 
 	function initComponentTitleExit() {
 		$('.ElementTitle').off('keyup');
@@ -2438,6 +2743,7 @@ initSortable()
 			  url: '/curatas/createNewList',
 			  success: function(item){
 			    console.log("List created: ", item);
+			    window.location.href = '/curatas/' + username + '/curatas/' + curataId;
 			    // Display success message?
 			  },
 			  error: function(err){
@@ -2450,6 +2756,28 @@ initSortable()
 		})
 	}
 	initCreateNewList();
+
+
+	function initDropDown() {
+		// reapply upon creating new component
+		$('.dropDown').off('click');
+		$('.dropDown').on('click', function(){
+			let ComponentId = $(this).closest('.Component').attr('id');
+			let List = $("#" + ComponentId);
+		    List.find('.drop-down2').toggleClass('drop-down--active');
+		});
+	}
+	initDropDown();
+
+	function initCurataDropdown() {
+		// reapply upon creating new component
+		$('.currentCurataSwitch').off('click');
+		$('.currentCurataSwitch').on('click', function(){
+		    $('.curataSwitcher').toggleClass('drop-down--active');
+		});
+	}
+	initCurataDropdown();
+
 
 
 

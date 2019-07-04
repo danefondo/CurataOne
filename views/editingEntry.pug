@@ -1,4 +1,4 @@
-extends layout
+extends layout_no_top_bar
 
 include mixins/heading
 include mixins/image
@@ -14,25 +14,27 @@ include mixins/list
 include mixins/checklist
 include mixins/link
 
+include images/TrashIcon
+include images/SettingsIcon
+
 //- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
 
 block heading
 	.helperNavigation
-		.navlinks-container
-			a.goBack.navlink(href= '/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) &larr; Go back
-			a.goBack.buttonGrey.inline(href= '/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) Go back
-			.editTemplate.buttonGrey.inline Edit template
-			.showPreview.buttonGrey.inline Show preview
-			.cancelDeleteEntry.buttonGrey.inline Cancel & delete
-			.entryState.inline(data-entryState= entry.entryState) Entry is #{entry.entryState}.
-			if (entry.entryState == "Draft") 
-				.publishEntry.buttonGrey.inline Publish
-			else
-				.makeDraft.buttonGrey.inline Revert to draft
+		.topnav-container
+			a.goBack.navlink(href= '/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) &larr;
 			.statusMessage.inline
-			a.navlink(href='/my-curations') &#63;
-
+			.floatRight
+				//- a.navlink(href='/my-curations') &#63;
+				.settingsButton.inline
+					+SettingsIcon
+				a.showPreview.inline(href= '/curatas/drafts/' + entry.id, target= '_blank') Preview
+				if (entry.entryState == "Draft") 
+					.publishEntry.inline Publish
+				if (entry.entryState == "Published")
+					a.viewLive(target= "_blank" href= '/browse/users/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id) View live
 block content
+	.curataId(id= entry.curataId)
 	.emptyModal
 		.modalBackground
 		.deleteModal
@@ -42,68 +44,97 @@ block content
 				.action-group
 					.cancelEntryDelete.button-outline CANCEL
 					.confirmEntryDelete.button-filled DELETE
-	.switchButtons
-		a.navlink.entryView.inline Entry
-		a.navlink.settingsView.inline Settings
-		//- Settings enables turning on/off whether description, image, link, other is displayed in the final outcome
-	.TemplateHolder(id= entry.id)
-		if (entry.entryTitle)
-			input.EntryTitle(placeholder= "Write something..." value= entry.entryTitle)
-		else
-			input.EntryTitle(placeholder= "Write something...")
-		.mainEditor
-			.editorTools.unreset(id= "toolbar_" +entry.id)
-			if (entry.entryText)
-				.editorText.unreset(id= "editor_" +entry.id) !{entry.entryText}
-			else
-				.editorText.unreset(id= "editor_" +entry.id)
-					p Write something here...
-		.mainImage(id= "imageArea_" +entry.id)
-			if (entry.entryImageURL)
-				.imageBlock(data-type= "mainImage" data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
-					.deleteMainImage x
-					form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
-						input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
-			else 
-				.imageBlock(data-type= "mainImage")
-					form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
-						input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
-		.linkContainer
-			if (entry.entryLink)
-				a.EntryLink(href= entry.entryLink target="_blank") #{entry.entryLink}
-				.removeLink Remove link
-			else
-				.addEntryLink + Add link
-		h2.TemplateId(id= template.id) New #{template.name}
-		if (entry.entryComponents.length)
-			ul.templateComponents
-				each component in entry.entryComponents
-					if component.componentType == "heading"
-						+heading(component, entry, template)
-					if component.componentType == "textarea"
-						+text(component, entry, template)
-					if component.componentType == "image"
-						+image(component, entry, template)
-					if component.componentType == "image-gallery"
-						+imageGallery(component, entry, template)
-					if component.componentType == "question-answer"
-						+questionAnswer(component, entry, template)
-					if component.componentType == "expandable"
-						+expandable(component, entry, template)
-					if component.componentType == "quote"
-						+quote(component, entry, template)
-					if component.componentType == "info-box"
-						+infoBox(component, entry, template)
-					if component.componentType == "example-box"
-						+exampleBox(component, entry, template)
-					if component.componentType == "section-break"
-						+sectionBreak(component, entry, template)
-					if component.componentType == "list"
-						+list(component, entry, template)
-					if component.componentType == "checklist"
-						+checklist(component, entry, template)
-					if component.componentType == "link"
-						+link(component, entry, template)
+	.settingsSideNav
+		.entrySettingsHeader
+			span Entry Settings
+			.closeEntrySettings.inline X
+		.entrySettingsContent
+			.entrySettingsBlock
+				.entryState(data-entryState= entry.entryState) Status: #{entry.entryState}
+			if (entry.entryState == "Published")
+				.entrySettingsBlock
+					.makeDraft Revert to draft
+			.entrySettingsBlock
+				a.editTemplate.whiteButton(href= '/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/template/' + entry.linkedTemplateId) Edit template
+		.entrySettingsDelete
+			.entrySettingsBlock
+				.cancelDeleteEntry.buttonGrey.inline
+					+TrashIcon
+					span Delete entry
+			//- Settings enables turning on/off whether description, image, link, other is displayed in the final outcome
+	.sectionArea.recalculatedWidth
+		.TemplateHolder(id= entry.id)
+			.entryMetaTitle Entry
+			.entryDetails
+				.entryComponentTitle Entry title
+				.entryDetailsGroup
+					if (entry.entryTitle)
+						input.EntryTitle(placeholder= "Write something..." value= entry.entryTitle)
+					else
+						input.EntryTitle(placeholder= "Write something...")
+				.entryComponentTitle Entry description
+				.entryDetailsGroup
+					.mainEditor
+						.editorTools.unreset(id= "toolbar_" +entry.id)
+						if (entry.entryText)
+							.editorText.unreset(id= "editor_" +entry.id) !{entry.entryText}
+						else
+							.editorText.unreset(id= "editor_" +entry.id)
+								p Write something here...
+				.entryComponentTitle Entry image
+				.entryDetailsGroup
+					.mainImage(id= "imageArea_" +entry.id)
+						if (entry.entryImageURL)
+							.imageBlock(data-type= "mainImage" data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+								.deleteMainImage x
+								form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+									input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+						else 
+							.imageBlock(data-type= "mainImage")
+								form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+									input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+				.entryComponentTitle Entry link
+				.entryDetailsGroup
+					.linkContainer
+						if (entry.entryLink)
+							a.EntryLink(href= entry.entryLink target="_blank") #{entry.entryLink}
+							.removeLink Remove link
+						else
+							.addEntryLink + Add link
+			//- h2.TemplateId(id= template.id) New #{template.name}
+			.entryContentTitle Entry content
+			if (entry.entryComponents.length)
+				ul.templateComponents
+					each component in entry.entryComponents
+						.entryComponentGroup
+							.entryComponentTitle #{component.componentType}
+								span(style= "font-size:15px") &#9432;
+							if component.componentType == "heading"
+								+heading(component, entry, template)
+							if component.componentType == "textarea"
+								+text(component, entry, template)
+							if component.componentType == "image"
+								+image(component, entry, template)
+							if component.componentType == "image-gallery"
+								+imageGallery(component, entry, template)
+							if component.componentType == "question-answer"
+								+questionAnswer(component, entry, template)
+							if component.componentType == "expandable"
+								+expandable(component, entry, template)
+							if component.componentType == "quote"
+								+quote(component, entry, template)
+							if component.componentType == "info-box"
+								+infoBox(component, entry, template)
+							if component.componentType == "example-box"
+								+exampleBox(component, entry, template)
+							if component.componentType == "section-break"
+								+sectionBreak(component, entry, template)
+							if component.componentType == "list"
+								+list(component, entry, template)
+							if component.componentType == "checklist"
+								+checklist(component, entry, template)
+							if component.componentType == "link"
+								+link(component, entry, template)
 
 
 

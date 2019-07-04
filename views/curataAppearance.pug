@@ -1,0 +1,102 @@
+extends layout_buttonless
+
+block content
+	.sideNav
+		.curataName #{curata.curataName}
+		.curataSwitcher
+			.currentCurataSwitch(id= curata.id) Switch Curata
+			.drop-down__menu-box3.unsortable.drop-down-extra-width
+				.curataSwitchHeader Switch current Curata
+				if (user.defaultCurataId && curata.id == user.defaultCurataId)
+					.defaultCurata Default Curata
+				else
+					.makeDefault Make default
+				ul.drop-down__menu3
+					each curata in curatas
+						li.drop-down__item3.drop-down-extra-styling
+							a.curata-link(href='/curatas/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+		.goToAllCuratas
+			a.allCuratasLink(href='/curatas/' + user.username + '/curatas') View all my Curatas
+		//- if curata exists & selected, display 
+		ul.sideNavButtons
+			li.sideNavLinkContainer
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id) Curations
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/templates') Templates
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/files') Files
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/appearance') Appearance
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/collaborators') Collaborators
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+		a.viewCurataLive(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+	.curataContainer.sideNavMargin
+		.curataPageTitle Appearance
+		.majorSettingGroup
+			.majorSettingGroupTitle Header
+			.subSettingGroup
+				p.subSettingGroupTitle Position
+				.settingBox.inline
+					p Left
+				.settingBox.inline
+					p Centre
+				.settingBox.inline
+					p Right
+			.settingGroup
+				.settingGroupTitle Title 
+				.subSettingGroup
+					p.subSettingGroupTitle Color
+					input.custom(type="text")
+				.subSettingGroup
+					p.subSettingGroupTitle Font-size
+					.tinySettingBox.inline
+						p H1
+					.tinySettingBox.inline
+						p H2
+					.tinySettingBox.inline
+						p H3
+				.subSettingGroup
+					p.subSettingGroupTitle Font
+					select.fontSelectGroup.inline
+						option(disabled selected=true) Choose a font
+						option(value= "Ubuntu") Ubuntu
+						option(value= "Lobster") Lobster
+						option(value= "Open Sans") Open Sans
+						option(value= "Roboto") Roboto
+						option(value= "Raleway") Raleway
+						option(value= "Roboto Slab") Roboto Slab
+						option(value= "Varela Round") Varela Round
+						option(value= "Nunito") Nunito
+					.fontTestGroup.inline
+						p.fontTest This is what your text would look like.
+				.subSettingGroup
+					p.subSettingGroupTitle Background
+			.settingGroup
+				.settingGroupTitle Description 
+				.subSettingGroup
+					p.subSettingGroupTitle Color
+					input.custom(type="text")
+				.subSettingGroup
+					p.subSettingGroupTitle Font-size
+					.tinySettingBox.inline
+						p H1
+					.tinySettingBox.inline
+						p H2
+					.tinySettingBox.inline
+						p H3
+				.subSettingGroup
+					p.subSettingGroupTitle Font
+					select.fontSelectGroup.inline
+						option(disabled selected=true) Choose a font
+						option(value= "Ubuntu") Ubuntu
+						option(value= "Lobster") Lobster
+						option(value= "Open Sans") Open Sans
+						option(value= "Roboto") Roboto
+						option(value= "Raleway") Raleway
+						option(value= "Roboto Slab") Roboto Slab
+						option(value= "Varela Round") Varela Round
+						option(value= "Nunito") Nunito
+					.fontTestGroup.inline
+						p.fontTest This is what your text would look like.
+				.subSettingGroup
+					p.subSettingGroupTitle Background
+block scripts
+	script(src='/js/spectrum.js')
+	script(src='/js/settings-scripts.js')

@@ -10,6 +10,7 @@ const componentSchema = new mongoose.Schema({
 	},
 	requiredState: Boolean,
 	componentTitle: String,
+	componentDescription: String,
 	placeholder: String,
 	componentOrder: Number
 });

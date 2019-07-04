@@ -1,7 +1,6 @@
 mixin infoBox(component, entry, template)
-	li.Component.drag.draggable-item(id= component.id, data-component="infoBox" data-order= component.componentOrder)
+	li.Component.componentCSS.drag.draggable-item(id= component.id, data-component="infoBox" data-order= component.componentOrder)
 		.sub-sortable-container
-			h2 Info box
 			.infoBlock
 				.infoTitle
 				.infoContent

@@ -4,7 +4,7 @@ mixin MultiForm
 	// email
 	.scroll-view.BackupView
 		fieldset.form-group
-			h1 Hi Robert,
+			h1 Hi #{user.firstname},
 			.Questions
 				.CurationName 
 					h1 What would you like to curate?
@@ -29,15 +29,21 @@ mixin MultiForm
 				span.checkmark
 				span.tooltiptext Your Curata will be accessible through /my-curations/curata-id
 		fieldset.form-group.CurataCreatedField
-			.CurataSuccessHolder
-				h1 Great! You've created a Curata.
-				.UserCurata 
-					p.UserCurataTitle Your Curata
-			h2 Finally, customize your template for Curata entries and start curating!
-			p Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder.
-			p (View examples / Browse template library)
-			h2 Your template title:
-			input.TemplateTitle.unsortable
+			.templateArea
+					.templateDetails
+						p.largeTitle Great! You've created a Curata.
+						p.mediumTitle Finally, customize your template for curating entries!
+						p.inline Don't worry, your template is automatically saved!
+						.tooltip2.inline
+							| ?
+							span.tooltiptext2 Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder. 
+						//- p (View examples / Browse template library)
+						.CreateTempArea
+							a.CreateTemplateButton Go curate!
+							a.goToTemplates Or go to Templates
+			.templateTitleContainer
+				.averageTitle Template title:
+				input.TemplateTitle.unsortable(placeholder= "Your template title")
 			.TemplateConstructor
 				.OverlayComponents Finishing up Curata creation...
 				.Components
@@ -75,17 +81,7 @@ mixin MultiForm
 				//- 	.Component.unsortable.TestHandle Description
 				.Template
 					ul.sortable
-						//- Description is optional and still possible to edit its placeholder
-						//- It is also possible to edit Name / Title placeholder
-						//- You can also turn the title into an image and give it a subtitle or something
-						li.Component.unsortable.TestHandle Drag blocks here from the left
-				.CreateTemplateArea
-					p.CreateTemplateSmallText Your template is automatically saved. 
-					p.CreateTemplateBigText Once you're done customizing your template, click the button below to go make your first entry!
-					a.CreateTemplateButton Go curate!
-					a.goToTemplates Or go to Templates
-			p Some more options that are coming soon: table blocks, list blocks with modals, section blocks, file upload block, columns, enabling an index, a purchase button, a metadata block, a resources used or 'referenced block' or 'fact checked block' or expandable where you have fact in one place, and source(s) listed in the expandable; This is important to make this into a truly fact-oriented space.
-			p LATER I will add boxes on each component with option to 'ADD PLACEHOLDER' and 'MARK REQUIRED' + 'DELETE'
+						li.Component.unsortable.TestHandle Drag blocks from the left here
 		//- // birthday
 		//- fieldset.form-group
 		//- 	label(for='bday')

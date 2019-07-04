@@ -1,0 +1,35 @@
+extends layout_buttonless
+
+block content
+	.sideNav
+		.curataName #{curata.curataName}
+		.curataSwitcher
+			.currentCurataSwitch(id= curata.id) Switch Curata
+			.drop-down__menu-box3.unsortable.drop-down-extra-width
+				.curataSwitchHeader Switch current Curata
+				if (user.defaultCurataId && curata.id == user.defaultCurataId)
+					.defaultCurata Default Curata
+				else
+					.makeDefault Make default
+				ul.drop-down__menu3
+					each curata in curatas
+						li.drop-down__item3.drop-down-extra-styling
+							a.curata-link(href='/curatas/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+		.goToAllCuratas
+			a.allCuratasLink(href='/curatas/' + user.username + '/curatas') View all my Curatas
+		//- if curata exists & selected, display 
+		ul.sideNavButtons
+			li.sideNavLinkContainer
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id) Curations
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/templates') Templates
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/files') Files
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/appearance') Appearance
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/collaborators') Collaborators
+				a.sidelink.size18.block(href='/curatas/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+		a.viewCurataLive(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+	.curataContainer.sideNavMargin
+		.curataPageTitle Collaborators
+		.List
+			.messageBlock
+				.messageText Collaboration coming soon!
+			//- .CollaboratorsMessage Collaboration coming soon!

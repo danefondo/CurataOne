@@ -18,9 +18,14 @@
 	appearance: none;
 }
 
+html {
+  height: 100%;
+}
+
 body {
 	font-family: Verdana, Geneva, sans-serif;
-	background-color: #f9f9f9; /* new */
+	background-color: #f9f9f9;
+/*  background-color: #ffffff;*/
 	overscroll-behavior-y: none;
 }
 
@@ -64,20 +69,20 @@ input[type="text"]:focus, input[type="password"]:focus {
 }
 
 input[type="submit"] {
-	background-color: #ff0744;
+	background-color: #673ab7;
 	color: white;
 	font-family: Verdana, Geneva, sans-serif;
 }
 
 input[type="submit"]:hover {
-	background-color: #ff0140d1;
+	background-color: #7e57c2;
 	color: white;
 	border-radius: 3px;
 }
 
 a {
-/*	color: #333;*/
-	color: #000;
+	color: #333;
+/*	color: #000;*/
 	text-decoration: none;
 }
 
@@ -96,6 +101,7 @@ div, p {
 .container {
 /*	background-color: #fdfdfd;*/
 	background-color: #f9f9f9;
+/*  background-color: white;*/
 	display: flex;
 	flex-wrap: wrap;
 /*	justify-content: center;*/
@@ -161,6 +167,188 @@ span.filter-button-name {
 	font-weight: 600;
 	color: white;
 	text-align: center;
+}
+
+/*
+===========================
+=== All Curatas page 
+===========================
+*/
+
+.allCuratasContainer {
+  width: 100%;
+  margin: 50px auto 0px auto;
+}
+
+.allCuratas {
+  width: 840px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.curatasList {
+  margin-top: 20px;
+}
+
+.curataLink {
+  border-radius: 4px;
+  padding: 25px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: block;
+  font-size: 28px;
+  font-weight: bold;
+  color: #424242;
+}
+
+.singleCurata {
+  background-color: #fff;
+/*  border: 1px solid #efefef;*/
+  border-radius: 4px;
+  margin: 12px 15px;
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+  transition: .2s ease;
+  cursor: pointer;
+  width: 250px;
+  height: 250px;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.singleCurata:hover {
+  transform: scale(1.03);
+}
+
+.noDefaultCurata {
+  padding: 40px;
+  width: 100%;
+/*  background-color: #333;*/
+  background-color: #673AB7;
+  border-radius: 4px;
+/*  border: 1px solid #f1f1f1;*/
+  margin: 20px auto 30px auto;
+  box-sizing: border-box;
+}
+
+p.noDefaultCurataText {
+  font-size: 20px;
+  color: white;
+}
+
+p.noDefaultCurataTextSmall {
+  font-size: 18px;
+  color: lightgrey;
+  margin-top: 10px;
+}
+
+.addNewCurata {
+  width: 200px;
+/*  background-color: #ff0844;*/
+  background-color: #673ab7;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin: 70px 0px 0px 0px;
+  box-sizing: border-box;
+  color: white;
+  transition: .2s ease-in-out;
+  font-weight: bold;
+  padding: 18px 14px;
+  width: 250px;
+  font-size: 25px;
+  display: block;
+}
+
+.addNewCurata:hover {
+  background-color: #7E57C2;
+  transform: scale(1.02); 
+}
+
+.alteredNewCurata {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 195px;
+  padding: 12px;
+  margin: 0px;
+}
+
+.noCuratas {
+  padding: 40px;
+  width: 100%;
+  height: 280px;
+  background-color: #333;
+  border-radius: 4px;
+  border: 1px solid #f1f1f1;
+  margin: 20px auto 30px auto;
+  box-sizing: border-box;
+}
+
+.noCuratasText {
+  font-size: 27px;
+  color: whitesmoke;
+  font-weight: bold;
+}
+
+.noCuratasTextSmall {
+  font-size: 37px;
+  color: darkgrey;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.blackBackground {
+  background-color: #252525;
+  transition: .2s ease;
+}
+
+.blackBackground:hover {
+  background-color: #333;
+}
+
+.errorContainer {
+  margin: 50px auto 0px auto;
+  width: 900px;
+}
+
+.errorBox {
+  padding: 40px;
+  /* width: 100%; */
+  width: 600px;
+/*  height: 280px;*/
+  background-color: #333;
+  border-radius: 4px;
+  border: 1px solid #f1f1f1;
+  margin: 20px auto 30px auto;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.errorImage {
+  width: 300px;
+  height: 300px;
+  box-sizing: border-box;
+}
+
+.errorText {
+  font-size: 30px;
+  color: whitesmoke;
+  font-weight: bold;  
+}
+
+.errorTextSmall {
+  font-size: 21px;
+  color: darkgrey;
+  margin-top: 15px;
+  font-weight: bold;
+  line-height: 24px;
+}
+
+.errorTextEmail {
+  color: #e6e6e6;
+  font-size: 25px;
+  margin-top: 10px;
 }
 
 
@@ -289,9 +477,11 @@ span.filter-button-name {
 }
 
 .Dropdown-profile, .Dropdown-nav li .NavLinkX {
-  background: #fff;
+/*  background: #f9f9f9;*/
+  background-color: white;
   display: block;
-  height: 24px;
+/*  height: 24px;*/
+  height: 32px;
   padding: 8px;
 }
 
@@ -310,9 +500,10 @@ a {
   /*border: 2px solid #eee;*/
 /*  box-shadow: 3px 3px 0px 0px #eee;*/
   cursor: pointer;
-  margin-right: 10px;
+/*  margin-right: 10px;*/
+  margin-right: 15px;
   overflow: hidden;
-  min-width: 160px;
+/*  min-width: 160px;*/
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   border-bottom-left-radius: 4px;
@@ -320,18 +511,21 @@ a {
 }
 .Dropdown-profile {
   position: relative;
+  background-color: #f9f9f9;
 /*  min-width: 170px;*/
 }
 .Dropdown-profile .Photo {
-  background: #ddd;
+  background: transparent;
   display: inline-block;
   vertical-align: middle;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
-  height: 24px;
-  width: 24px;
+/*  height: 24px;
+  width: 24px;*/
+  height: 32px;
+  width: 32px;
 }
 
 .Dropdown-profile:hover {
@@ -390,7 +584,8 @@ a {
     position: absolute;
     width: 3px;
     height: 28px;
-    background-color: #3d6def;
+/*    background-color: #3d6def;*/
+    background-color: #673ab7;
     left: 0px;
     top: 50%;
     transform: translateY(-50%);
@@ -402,7 +597,8 @@ a {
 }
 
 .Dropdown-nav li a:hover {
-  color: #3d6def;
+/*  color: #3d6def;*/
+  color: #673ab7;
 }
 .Dropdown-nav li .OptionLink {
   position: absolute;
@@ -415,7 +611,7 @@ a {
   z-index: 5;
 }
 .Dropdown-nav li .NavLinkX {
-  line-height: 24px;
+  line-height: 32px;
 }
 .DropdownX.is-expanded nav {
     visibility: visible;
@@ -470,7 +666,7 @@ a {
 .Upgrade {
 	background-color: #fffcd4 !important;
 	font-weight: bold;
-	color: #ff0744 !important;
+	color: #673ab7 !important;
 	border-radius: 3px;
 }
 
@@ -529,13 +725,13 @@ h1.RegisterSuccess {
 }
 
 .StartCuratingBlock {
-	background-color: #ff0744;
-    margin: 60px auto 0px auto;
-    padding: 25px 50px;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    transition: .2s ease-in-out;
+  background-color: #673ab7;
+  margin: 60px auto 0px auto;
+  padding: 25px 50px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: .2s ease-in-out;
 }
 
 .StartCuratingBlock:hover {
@@ -582,9 +778,9 @@ h2.CheckOthers {
 
 
 .buttonGrey {
-  background-color: gainsboro;
+/*  background-color: gainsboro;*/
   padding: 5px 5px;
-  color: #6f6f6f;
+  color: #333;
   border-radius: 3px;
   font-weight: bold;
   text-align: center;
@@ -692,21 +888,35 @@ h2.CheckOthers {
   min-height: 150px;
   background-color: white;
   border-radius: 3px;
-  border: 1px solid #e4e4e4; 
+/*  border: 1px solid #e4e4e4; */
   text-align: center;
   line-height: 150px;
   margin-top: 10px;
 }
 
+/*
+===========================
+== Title inputs
+===========================
+*/
 
-.ElementTitle, .QuestionTitle, .EntryTitle, .ListTitle, .ListDescription {
+
+.ElementTitle, 
+.QuestionTitle, 
+.EntryTitle, 
+.ListTitle, 
+.ListDescription, 
+.componentDescription,
+.publicElementTitle,
+.curataSettingsTitle,
+.curataDescription {
   background: transparent;
   border-radius: 3px;
   box-shadow: none;
   font-size: 30px;
   font-weight: 700;
   line-height: 24px;
-  margin: 10px 0px 0px 10px;
+  margin: 0px 0px 0px 10px;
   width: 95%;
   min-height: 24px;
   padding: 4px 8px;
@@ -733,7 +943,13 @@ h2.CheckOthers {
   border: none;
 }
 
-.ElementTitle:focus, .QuestionTitle:focus, .EntryTitle:focus, .ListTitle:focus, .ListDescription:focus {
+.ElementTitle:focus, 
+.QuestionTitle:focus, 
+.EntryTitle:focus, 
+.ListTitle:focus, 
+.ListDescription:focus,
+.curataSettingsTitle:focus,
+.curataDescription:focus {
   background: #fff;
   border: none;
   box-shadow: inset 0 0 0 2px #4725a9;
@@ -744,7 +960,19 @@ h2.CheckOthers {
   box-shadow: inset 0 0 0 1px #ececec;
 }
 
-.ListDescription {
+.curataSettingsTitle {
+  border: 1px solid #fff;
+  font-size: 28px;
+  height: 50px;
+/*  width: 80%;*/
+  margin: 10px 0px 0px 0px;
+  color: #333;
+  background-color: white;
+}
+
+.ListDescription,
+.componentDescription,
+.curataDescription {
   min-height: 40px;
   height: 120px;
   font-size: 18px;
@@ -755,24 +983,146 @@ h2.CheckOthers {
   box-shadow: inset 0 0 0 1px #ececec;
 }
 
+.curataDescription {
+  padding: 12px;
+  margin-left: 0px;
+  font-size: 21px;
+  color: #333;
+  box-shadow: inset 0 0 0 1px #fff;
+  margin-top: 10px;
+}
+
+.EntryTitle {
+  margin-left: 0px;
+  padding-left: 0px;
+  font-size: 35px;
+}
+
+.entryDetailsGroup {
+  background-color: white;
+  margin: 0px auto 25px auto;
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+  padding: 18px;
+  font-size: 20px;
+  color: #0e0e0e;
+  border-radius: 6px;
+  text-transform: capitalize;
+  position: relative;
+}
+
+.publicElementTitle {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+.componentDescription {
+  margin-top: 15px;
+  padding: 10px 15px;
+  box-shadow: 0px 5px 5px 1px #efefef;
+}
+
+.componentDescription:focus {
+  border: 1px solid #efefef;
+}
+
 .listDetails {
   margin: 20px 0px 10px 0px;
 }
 
 .Component {
-  background-color: #f7f7f7;
-  padding: 15px;
-  margin: 15px 0px;
-  border-radius: 3px;
-  border: 1px solid #e4e4e4;
+/*  background-color: #f9f9f9;*/
+  background-color: #fff;
+  padding: 18px;
+  margin: 15px auto;
+  font-size: 20px;
+  box-shadow: 0px 5px 5px 1px #efefef;
+  color: #333;
+  border-radius: 6px;
+  text-transform: capitalize;
+  position: relative;
 }
 
+.componentCSS {
+/*  border: 1px solid #f5f5f5;*/
+  background-color: white;
+  margin: 0px auto 0px auto;
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+/*  border-top: none;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;*/
+}
+
+
+.componentType {
+  font-size: 12px;
+  display: block;
+}
+
+.componentTitle {
+  background: transparent;
+  border-radius: 8px;
+/*  box-shadow: inset 0 0 0 1px #f1f1f1;*/
+  color: #333;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 10px 0px 0px 0px;
+  width: 500px;
+  min-height: 24px;
+  padding: 4px 10px;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  font-family: 'GothamRounded';
+  height: 35px;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  text-rendering: auto;
+  cursor: text;
+  white-space: pre-wrap;
+  -webkit-rtl-ordering: logical;
+  flex-direction: column;
+  transition-property: background-color,border-color,box-shadow;
+  transition-duration: 85ms;
+  transition-timing-function: ease;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  border: none;
+}
+
+.componentTitle:focus {
+  background: #fff;
+  border: none;
+/*  box-shadow: inset 0 0 0 2px #4725a9;*/
+}
+
+.editorSortable {
+  text-transform: none;
+}
+
+/*.Component:hover > .drop-down {
+  opacity: 1;
+}
+*/
 .entryComponent {
-  background-color: #f7f7f7;
-  padding: 15px;
-  margin: 15px 0px;
+  background-color: #fff;
+/*  padding: 15px;*/
+  padding: 0px 15px;
+/*  margin: 15px 0px;*/
+  margin: 0px;
   border-radius: 3px;
-  border: 1px solid #e4e4e4;
+}
+
+.lightBorderAddOn {
+  border: 1px solid #eee;
+}
+
+.entryComponents {
+  max-width: 700px;
+  width: 700px;
 }
 
 .listItemInput {
@@ -837,6 +1187,110 @@ h2.CheckOthers {
   display: inline-block;
 }
 
+.cancelDeleteEntry {
+  background: transparent;
+  padding: 0px;
+  margin: 0px;
+  line-height: 26px;
+  vertical-align: middle;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  color: #424242;
+}
+
+.cancelDeleteEntry:hover {
+  color: #8a8a8a;
+}
+
+.cancelDeleteEntry:hover .trashIcon {
+  fill: #8a8a8a !important;
+}
+
+.settingsButton {
+  background: #333;
+  padding: 0px 10px;
+  margin: 0px;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 10px;
+  line-height: 38px;
+}
+
+.settingsButton svg {
+  vertical-align: middle;
+  line-height: 24px;
+}
+
+.showPreview {
+  background-color: #673AB7;
+  color: white;
+  padding: 0px 11px;
+  border-radius: 4px;
+  margin-right: 15px;
+  vertical-align: middle;
+  line-height: 38px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0px 5px;
+  transition: .2s ease;
+}
+
+.viewLive, .publishEntry {
+  display: inline-block;
+  padding: 0px 11px;
+  border-radius: 4px;
+  margin-right: 15px;
+  vertical-align: middle;
+  line-height: 38px;
+  text-align: center;
+  margin: 0px 5px;
+  background-color: white;
+  border: 1px solid #efefef;
+  box-shadow: 0px 5px 7px 1px #f5f5f5;
+  transition: .2s ease;
+  cursor: pointer;
+}
+
+.viewLive:hover, .publishEntry:hover {
+  background-color: #f7f7f7;
+}
+
+.makeDraft {
+  background-color: #673AB7;
+  color: white;
+  padding: 0px 11px;
+  border-radius: 4px;
+  margin-right: 15px;
+  vertical-align: middle;
+  line-height: 38px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0px 5px;  
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.makeDraft:hover, .showPreview:hover {
+  background-color: #7E57C2;
+}
+
+.entryState {
+  font-size: 18px;
+}
+
+.goBack {
+  line-height: 42px;
+  vertical-align: middle;
+}
+
+.floatRight {
+  float: right;
+  line-height: 42px;
+  margin-right: 10px;
+}
+
 .saveListItemLink, .cancelListItemLink, .hideLinkContainer, .removeListItemLink {
   display: inline-block;
   line-height: 45px;
@@ -897,7 +1351,13 @@ h2.CheckOthers {
 /* Curatas */
 
 .curataContainer {
-  margin: 50px;
+  margin-top: 50px;
+  width: 70%;
+}
+
+.entriesContainer {
+  margin-top: 50px;
+  width: 70%;
 }
 
 .curataList {
@@ -905,25 +1365,115 @@ h2.CheckOthers {
   flex-wrap: wrap;
 }
 
-.singleCurata {
-  padding: 20px;
-  background-color: #f1f1f1;
-  border: 1px solid #d8d8d8;
-  border-radius: 2px;
+.singleEntry {
+  background-color: #f9f9f9;
+  border: 1px solid #efefef;
+  border-radius: 4px;
   margin-bottom: 10px;
-  margin-left: 5px;
+  margin-top: 5px;
+  margin-left: 7px;
   margin-right: 5px;
+  box-shadow: 0px 5px 7px 1px #f5f5f5;
+  transition: .2s ease;
+  cursor: pointer;
+}
+
+.singleEntry:hover {
+  transform: scale(1.03);
+}
+
+.settingsButton {
+  transition: .2s ease;
+}
+
+.settingsButton:hover {
+  background-color: #424242;
+}
+
+.settingsSideNav {
+  width: 275px;
+  height: 100%;
+  top: 57px;
+  right: 0;
+  overflow: hidden;
+/*  position: absolute;*/
+  position: fixed;
+  z-index: 1001;
+  background-color: #fff;
+  border-left: 1px solid #eee;
+}
+
+.closeEntrySettings {
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.closeEntrySettings:hover {
+  color: #757575;
+}
+
+.entrySettingsHeader {
+  background: #f7f7f7;
+  color: var(--color-neutral-700);
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #424242;
+}
+
+.entrySettingsContent {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+  padding: 11px 15px 11px 16px;
+}
+
+.entrySettingsBlock {
+  padding: 18px;
+  border-bottom: 1px solid #eee;
+  height: 100%;
+  width: 100%;
+}
+
+.entrySettingsDelete {
+  bottom: 57px;
+  position: absolute;
+  border-top: 1px solid #eee;
+  width: 100%;
+  display: flex;
+}
+
+.whiteButton {
+  border-radius: 4px;
+  padding: 11px 16px;
+  margin: 0px 6px;
+  box-sizing: border-box;
+  background-color: white;
+  border: 1px solid #efefef;
+  box-shadow: 0px 5px 7px 1px #f5f5f5;
+  display: block;
+  transition: .2s ease-in-out;
+}
+
+.whiteButton:hover {
+  background-color: #f7f7f7;
 }
 
 .sideNav {
   width: 200px;
   top: 64px;
-  position: fixed;
+/*  position: fixed;*/
   left: 0;
   overflow: hidden;
   z-index: 1001;
-  height: calc(100% - 64px);
-  background-color: #fff;
+/*  height: calc(100% - 64px);*/
+  background-color: #f9f9f9;
 }
 
 .sideNavButtons {
@@ -941,16 +1491,18 @@ h2.CheckOthers {
 }
 
 .sideNavMargin {
-  margin-left: 225px;
+/*  margin-left: 100px;*/
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .largeSideNavMargin {
-  margin-left: 275px;
+  margin-left: 125px;
 }
 
 .viewCurataLive {
   width: 110px;
-  background-color: #009688;
+  background-color: #607d8b;
   cursor: pointer;
   border-radius: 4px;
   padding: 12px 16px;
@@ -959,54 +1511,71 @@ h2.CheckOthers {
   color: white;
   transition: .2s ease-in-out;
   font-weight: bold;
+  display: block;
 }
 
 .viewCurataLive:hover {
-  background-color: #04bfae !important;
+  background-color: #78909C !important;
   transform: scale(1.02);
 }
 
-.addNewList, .createNewEntry {
+.addNewList, .createNewEntry, .addNewTemplate {
   width: 150px;
-  background-color: #ff0844;
+/*  background-color: #ff0844;*/
+  background-color: #673ab7;
   cursor: pointer;
   border-radius: 4px;
   padding: 12px 16px;
-  margin: 40px auto 20px auto;
+  margin: 20px 12px 55px 5px;
   box-sizing: border-box;
   color: white;
   transition: .2s ease-in-out;
   font-weight: bold;
 }
 
-.addNewList {
-  margin: 40px 12px 30px 5px;
+.addNewTemplate {
+  width: 175px;
 }
 
-.addNewList:hover, .createNewEntry:hover {
-  background-color: #ff0140d1 !important;
+.addNewList {
+  width: 215px;
+}
+
+.addNewList:hover, 
+.createNewEntry:hover, 
+.addNewTemplate:hover {
+/*  background-color: #ff0140d1 !important;*/
+  background-color: #7E57C2 !important;
   transform: scale(1.02); 
 }
 
+.curataSwitcher {
+  position: relative;
+}
+
 .currentCurataSwitch {
-  max-width: 160px;
+/*  max-width: 160px;*/
+  max-width: 180px;
   cursor: pointer;
   text-align: center;
-  font-size: 20px;
-  box-shadow: 0px 2px 0px 0 #e8e8e8;
+  font-size: 18px;
+/*  box-shadow: 0px 2px 0px 0 #e8e8e8;*/
   border-radius: 4px;
-  padding: 12px 16px;
-  background-color: #ececec;
+  padding: 12px 5px;
+  background-color: #eee;
+/*  background-color: #333333;*/
   margin: 40px auto 0px auto;
   box-sizing: border-box;
-  color: #292929;
+  color: #616161;
   transition: .2s ease-in-out;
   font-weight: bold;
+  position: relative;
 }
 
 .currentCurataSwitch:hover {
-  background-color: #f3f3f3 !important;
-  transform: scale(1.02);
+/*  background-color: #424242 !important;*/
+  background-color: #d0d0d0 !important;
+/*  transform: scale(1.02);*/
 }
 
 .goToAllCuratas {
@@ -1017,6 +1586,10 @@ h2.CheckOthers {
   margin-top: 15px;
 }
 
+.allCuratasLink {
+  color: #757575;
+}
+
 .allCuratasLink:hover {
   color: #565656;
 }
@@ -1025,13 +1598,15 @@ h2.CheckOthers {
   display: none;
 }
 
-.curataList, .entriesList {
+.curataList, .entriesList, .List {
   margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 
 
-button.button-white.confirmEntryDelete{
+button.button-white.confirmEntryDelete, button.button-white.confirmComponentDelete, {
   margin-left:50%;
   margin-top:50px;
   position:relative;
@@ -1063,11 +1638,18 @@ button.button-white.confirmEntryDelete{
   font-weight: 600;
   color: white;
   letter-spacing: 0.1rem;
-  background-color: #ff0744;
+/*  background-color: #ff0744;*/
+  background-color: #673AB7;
+  cursor: pointer;
   border-radius: 2px;
   border: none;
   padding: 1rem;
   text-align: center;
+  transition: .2s ease;
+}
+
+.button-filled:hover {
+  background-color: #7E57C2;
 }
 
 /*New code: adding button-outline style*/
@@ -1082,7 +1664,12 @@ button.button-white.confirmEntryDelete{
   text-align: center;
   background: none;
   padding:1rem;
+  cursor: pointer;
+  transition: .2s ease;
+}
 
+.button-outline:hover {
+  color: #b9bcc1;
 }
 
 /*New code: css related to dialog starts below*/
@@ -1106,7 +1693,7 @@ button.button-white.confirmEntryDelete{
   padding: 25px;
 }
 
-.emptyModal {
+.emptyModal, .emptyConfirmModal {
   display: none;
 }
 
@@ -1116,7 +1703,6 @@ button.button-white.confirmEntryDelete{
 }
 
 .big-content-wrapper {
-  widows: 350px;
   margin: auto;
   margin-top: 20px;
 }
@@ -1139,15 +1725,15 @@ button.button-white.confirmEntryDelete{
   margin-right: auto;
 }
 
-.button-outline.cancelEntryDelete{
+.button-outline.cancelEntryDelete, .button-outline.cancelComponentDelete{
   width:98px;
 }
-.button-filled.confirmEntryDelete{
+.button-filled.confirmEntryDelete, .button-filled.confirmComponentDelete{
   width:98px;
   margin-right:12px;
 }
 
-.modalBackground {
+.modalBackground, .confirmBackground {
   background-color: darkgrey;
   opacity: 0.5;
   top: 0;
@@ -1157,21 +1743,44 @@ button.button-white.confirmEntryDelete{
   height: 100%;
 }
 
+.confirmBackground {
+  z-index: 1250;
+}
+
+.z-index1300 {
+  z-index: 1300;
+}
+
+.z-index1200 {
+  z-index: 1200;
+}
+
 .TemplateHolder {
-  max-width: 700px;
+  max-width: 650px;
   height: 100%;
   margin: 0 auto;
   margin-top: 20px;
+  width: 650px;
 }
 
 .templateArea {
-  margin-left: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 50px;
 }
 
 .ButtonGroup {
   width: 100%;
 }
 
+.sectionArea {
+  width: 100%;
+}
+
+.recalculatedWidth {
+  width: calc(100% - 225px);
+}
 
 
 
@@ -1320,17 +1929,39 @@ button.button-white.confirmEntryDelete{
 
 .cancelListCreating {
   float: right;
+  padding: 7px 11px;
+  transition: .2s ease-in-out;
+}
+
+.cancelListCreating:hover {
+    background-color: #ececec;
+    border-radius: 360px;
+    cursor: pointer;
+}
+
+.deleteArchived {
+  float: right;
 }
 
 
 .templateContainer  {
-  border-radius: 3px;
+  border-radius: 4px;
   background-color: #f5f5f5;
-  margin-top: 15px;
-  font-size: 18px;
+  margin-top: 23px;
+  font-size: 26px;
+  color: #333;
   font-weight: bold;
-  border: 2px solid #eaeaea;
+  border: 1px solid #eaeaea;
   padding: 20px 15px;
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+  cursor: pointer;
+  transition: .2s ease;
+/*  overflow: scroll;
+  width: 450px;*/
+}
+
+.templateContainer:hover {
+  transform: scale(1.02);
 }
 
 .templateName {
@@ -1339,7 +1970,7 @@ button.button-white.confirmEntryDelete{
 }
 
 .createNewTemplate {
-  background-color: #ff0744;
+  background-color: #673ab7;
   padding: 12px;
   color: white;
   font-size: 18px;
@@ -1355,7 +1986,7 @@ button.button-white.confirmEntryDelete{
 }
 
 .createNewTemplate:hover {
-  background-color: #ff0140d1 !important;
+  background-color: #7e57c2 !important;
   transform: scale(1.02);
 }
 
@@ -1364,10 +1995,29 @@ button.button-white.confirmEntryDelete{
 }
 
 .ribbonList {
-  background-color: #eee;
   display: inline-block;
-  width: 550px;
-  padding: 15px;
+/*  width: 550px;*/
+  width: 600px;
+  padding: 25px;
+  font-size: 18px;
+  font-weight: bold;
+/*  color: #424242;*/
+}
+
+.messageText {
+  display: inline-block;
+  width: 600px;
+  padding: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #efefef;
+}
+
+.curata-link {
+  padding: 6px 0px;
+  box-sizing: border-box;
+  display: block;
+  color: #666;
 }
 
 .templateDetails {
@@ -1394,6 +2044,43 @@ button.button-white.confirmEntryDelete{
   font-weight: 400;
 }
 
+.curataPageTitle {
+  font-size: 45px;
+  font-weight: bold;
+  color: #333;
+}
+
+.entryMetaTitle {
+  font-size: 45px;
+  color: #616161;
+  font-weight: bold;
+  margin-top: 100px;
+  margin-bottom: 25px;
+}
+
+.entryContentTitle {
+  font-size: 45px;
+  color: #616161;
+  font-weight: bold;
+  margin-bottom: -40px;
+  margin-top: 100px;
+}
+
+
+
+/*
+===========================
+== Top navigation
+===========================
+*/
+
+
+.topnav-container {
+  width: 100%;
+  vertical-align: middle;
+  height: 42px;
+  padding: 4px 0px;
+}
 
 /*
 ===========================
@@ -1401,7 +2088,7 @@ button.button-white.confirmEntryDelete{
 ===========================
 */
 
-.tooltip2 {
+.tooltip2, .tooltip3 {
   position: relative;
   display: inline-block;
   border-bottom: 1px solid #d6d6d6;
@@ -1413,7 +2100,12 @@ button.button-white.confirmEntryDelete{
   cursor: pointer;
 }
 
-.tooltip2 .tooltiptext2 {
+.tooltip3 {
+  height: 15px;
+  margin-left: -25px;
+}
+
+.tooltip2 .tooltiptext2, .tooltip3 .tooltiptext3 {
   visibility: hidden;
   width: 350px;
   background-color: #f1f1f1;
@@ -1430,12 +2122,21 @@ button.button-white.confirmEntryDelete{
   left: 140%;
 }
 
-.tooltip2:hover {
+.tooltip3 .tooltiptext3 {
+/*  right: 140%;*/
+  right: 300%;
+  left: unset;
+  width: 625px;
+  text-align: left;
+  background-color: #f9f9f9;
+}
+
+.tooltip2:hover, .tooltip3:hover {
   transform: scale(1.02);
   background-color: #dedede;
 }
 
-.tooltip2:hover .tooltiptext2 {
+.tooltip2:hover .tooltiptext2, .tooltip3:hover .tooltiptext3 {
   visibility: visible;
 }
 
@@ -1456,26 +2157,34 @@ button.button-white.confirmEntryDelete{
 ===========================
 */
 
-.templateTitleContainer2 {
+.templateTitleContainer, .templateTitleContainer2 {
   margin-top: 20px;
+}
+
+.templateTitleContainer {
+  margin-top: 25px;
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 8px;
+  width: 750px;
 }
 
 .templateTitle2 {
   background: white;
-  border-radius: 3px;
-  box-shadow: inset 0 0 0 2px #ececec;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px #f1f1f1;
   font-size: 30px;
   font-weight: 700;
   line-height: 24px;
-  margin: 10px 0px 0px 10px;
+  margin: 10px 0px 0px 0px;
   width: 600px;
   min-height: 24px;
-  padding: 4px 8px;
+  padding: 4px 10px;
   resize: none;
   overflow: hidden;
   overflow-wrap: break-word;
   font-family: 'GothamRounded';
-  height: 40px;
+  height: 50px;
   letter-spacing: normal;
   word-spacing: normal;
   text-transform: none;
@@ -1521,6 +2230,82 @@ button.button-white.confirmEntryDelete{
   background-color: white;
 }
 
+.changeCurataDomainArea, .changeCurataPrivacyArea {
+  padding-top: 18px;
+}
+
+.deleteCurataButton {
+  text-align: center;
+  background-color: #a70029;
+  padding: 15px;
+  margin-top: 20px;
+  width: 115px;
+  border-radius: 3px;
+  border: 2px solid #710000;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  display: block;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.deleteCurataButton:hover {
+  transform: scale(1.02);
+}
+
+.deleteCurataArea {
+  padding: 30px;
+  background-color: #f5f5f5;
+  border: 1px solid #eaeaea;
+  border-radius: 3px;
+  max-width: 638px;
+  margin-bottom: 50px;
+}
+
+.curataSettingsArea {
+  padding: 30px;
+  padding-left: 0px;
+  /* border: 1px solid #eee; */
+  margin-top: 20px;
+  border-radius: 3px;
+  max-width: 700px;
+}
+
+.curataSettingsGroup {
+/*  padding: 30px;
+  border: 1px solid #f9f9f9;
+  margin: 28px auto;
+  border-radius: 4px;
+  box-shadow: 0px 3px 5px 0px #f1f1f1;
+  background-color: #fff;*/
+  padding: 7px 30px;
+  border: 1px solid #f9f9f9;
+  margin: 28px auto;
+  border-radius: 4px;
+  box-shadow: 0px 3px 5px 0px #f1f1f1;
+  background-color: #fff;
+  margin-bottom: 40px;
+  min-height: 66px;
+}
+
+.curataSetting {
+/*  padding: 30px;
+  border: 1px solid #f9f9f9;
+  margin: 28px auto;
+  border-radius: 4px;
+  box-shadow: 0px 3px 5px 0px #f1f1f1;
+  background-color: #fff;  */
+}
+
+.curataSettingsGroupTitle {
+  font-size: 19px;
+  margin-bottom: -16px;
+  color: #757575;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
 .CreateListButton {
   text-align: center;
   background-color: #ff0744;
@@ -1554,9 +2339,484 @@ button.button-white.confirmEntryDelete{
 
 
 .helperNavigation {
-  padding: 10px 15px;
-  background-color: #f1f1f1;
+  padding: 4px 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+  height: 44px;
 }
+
+
+
+
+/* DROPDOWN */
+
+.drop-down2 {
+/*    display: inline-block;*/
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  right: 0;
+/*  opacity: 0;*/
+}
+
+.drop-down__button2 {
+/*    background: linear-gradient(to right,#3d6def, #8FADFE);*/
+    display: inline-block;
+    align-self: flex-end;
+    line-height: 40px;
+    padding: 0 18px;
+    text-align: left;
+    border-radius: 4px;
+/*    box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.2);*/
+    cursor: pointer;
+}
+
+.drop-down__menu-box2, 
+.drop-down__menu-box3 {
+    position: absolute;
+    top: 30px;
+    width: 165px;
+    right: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    visibility: hidden;
+    text-transform: none;
+    opacity: 0;
+    margin-top: 5px;
+    z-index: 1000;
+}
+
+.drop-down__menu-box3 {
+  width: 160px;
+  top: 40px;
+  height: 350px;
+  overflow: scroll;
+}
+
+
+.drop-down--active .drop-down__menu-box2,
+.drop-down--active .drop-down__menu-box3 {
+    visibility: visible;
+    opacity: 1;
+    margin-top: 15px;
+}
+
+.drop-down__menu-box2:before {
+    content: '';
+    background-color: transparent;
+    border-right: 8px solid transparent;
+    position: absolute;
+    border-left: 8px solid transparent;
+    border-bottom: 8px solid #fff;
+    border-top: 8px solid transparent;
+    top: -15px;
+    right: 18px;
+}
+
+.drop-down__menu-box2:after {
+    content: '';
+    background-color: transparent;
+}
+
+.drop-down__menu2,
+.drop-down__menu3 {
+    margin: 0;
+    padding: 0 13px;
+    list-style: none;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 20px;
+}
+
+.drop-down__item2,
+.drop-down__item3 {
+    font-size: 13px;
+    padding: 10px 0;
+    text-align: left;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    position: relative;
+    border-bottom: 1px solid #e0e2e9;
+    display: list-item;
+}
+
+.drop-down__item2:hover {
+  color: #673ab7;
+}
+
+.drop-down__item3:hover {
+  color: #673ab7;
+}
+
+.drop-down__item2:before {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 28px;
+    background-color: #673ab7;
+    left: -13px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+}
+
+.drop-down__item3:before {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 28px;
+    background-color: #673ab7;
+    left: -13px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+}
+
+.drop-down__item2:hover:before,
+.drop-down__item3:hover:before {
+    display: block;
+}
+
+.drop-down-extra-styling {
+  font-size: 17px;
+  padding: 10px 0;
+  margin-right: 20px;
+  text-align: left;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  position: relative;
+  border-bottom: none;
+  display: list-item;
+}
+
+.drop-down-extra-width {
+  width: 180px;
+  right: 10px;
+}
+
+.curataSwitchHeader, .defaultCurata {
+  background-color: #fff;
+  padding: 18px 12px 8px 12px;
+  box-sizing: border-box;
+  display: block;
+  color: #616161;
+  font-weight: bold;
+  transition: .2s ease;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.makeDefault, .defaultCurata {
+  background-color: #673AB7;
+  padding: 16px 18px;
+  box-sizing: border-box;
+  display: block;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.makeDefault:hover {
+  background-color: #7E57C2;
+}
+
+.curataName {
+  padding: 20px;
+  font-size: 25px;
+  color: #555;
+  margin-bottom: -25px;
+  text-align: center;
+  margin-top: 20px; 
+}
+
+.IsRequired {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  color: #909090;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 0px 2px;
+  margin-top: 7px;
+}
+
+.archivedComp {
+  background-color: #f9f9f9;
+  padding: 18px;
+  margin: 15px auto;
+  font-size: 20px;
+  box-shadow: 0px 2px 0px #efefef;
+  color: #0e0e0e;
+  border-radius: 6px;
+  text-transform: capitalize;
+  position: relative;
+}
+
+.emptyArchives {
+  background-color: #313131;
+  padding: 18px;
+  margin: 15px auto;
+  font-size: 20px;
+  box-shadow: 0px 2px 0px #efefef;
+  color: white;
+  border-radius: 6px;
+  position: relative;
+}
+
+.templateArchives {
+  width: 92%;
+  min-height: 96%;
+  top: 4%;
+}
+
+.wrapperWidth {
+  width: 600px;
+}
+
+.componentCategory {
+  margin-top: 20px;
+  text-transform: capitalize;
+}
+
+.addArchivedComponent {
+  margin-top: 20px;
+  background-color: #ececec;
+  width: 200px;
+  text-align: center;
+  border-radius: 6px;
+  color: black;
+  padding: 7px;
+  font-size: 17px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+}
+
+.addArchivedComponent:hover {
+  transform: scale(1.02);
+}
+
+.defaultEntryContent {
+  padding: 15px;
+}
+
+.entryComponentGroup {
+  margin-top: 60px;
+  margin-bottom: 25px;
+}
+
+.entryComponentTitle {
+/*  padding: 15px 10px;*/
+  padding: 15px 10px 12px 0px;
+/*  font-size: 26px;*/
+  font-size: 15px;
+  border-radius: 8px;
+  font-weight: bold;
+/*  text-transform: capitalize;*/
+  text-transform: uppercase;
+  color: #9E9E9E;
+  margin-bottom: 0px;
+}
+
+.entryComponentTitle span {
+  float: right;
+  text-transform: none;
+  font-size: 16px !important;
+  color: #adadad;
+  margin-left: 10px;
+  cursor: default;
+}
+
+.majorSettingGroup {
+  border-radius: 4px;
+  background-color: #fbfbfb;
+  padding: 30px 40px;
+  margin-top: 30px;
+  min-width: 700px;
+  width: 700px;
+}
+
+.settingGroup {
+  margin: 30px 0px;
+  padding: 30px;
+  border: 1px solid #eee;
+  background-color: white;
+  border-radius: 3px;
+  border: none;
+}
+
+.subSettingGroup {
+  margin: 15px 0px;
+  padding: 15px;
+}
+
+.settingBox {
+  border: 2px solid #cecee6;
+  padding: 5px;
+  border-radius: 3px;
+  background-color: white;
+  font-size: 19px;
+  margin: 15px 5px;
+  cursor: pointer;
+  transition: .2s ease-in-out;
+  font-weight: bold;
+}
+
+.settingBox:hover {
+  transform: scale(1.05);
+  background-color: #cecee6;
+}
+
+.tinySettingBox {
+  border: 2px solid #cecee6;
+  padding: 5px;
+  border-radius: 3px;
+  background-color: white;
+  font-size: 19px;
+  margin: 15px 5px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tinySettingBox:hover {
+  transform: scale(1.05);
+  background-color: #cecee6;
+}
+
+.settingGroupTitle {
+  font-size: 20px;
+}
+
+.majorSettingGroupTitle {
+  font-size: 24px;
+}
+
+.subSettingGroupTitle {
+  font-size: 18px;
+}
+
+.fontTest {
+  font-family: sans-serif;
+  font-size: 18px;
+}
+
+.fontSelectGroup {
+  font-size: 1em;
+  zoom: 1.3;
+  padding: 5px 10px;
+  outline: none;
+  border-radius: 3px;
+  border: 1px solid #eee;
+  margin-top: 10px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.fontSelectGroup:hover {
+  transform: scale(1.02);
+  background-color: #f1f1f1;
+}
+
+.fontTestGroup {
+  margin-left: 35px;
+}
+
+
+
+.singleList {
+  margin-bottom: 15px;
+/*  background-color: #fbfbfb;*/
+  background-color: #ffffff;
+/*  border: 1px solid #f5f5f5;*/
+  border-radius: 4px;
+  text-transform: capitalize;
+/*  box-shadow: 0px 5px 5px 1px #f5f5f5;*/
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+}
+
+.singleList:hover {
+  transform: scale(1.02);
+}
+
+.messageBlock {
+  margin-bottom: 15px;
+  background-color: #333;
+  border-radius: 4px;
+  transition: .2s ease-in-out;
+}
+
+.messageBlock:hover {
+  transform: scale(1.02);
+}
+
+
+.imageContainer {
+  position: relative;
+  transition: .2s ease-in-out;
+}
+
+.imageContainer:hover {
+  transform: scale(1.02);
+}
+
+.imageContainer:hover > .deleteImg {
+  opacity: 1;
+}
+
+.deleteImg {
+  position: absolute;
+  float: right;
+  top: 20px;
+  right: 20px;
+  padding: 4px 8px;
+  border-radius: 360px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s ease-in-out;
+  background-color: #e6e6e6;
+  opacity: 0;
+}
+
+.deleteImg:hover {
+  background-color: red;
+}
+
+.theGallery {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 15px;
+}
+
+.curataEntryImage {
+  cursor: pointer;
+  object-fit: cover;
+  margin: 14px;
+  max-height: 250px;
+  border-radius: 3px;
+  box-shadow: 0px 5px 5px 0px #d0d0d0;
+/*  max-width: 350px;*/
+  width: 250px;
+  height: 250px;
+}
+
