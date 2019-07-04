@@ -70,7 +70,7 @@
   	}
 
   	.noDefaultCurataTextSmall {
-  		font-size: 15px;
+  		font-size: 15px !important;
   		line-height: 18px;
   	}
 
