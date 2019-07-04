@@ -57,6 +57,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /*====== AUTHENTICATION ======*/
 
+app.use(function(req, res, next) {
+  console.log('handling request for: ' + req.url);
+  next();
+});
+
 // Express session middleware
 app.use(session({
   secret: 'keyboard cat',

@@ -1,0 +1,86 @@
+@media screen and (max-width: 480px) {
+  	body {
+  		max-width: 480px;
+  	}
+
+  	.nav-container {
+  		padding: 10px 0px;
+  		flex-wrap: wrap;
+  	}
+
+  	.title-container {
+  		width: 100%;
+  		margin-bottom: 10px;
+  	}
+
+  	.navlinks-container {
+  		margin-left: 10px;
+  	}
+
+  	.navlink {
+  		padding: 10px 6px;
+  		margin: 0px 4px;
+  	}
+  	
+  	.Dropdown-profile {
+  		padding: 4px;
+  	}
+
+  	.Dropdown-nav {
+  		right: 12px;
+  		width: 94%;
+  		margin: 15px auto;
+  	}
+
+  	.so-good-container {
+  		position: relative;
+  		margin-bottom: 5px;
+  		margin-left: 5px;
+  	}
+
+  	.allCuratas {
+  		width: 100%;
+  	}
+
+  	.allCuratasContainer {
+  		margin: 50px auto 35px auto;
+  	}
+
+  	.curataPageTitle {
+  		font-size: 35px;
+  		margin-left: 20px;
+  	}
+
+  	.alteredNewCurata {
+  		position: relative;
+		margin-left: 18px;
+		margin-top: 20px;
+		font-size: 20px;
+		width: 146px;
+		padding: 9px;
+  	}
+
+  	.noDefaultCurata {
+  		width: 90%;
+  		padding: 25px;
+  	}
+
+  	.noDefaultCurataText {
+  		font-size: 25px;
+  	}
+
+  	.noDefaultCurataTextSmall {
+  		font-size: 16px;
+  		line-height: 18px;
+  	}
+
+  	.curatasList {
+  		text-align: center;
+  	}
+
+  	.singleCurata {
+  		width: 90%;
+  		height: 200px;
+  		text-align: left;
+  	}
+  }

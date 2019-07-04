@@ -15,14 +15,14 @@ block content
 			.allCuratas
 				.curataPageTitle All my Curatas
 				if (user.defaultCurataId == none || user.defaultCurataId == undefined || !user.defaultCurataId)
-					a.addNewCurata.alteredNewCurata.blackBackground(href='/curatas/' + user.username + '/curatas/curate') + New Curata
-						.addNewCurataText
+					a.addNewCurata.alteredNewCurata.blackBackground(href='/curatas/' + user.username + '/curatas/curate') 
+						.addNewCurataText + New Curata
 					.noDefaultCurata
 						p.noDefaultCurataText You have no default Curata.
-						p.noDefaultCurataTextSmall If you want to the dashboard button to take you to a specific Curata, rather than all of your Curatas, then set your desired Curata as default Curata.
+						p.noDefaultCurataTextSmall If you want the dashboard button to take you to a specific Curata, rather than all of your Curatas, then set your desired Curata as default.
 				else
-					a.addNewCurata.alteredNewCurata(href='/curatas/' + user.username + '/curatas/curate') + New Curata
-						.addNewCurataText
+					a.addNewCurata.alteredNewCurata(href='/curatas/' + user.username + '/curatas/curate')
+						.addNewCurataText + New Curata
 				ul.curatasList
 					each curata in curatas
 						li.singleCurata
@@ -33,5 +33,5 @@ block content
 				.noCuratas
 					.noCuratasText You have no Curatas.
 					.noCuratasTextSmall Why not create one?
-					a.addNewCurata(href='/curatas/' + user.username + '/curatas/curate') + New Curata
-						.addNewCurataText
+					a.addNewCurata(href='/curatas/' + user.username + '/curatas/curate')
+						.addNewCurataText + New Curata
