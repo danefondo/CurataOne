@@ -36,6 +36,7 @@ router.post('/register', function(req, res) {
 	const password = req.body.password;
 	const passcheck = req.body.passcheck;
 	const dateCreated = new Date();
+	// code change
 
 	// // check if username already exists
 	// User.find({"username": username}, function(err, docs) {
