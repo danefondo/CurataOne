@@ -16,7 +16,6 @@
     "aws-sdk": "^2.578.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "mailgun-js": "^0.22.0",
@@ -27,5 +26,8 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.4"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
   }
 }
