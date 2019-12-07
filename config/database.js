@@ -1,5 +1,7 @@
+const dotenv = require('dotenv');
+dotenv.config();
 module.exports = {
-	db_uri: 'mongodb+srv://robertunyx:Xr5a8u2323!@curateapp-lm8hq.mongodb.net/curateapp',
-	// db_uri: 'mongodb://127.0.0.1:27018/curata-test-db',
-	secret: 'mysecret'
-}
+  db_uri: process.env.DB_URI,
+  secret: process.env.SECRET,
+  PORT: process.env.PORT
+};

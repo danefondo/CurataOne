@@ -7,9 +7,6 @@ const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
 const dotenv = require('dotenv');
-dotenv.config();
-console.log(`Your port is ${process.env.PORT}`); // 8626
-
 
 // Curata -- modularized content
 
