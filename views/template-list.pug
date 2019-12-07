@@ -1,24 +1,41 @@
-extends layout
+extends layout_buttonless
 
 block heading
+	- var coreURL = 'dashboard';
 	.helperNavigation
 		.navlinks-container
-			a.navlink(href='/curatas/' + user.username + '/curatas/' + curataId) &larr; Back to lists
+			a.navlink(href='/' + coreURL + '/' + user.username + '/curatas/' + curataId) &larr; Back to lists
 			//- a.navlink Cancel
+			p.messageUpdate.inline
 
 block content
+	- var coreURL = 'dashboard';
 	.curataId(data-curataId= curataId)
 	.templateArea
 		.templateDetails
-			p.title4vh Customize your template. 
-			p.inline Don't worry, your template is automatically saved!
+			p.templateDetailsTitle Create your list
+			p.inline Your list is automatically created and saved!
 			.tooltip2.inline
 				| ?
-				span.tooltiptext2 Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder. 
+				span.tooltiptext2 Your list is created the moment you write something in the title or description area.
+			.CreateListArea
+				.listDetails
+					p.listTitleInstruction Give your list a name:
+					input.ListTitle(placeholder= 'What do you want to call your list?')
+				.listDetails
+					p.listTitleInstruction Describe its purpose:
+					textarea.ListDescription(placeholder= 'What is this list about?')
+				//- a.CreateListButton Create list!
+		.templateDetails
+			p.templateDetailsTitle Customize your template. 
+			p.inline Don't worry, your template is also automatically created and saved!
+			.tooltip2.inline
+				| ?
+				span.tooltiptext2 Your template is created the moment you write something in the title or description area.
 			//- p (View examples / Browse template library)
 			.templateTitleContainer2
-				.title2p5vh Template title:
-				input.templateTitle2.unsortable
+				.templateTitleInstruction Template title:
+				input.templateTitle2.unsortable(placeholder= 'Give your template a name!')
 		.TemplateConstructor
 			.Components
 				ul
@@ -91,15 +108,6 @@ block content
 					//- It is also possible to edit Name / Title placeholder
 					//- You can also turn the title into an image and give it a subtitle or something
 					li.Component.unsortable.TestHandle Drag blocks here from the left
-		.CreateListArea
-			.listDetails
-				p.title20px Give your list a name:
-				input.ListTitle
-			.listDetails
-				p.title20px Describe its purpose:
-				textarea.ListDescription(placeholder= 'What is this list about?')
-			a.CreateListButton Create list!
-			a.goToLists Or go to all lists
 
 
 

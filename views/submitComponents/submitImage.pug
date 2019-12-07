@@ -1,0 +1,13 @@
+mixin submitImage(component)
+	- var coreURL = "dashboard";
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="image" data-order= component.componentOrder)
+		.sub-sortable-container
+			.imageBlock + Upload Image
+				form.imageForm(action= "/" + coreURL + "/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+					input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+			.ImageTitleBlock
+			.ImageTitleAddingBlock
+				.addImageTitle + Add Title
+			.ImageDescriptionBlock
+			.ImageDescriptionAddingBlock
+				.addImageDescription + Add Description

@@ -49,7 +49,7 @@ function updateComponentOrderInDB() {
 			entryId: entryId
 		},
 		type: 'POST',
-		url: '/curatas/UpdateComponentPosition',
+		url: '/dashboard/UpdateComponentPosition',
 		success: function(response) {
 			console.log("Successfully updated positions.");
 			if (receiveInProgress == true) {
@@ -179,7 +179,7 @@ $(".sortable").sortable({
 					    entryId: entryId
 					  },
 					  type: 'POST',
-					  url: '/curatas/createNewTemplateWithComponent',
+					  url: '/dashboard/createNewTemplateWithComponent',
 					  success: function(data){
 					    console.log("Template created.", data);
 					    $('.Template').attr('id', data.template._id);
@@ -221,7 +221,7 @@ $(".sortable").sortable({
 						entryId: entryId
 					},
 					type: 'POST',
-					url: '/curatas/updateTemplateComponent',
+					url: '/dashboard/updateTemplateComponent',
 					success: function(response) {
 						console.log("Successfully updated template: ", response.template);
 						if (response.component._id) {
@@ -302,7 +302,7 @@ $(".sortable").sortable({
 					templateComponentId: templateComponentId
 				},
 				type: 'DELETE',
-				url: '/curatas/deleteTemplateComponent',
+				url: '/dashboard/deleteTemplateComponent',
 				success: function(data) {
 					console.log("Successfully removed component.");
 					component.remove();
@@ -345,7 +345,7 @@ $(".sortable").sortable({
 					templateComponentId: templateComponentId,
 				},
 				type: 'DELETE',
-				url: '/curatas/archiveComponent',
+				url: '/dashboard/archiveComponent',
 				success: function(data) {
 					console.log("Successfully removed component.");
 					component.remove();
@@ -375,7 +375,7 @@ $(".sortable").sortable({
 	// 			templateId: templateId
 	// 		},
 	// 		type: 'GET',
-	// 		url: '/curatas/checkTemplateArchives',
+	// 		url: '/dashboard/checkTemplateArchives',
 	// 		success: function(data) {
 	// 			console.log("Received template data: ", data);
 	// 			if (data.archivedEntryComponents !== "N/A") {
@@ -413,7 +413,7 @@ $(".sortable").sortable({
 					templateId: templateId
 				},
 				type: 'POST',
-				url: '/curatas/checkTemplateArchives',
+				url: '/dashboard/checkTemplateArchives',
 				success: function(data) {
 					console.log("Received template data: ", data);
 
@@ -561,7 +561,7 @@ $(".sortable").sortable({
 					templateComponentId: templateComponentId,
 				},
 				type: 'POST',
-				url: '/curatas/unarchiveComponent',
+				url: '/dashboard/unarchiveComponent',
 				success: function(data) {
 
 					let tempComp = data.templateComponent;
@@ -683,7 +683,7 @@ $(".sortable").sortable({
 					templateId
 				},
 				type: 'POST',
-				url: '/curatas/checkIfRequired',
+				url: '/dashboard/checkIfRequired',
 				success: function(data) {
 					console.log("Successfully checked required state: ", data);
 					let state = data.component.requiredState;
@@ -706,7 +706,7 @@ $(".sortable").sortable({
 								entryId: entryId
 							},
 							type: 'POST',
-							url: '/curatas/markComponentRequired',
+							url: '/dashboard/markComponentRequired',
 							success: function(data) {
 								console.log("Successfully marked required.");
 								if (requiredState == true) {
@@ -733,7 +733,7 @@ $(".sortable").sortable({
 								requiredState: requiredState
 							},
 							type: 'POST',
-							url: '/curatas/markComponentRequired',
+							url: '/dashboard/markComponentRequired',
 							success: function(data) {
 								console.log("Successfully marked required.");
 								if (requiredState == true) {
@@ -807,7 +807,7 @@ $(".sortable").sortable({
 					templateId: templateId
 				},
 				type: 'DELETE',
-				url: '/curatas/permaDeleteComponent',
+				url: '/dashboard/permaDeleteComponent',
 				success: function(data) {
 					console.log("Successfully deleted archived component with all related content.")
 					deleteConfirmationModal.hide();
@@ -870,7 +870,7 @@ $(".sortable").sortable({
 			    templateId: templateId
 			  },
 			  type: 'POST',
-			  url: '/curatas/removeTemplateComponentDescription',
+			  url: '/dashboard/removeTemplateComponentDescription',
 			  success: function(Item){
 			    console.log("Component description successfully removed.")
 			    // Display success message?
@@ -904,7 +904,7 @@ $(".sortable").sortable({
 			    templateId: templateId
 			  },
 			  type: 'POST',
-			  url: '/curatas/UpdateTemplateComponentDescription',
+			  url: '/dashboard/UpdateTemplateComponentDescription',
 			  success: function(Item){
 			    console.log("Component description successfully updated.")
 			    // Display success message?
@@ -935,7 +935,7 @@ $(".sortable").sortable({
 			    templateId: templateId
 			  },
 			  type: 'POST',
-			  url: '/curatas/UpdateTemplateComponentTitle',
+			  url: '/dashboard/UpdateTemplateComponentTitle',
 			  success: function(Item){
 			    console.log("Component title successfully updated.")
 			    // Display success message?

@@ -23,3 +23,5 @@ const taskSchema = new mongoose.Schema({
 });
 
 const Task = module.exports = mongoose.model('Task', taskSchema);
+
+// Highest admins can delete any task. Therefore if an owner deletes their account, but their tasks still remain all around the Curata, then it will be possible to delete them

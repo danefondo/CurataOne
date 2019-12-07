@@ -1,0 +1,110 @@
+extends layout_buttonless_public
+
+include submitComponents/submitHeading
+include submitComponents/submitImage
+include submitComponents/submitTextarea
+include submitComponents/submitGallery
+include submitComponents/submitQuote
+include submitComponents/submitInfoBox
+include submitComponents/submitExampleBox
+include submitComponents/submitExpandable
+include submitComponents/submitQuestionAnswer
+include submitComponents/submitSectionBreak
+include submitComponents/submitList
+include submitComponents/submitChecklist
+include submitComponents/submitLink
+
+block content
+	- var coreURL = "dashboard";
+	//- disable loading if no list or template
+	//- disable loading if submit not enabled
+	.modal__deleteAccount
+		.modalBackground__deleteAccount
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to delete your account?
+				.msg-body Your account will be permanently deleted and you will lose ownership and access to all your existing content.
+				.action-group
+					.cancelPermaDeleteAccount.button-outline CANCEL
+					.confirmPermaDeleteAccount.button-filled DELETE
+	.container__submitEntry.sideNavMargin
+		.headerMeta__submitEntry
+			.pageTitle__submitEntry Submit entry to
+				span.pageTitleSpan__submitEntry  #{curata.curataName}
+			.pageDescription__submitEntry This is a description for the list
+		//- if user, auto save & create drafts
+		if (!user)
+			.notLoggedIn
+				p Sign up to create drafts and enable autosave
+		.pageContent__submitEntry
+			.tab
+				button.tablinks.activeTab(data-tab="submissionContainer__submitEntry") Submit
+				button.tablinks(data-tab= "draftsContainer__submitEntry") Drafts 0
+				//- (#{draftCount}) 
+			.pageBlock__submitEntry
+				#submissionContainer__submitEntry.tabcontent.block
+					.submissionTemplate__submitEntry
+						.submissionMeta__submitEntry
+							.submissionComponent__submitEntry
+								.submissionComponentName__submitEntry Entry title
+								.submissionComponentContent__submitEntry
+									input.submissionTitleInput__submitEntry(placeholder= "What do you want to call the entry?")
+							.submissionComponent__submitEntry
+								.submissionComponentName__submitEntry Entry description
+								.submissionComponentContent__submitEntry
+									.mainEditor
+										.editorTools.unreset(id= "toolbar__submit")
+										.editorText.unreset(id= "editor__submit")
+											p Write a description
+							.submissionComponent__submitEntry
+								.submissionComponentName__submitEntry Entry image
+								.submissionComponentContent__submitEntry
+									.mainImage
+										.imageBlock(data-type= "mainImage")
+											form.imageForm(action= "/" + coreURL + "/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+												input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+							.submissionComponent__submitEntry
+								.submissionComponentName__submitEntry Entry link
+								.submissionComponentContent__submitEntry
+									.linkContainer
+										.addEntryLink + Add link
+						if (template.components.length)
+							ul.submissionComponents__submitEntry
+								each component in template.components
+									.submissionComponentContainer__submitEntry
+										.submissionComponentName__submitEntry #{component.componentType}
+											span(style= "font-size:15px") &#9432;
+										if (component.componentType == "heading")
+											+submitHeading(component)
+										if component.componentType == "textarea"
+											+submitText(component)
+										if component.componentType == "image"
+											+submitImage(component)
+										if component.componentType == "image-gallery"
+											+submitImageGallery(component)
+										if component.componentType == "question-answer"
+											+submitQuestionAnswer(component)
+										if component.componentType == "expandable"
+											+submitExpandable(component)
+										if component.componentType == "quote"
+											+submitQuote(component)
+										if component.componentType == "info-box"
+											+submitInfoBox(component)
+										if component.componentType == "example-box"
+											+submitExampleBox(component)
+										if component.componentType == "section-break"
+											+submitSectionBreak(component)
+										if component.componentType == "list"
+											+submitList(component)
+										if component.componentType == "checklist"
+											+submitChecklist(component)
+										if component.componentType == "link"
+											+submitLink(component)
+				#draftsContainer__submitEntry.tabcontent
+					//- load content into form
+					.draftsContainer__submitEntry
+						p Here are all your drafts for #{curata.curataName}. Click on any draft to continue editing.
+						ul.drafts__submitEntry
+							//- each draft in list
+							//- 	li.draft__submitEntry #{draft.name}
+

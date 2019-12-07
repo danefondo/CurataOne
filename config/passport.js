@@ -36,6 +36,14 @@ module.exports = function(passport){
   passport.serializeUser(function(user, done) {
     done(null, user.id);
     console.log("Done serializing " + user.id)
+    console.log("Going to change last login date.");
+    User.findById(user.id, function(err, user) {
+      let loginDate = new Date();
+      user.lastLogin = loginDate;
+      user.save(function(err) {
+        if (err) { return console.log("Login date save fail: ", err)};
+      })
+    })
   });
 
   passport.deserializeUser(function(id, done) {

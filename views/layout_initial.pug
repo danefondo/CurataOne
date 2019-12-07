@@ -1,3 +1,5 @@
+include images/profileIcon
+
 doctype html
 html
 	head
@@ -14,9 +16,11 @@ html
 		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js')
 		script(src='https://cdn.ckeditor.com/ckeditor5/11.2.0/decoupled-document/ckeditor.js')
+		script(src='https://momentjs.com/downloads/moment.min.js')
 		link(rel='stylesheet' href='/css/ckeditor.css')
 		link(rel='stylesheet' href='/css/responsive.css')
 	body
+		- var coreURL = 'dashboard';
 		//- .top-bar
 		.nav-container
 			.title-container
@@ -25,10 +29,11 @@ html
 				.navlinks-container
 					// show menu items based on what the user has (used) and their settings
 					if (user.defaultCurataId && user.defaultCurataId !== "N/A")
-						a.dashboardBtn.navlink(href='/curatas/' + user.username + '/curatas/' + user.defaultCurataId) Dashboard
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas/' + user.defaultCurataId) Dashboard
 					else 
-						a.dashboardBtn.navlink(href='/curatas/' + user.username + '/curatas') Dashboard
-					a.navlink(href='/browse') Browse
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas') Dashboard
+					//- a.topNavigationLink__topBar(href='/browse') Browse
+					a.topNavigationLink__topBar(href= '/' + coreURL + '/' + user.username + '/curatas') My Spaces
 				.logout-container
 					//- #create.drop-down
 					//- 	#create-button.dropDown.drop-down__button.unsortable
@@ -44,7 +49,9 @@ html
 					.DropdownX
 						.Dropdown-profile
 							//- img.Photo(src='//s3-us-west-2.amazonaws.com/s.cdpn.io/33381/profile/profile-80.jpg?1')
-							img.Photo(src='https://img.icons8.com/pastel-glyph/64/000000/gender-neutral-user.png')
+							.Photo
+								+profileIcon
+							//- img.Photo(src='https://img.icons8.com/pastel-glyph/64/ffffff/gender-neutral-user.png')
 							span.Name #{user.firstname}
 							span.MenuIcon
 								span.MenuIcon-line
@@ -52,17 +59,14 @@ html
 								span.MenuIcon-line
 						nav.Dropdown-nav
 							ul.Dropdown-group
-								li
-									a.entypo-newspaper.NavLinkX(href='#') Profile
-									a.entypo-plus.OptionLink(href='#')
-								li
-									a.entypo-docs.NavLinkX.Upgrade(href='#') Upgrade
-									a.entypo-plus.OptionLink(href='#')
+								//- li
+								//- 	a.entypo-newspaper.NavLinkX(href='#') Profile
+								//- 	a.entypo-plus.OptionLink(href='#')
+								//- li
+								//- 	a.entypo-docs.NavLinkX.Upgrade(href='#') Upgrade
+								//- 	a.entypo-plus.OptionLink(href='#')
 								li
 									a.entypo-archive.NavLinkX(href='#') Account settings
-									a.entypo-plus.OptionLink(href='#')
-								li
-									a.entypo-docs.NavLinkX(href='#') View mobile site
 									a.entypo-plus.OptionLink(href='#')
 								li
 									a.entypo-logout.NavLinkX(href='/accounts/logout') Logout
@@ -79,12 +83,7 @@ html
 					//- 			a.li.drop-down__item(href='/users/logout') Logout
 					//- a.logout-btn(href='/users/logout') Logout
 			else
-				.account-manager 
-					form.signin-form(method='POST', action='/accounts/login')
-						input.login-input(name='username' type='text' placeholder='Your username' autocomplete="off") 
-						input.login-input(name='password' type='password' placeholder='Your password' autocomplete="off")
-						.submit
-							input(type='submit' value='Log in' class='login-button')
+				a.loginPageLink(href='/accounts/loginForm') Login
 		if !user
 			.container
 				.registration-block

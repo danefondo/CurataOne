@@ -7,20 +7,26 @@ const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
 
+
 // Curata -- modularized content
 
 
 /*====== DATABASE ======*/
 
 // Set up default mongoose connection // var db_uri = 'mongodb://127.0.0.1/my_database';
+// var myURL = 'mongodb://127.0.0.1/curata-test-db';
+// mongoose.connect(myURL, { useNewUrlParser: true });
+
+// Production database
 mongoose.connect(config.db_uri);
 
+
 // Get default connection
-let db = mongoose.connection
+let db = mongoose.connection;
 
 // Get connection
 db.once('open', function() {
-	console.log('Connected to MongoDB.')
+	console.log('Connected to MongoDB.');
 });
 
 // Check for DB errors
@@ -33,6 +39,7 @@ db.on('error', function(err) {
 /*====== APP ======*/
 // Initializing the app
 const app = express();
+app.locals.moment = require('moment');
 
 // Bring in models
 let User = require('./models/user');
@@ -41,6 +48,13 @@ let curataList = require('./models/curataList');
 let Template = require('./models/template');
 let Entry = require('./models/entry');
 let entryComponent = require('./models/entryComponent');
+let ExpiredUser = require('./models/expiredAccount');
+let Image = require('./models/image');
+let Component = require('./models/component');
+let linklistItem = require('./models/linklistItem');
+let ListItem = require('./models/listItem');
+let Note = require('./models/note');
+let Task = require('./models/task');
 
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -103,7 +117,7 @@ app.get('/successful-registration', function(req, res) {
 
 
 
-// app.get('/curatas/curate/templates/:id', ensureAuthenticated, function(req, res) {
+// app.get('/dashboard/curate/templates/:id', ensureAuthenticated, function(req, res) {
 
 // 	// except now the problem is that this will create a new entry EACH TIME it is pulled, whereas it should only happen ONCE
 // 		// next step is setting up questions
@@ -137,13 +151,15 @@ app.get('/successful-registration', function(req, res) {
 
 /*====== ROUTE FILES ======*/
 let accounts = require('./routes/accounts');
-let curatas = require('./routes/curatas');
+// let curatas = require('./routes/curatas');
 let browse = require('./routes/browse');
 let public = require('./routes/public');
+let dashboard = require('./routes/dashboard');
 app.use('/accounts', accounts);
-app.use('/curatas', curatas);
+// app.use('/curatas', curatas);
 app.use('/browse', browse);
 app.use('/public', public);
+app.use('/dashboard', dashboard);
 
 
 /*====== Access control  ======*/
@@ -163,6 +179,7 @@ function ensureAuthenticated(req, res, next){
 let port = process.env.PORT;
 if (port == null || port == "") {
 	port = 3000;
+  // port = 27018;
 }
 
 

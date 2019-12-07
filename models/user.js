@@ -3,15 +3,13 @@ let Schema = mongoose.Schema;
 
 // User Schema
 const UserSchema = new mongoose.Schema({
-	firstname: {
-		type: String,
-		required: true
-	},
-	lastname: {
-		type: String,
-		required: true
-	},
+	firstname: String,
+	lastname: String,
 	username: {
+		type: String,
+		required: true
+	},
+	email: {
 		type: String,
 		required: true
 	},
@@ -19,7 +17,14 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	defaultCurataId: String
+	lastLogin: Date,
+	verificationToken: String,
+	resetToken: String,
+	verifiedStatus: Boolean,
+	defaultCurataId: String,
+	likedSpaces: [String],
+	oldUserId: String,
+	dateCreated: Date
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);

@@ -1,0 +1,84 @@
+extends layout_buttonless
+
+block content
+	- var coreURL = 'dashboard';
+	.modal__deleteSpace
+		.modalBackground__deleteSpace
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to delete your space?
+				.msg-body Your space will be permanently deleted with all its content.
+				.action-group
+					.cancelPermaDeleteSpace.button-outline CANCEL
+					.confirmPermaDeleteSpace.button-filled DELETE
+	.sideNav
+		.curataSwitcher
+			.currentCurataSwitch(id= curata.id) Switch Space
+			.drop-down__menu-box3.unsortable.drop-down-extra-width
+				.curataSwitchHeader Switch current Space
+				if (user.defaultCurataId && curata.id == user.defaultCurataId)
+					.defaultCurata Default Space
+				else
+					.makeDefault Make default
+				ul.drop-down__menu3
+					each space in curatas
+						if (space.id !== curata.id)
+							li.drop-down__item3.drop-down-extra-styling
+								a.curata-link(href='/' + coreURL + '/' + user.username + '/curatas/' + space.id) #{space.curataName}
+		a.curataName(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+		.goToAllCuratas
+			a.allCuratasLink(href= '/' + coreURL + '/' + user.username + '/curatas') View all my Spaces
+		//- if curata exists & selected, display 
+		a.viewCurataLive(target="_blank" href= '/browse/users/' + user.username + '/curatas/' + curata.id) View live
+		ul.sideNavButtons
+			li.sideNavLinkContainer
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id) Space
+				a.sidelink.size18.block(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/entries') Entries
+				a.sidelink.size18.block(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/appearance') Appearance
+				a.sidelink.size18.block(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+	.curataContainer.sideNavMargin
+		.curataPageTitle Settings
+		p.autoSaveNotice Changes are automatically saved.
+		.curataSettingsArea
+			//- p Text is automatically saved
+			.curataSettingsGroupTitle Change your Space name
+			.curataSettingsGroup
+				.changeCurataNameArea
+					if (curata.curataName)
+						input.curataSettingsTitle(placeholder= "Your title" value= curata.curataName)
+					else
+						input.curataSettingsTitle(placeholder= "Your title")
+			.curataSettingsGroupTitle Change your Space description
+			.curataSettingsGroup
+				.curataSetting
+					.changeCurataDescription
+						if (curata.curataDescription)
+							textarea.curataDescription(placeholder= 'What is this list about?') #{curata.curataDescription}
+						else
+							textarea.curataDescription(placeholder= 'What is this list about?')
+			//- .curataSettingsGroupTitle Change Curata's membership status
+			//- .curataSettingsGroup
+			//- 	.curataSetting
+			//- 		.changeCurataMembership
+			//- .curataSettingsGroupTitle Add or change your Curata address
+			//- .curataSettingsGroup
+			//- 	.curataSetting
+			//- 		.changeCurataDomainArea
+			//- 			if (curata.curataAddress && curata.curataAddress !== "no-address")
+			//- 				.curataSettingsAddress.inline #{curata.curataAddress}
+			//- 				.curataEnding.inline .curata.one
+			//- 				.changeAddress Change address
+			//- 			else
+			//- 				.addAddress You don't have an address. Add address
+			//- 			.getCustomDomainButton Add your own custom domain for $2.99/month
+			//- .curataSettingsGroupTitle Change your Curata privacy settings
+			//- .curataSettingsGroup
+			//- 	.curataSetting
+			//- 		.changeCurataPrivacyArea
+			//- 			.changeCurataPrivacy Make Curata private
+			//- 			.unlistCurata Unlist Curata from the Curata library
+		.curataSettingsGroupTitle DANGER ZONE
+		.deleteCurataArea
+			.deleteCurataText Deleting your space is an irreversible action and will permanently delete all the lists and content inside it.
+			.deleteSpaceButton
+				p.deleteSpaceButtonText Delete Curata

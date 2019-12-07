@@ -22,7 +22,7 @@ router.get('/users/:username/curatas/:curataId', function(req, res) {
 	let username = req.params.username;
 	let curataId = req.params.curataId;
 
-	Curata.findById(curataId, function(err, curata) {
+	Curata.findById(curataId).populate('curataList').exec(function(err, curata) {
 		if (err) {
 			return console.log("Could not get Curata. ", err);
 		}
@@ -292,7 +292,7 @@ router.get('/users/:username/curatas/:curataId/lists/:curataListId/entries/:entr
 					return a.componentOrder - b.componentOrder;
 				});
 
-				res.render('viewEntry', {
+				res.render('entry__view', {
 					curata: curata,
 					list: list,
 					username: username,
@@ -302,6 +302,114 @@ router.get('/users/:username/curatas/:curataId/lists/:curataListId/entries/:entr
 		})
 	})
 });
+
+/*
+===========================
+== Submit page
+===========================
+*/
+
+router.get('/curatas/:curataId/submit', function(req, res) {
+
+	let curataId = req.params.curataId;
+
+	Curata.findById(curataId).populate('curataList').exec(function(err, curata) {
+		if (err) {
+			return console.log("Could not get curata: ", err);
+		}
+
+		if (curata) {
+			res.render('submit', {
+				curata: curata,
+			})
+		} else {
+			console.log("Curata not found.");
+			res.redirect('/');
+		}
+	})
+})
+
+router.get('/curatas/:curataId/submit/lists/:curataListId', function(req, res) {
+
+	let curataId = req.params.curataId;
+	let curataListId = req.params.curataListId;
+
+	Curata.findById(curataId).populate('curataList').exec(function(err, curata) {
+		if (err) {
+			return console.log("Could not get curata: ", err);
+		}
+
+		curataList.findById(curataListId, function(err, list) {
+			if (err) { return console.log(err) };
+
+			let templateId = list.defaultTemplate;
+
+			Template.findById(templateId, function(err, template) {
+				if (err) { return console.log(err) };
+
+					if (curata) {
+						res.render('submitEntry', {
+							curata: curata,
+							list: list,
+							template: template
+						})
+					} else {
+						console.log("Curata not found.");
+						res.redirect('/');
+					}
+
+			})
+		})
+	})
+
+})
+
+router.post('/curatas/:curataId/addLike', function(req, res) {
+
+	let curataId = req.params.curataId;
+	let userId = req.body.userId;
+
+	console.log("curataid: ", curataId);
+	console.log("userId: ", userId);
+
+	Curata.findById(curataId, function(err, curata) {
+		if (err) {
+			return console.log("Could not get curata: ", err);
+		}
+
+		// if undefined and not even zero, make it one
+		if (!curata.likeCount) {
+			curata.likeCount = 1;
+		} else if (curata.likeCount == 0 || curata.likeCount > 0) {
+			curata.likeCount = curata.likeCount + 1;
+		}
+
+		curata.save(function(err) {
+			if(err) {
+				return console.log(err);
+			} 
+
+			let newCount = curata.likeCount;
+
+			User.findById(userId, function(err, user) {
+				if (err) {
+					return console.log("Could not get user: ", err);
+				}
+				user.likedSpaces.push(curataId);
+				user.save(function(err) {
+					if (err) {
+						return consle.log("Could not save user: ", err);
+					}
+
+					res.json({
+						newCount: newCount
+					})
+				})
+
+			})
+		});
+	})
+})
 
 
 /*====== Users  ======*/

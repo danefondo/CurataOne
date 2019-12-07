@@ -1,9 +1,50 @@
 extends layout_buttonless
 
-include MultiForm
-
 block content
-	+MultiForm
+	.process
+		.progress
+			.progress-bar(role='progressbar', aria-valuenow='4', aria-valuemin='1', aria-valuemax='100')
+		// email
+		.fields
+			fieldset.form-group
+				h1.fieldTitle Hi #{user.firstname},
+				.Questions
+					.fieldSection
+						h1.fieldSubtitle What would you like to curate?
+						.input-holder
+							input.form-control.CurationNameInput(type='text', name='text', placeholder='e.g. Coolest Cats in the World')
+							//- small.text-muted Write specific or choose topic. -- will later put to tooltip or appearing popup infobox
+					.fieldSection
+						h1.fieldSubtitle You can also briefly describe it:
+						textarea.CurationDescriptionInput(placeholder='e.g. Legit list of the Coolest Cats in the World')
+			// password
+			fieldset.form-group.topMargin110
+				h1.fieldTitle Awesome! Now, let's give it an address.
+				h2.CurationInstruction Enter your Curata's name or some keywords that describe it to get started.
+				.input-holder.CurationAddressHolder
+					input.form-control.CurationAddressInput(type='text', name='text', placeholder='e.g. coolestkats')
+					h2.CurationAddressEnding .curata.one
+				//- .CurationAlternativeOption
+				//- 	h2 Or choose an address later
+				label.containerX.tooltip
+					h2 Or choose an address later
+					input.ChoiceInput(type='checkbox')
+					span.checkmark
+					span.tooltiptext Your Curata will be accessible through /my-curations/curata-id
+			fieldset.form-group.CurataCreatedField
+				.templateArea
+						.templateDetails
+							p.largeTitle Great! You've created a Space.
+							p.mediumTitle Time to create your first entry!
+							//- p.inline Don't worry, your template is automatically saved!
+							//- .tooltip2.inline
+							//- 	| ?
+							//- 	span.tooltiptext2 Drag the blocks on the left to the template area on the right. Drag blocks in the template area to reorder. 
+							//- p (View examples / Browse template library)
+							.CreateTempArea
+								a.createEntryButton + New entry
+			button.btn.btn-lg.next-btn.font-weight-bold Continue
+		button.btn.back-btn Back
 
 block scripts
 	script(src='/js/sortable.js')

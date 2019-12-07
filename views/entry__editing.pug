@@ -1,0 +1,218 @@
+extends layout_no_top_bar
+
+include mixins/heading
+include mixins/image
+include mixins/textarea
+include mixins/gallery
+include mixins/quote
+include mixins/infoBox
+include mixins/exampleBox
+include mixins/expandable
+include mixins/questionAnswer
+include mixins/sectionBreak
+include mixins/list
+include mixins/checklist
+include mixins/link
+
+include images/TrashIcon
+include images/SettingsIcon
+include images/externalLink
+
+//- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
+block heading
+	- var coreURL = 'dashboard';
+	.helperNavigation
+		.topnav-container
+			a.goBack.navlink(href= '/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) &larr;
+			.entryMetaTitle Editing entry
+			.statusMessage.inline
+			if (entry.entryState == "Trashed")
+				span.inTrash This entry is in the trash. Click 'Untrash' to restore entry.
+			if (entry.entryState !== "Trashed")
+				.floatRight
+					//- a.navlink(href='/my-curations') &#63;
+					.settingsButton.inline
+						+SettingsIcon
+					a.showPreview.inline(href= '/' + coreURL + '/drafts/' + entry.id, target= '_blank') Preview
+					if (entry.entryState == "Draft") 
+						.publishEntry.inline Publish
+					if (entry.entryState == "Published")
+						a.viewLive(target= "_blank" href= '/browse/users/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id) View live
+			else
+				.floatUntrash
+					.untrashEntry.buttonGrey.inline
+						+TrashIcon
+						span Untrash
+block content
+	- var coreURL = 'dashboard';
+	.curataId(id= entry.curataId)
+	.emptyModal
+		.modalBackground
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to move this entry to the trash?
+				.action-group
+					.cancelTrashEntry.button-outline CANCEL
+					.confirmTrashEntry.button-filled TRASH
+	if (entry.entryState !== "Trashed")
+		.settingsSideNav
+			.entrySettingsHeader
+				span Entry Settings
+				.closeEntrySettings.inline X
+			.entrySettingsContent
+				.entrySettingsBlock
+					.entryState(data-entryState= entry.entryState) Status: #{entry.entryState}
+				if (entry.entryState == "Published")
+					.entrySettingsBlock
+						.makeDraft Revert to draft
+				//- .entrySettingsBlock
+				//- 	a.editTemplate.whiteButton(href= '/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/template/' + entry.linkedTemplateId) Edit template
+			.entrySettingsDelete
+				.entrySettingsBlock
+					if (entry.entryState !== "Trashed")
+						.trashEntry.buttonGrey.inline
+							+TrashIcon
+							span Move to trash
+					else
+						.untrashEntry.buttonGrey.inline
+							+TrashIcon
+							span Untrash
+				//- Settings enables turning on/off whether description, image, link, other is displayed in the final outcome
+	//- if (!entry) scenario
+	if (entry.entryState !== "Trashed")
+		.sectionArea.recalculatedWidth
+			.TemplateHolder(id= entry.id)
+				.entryDetails
+					.entryComponentTitle Title
+					.entryDetailsGroup
+						if (entry.entryTitle)
+							input.EntryTitle(placeholder= "Your title" value= entry.entryTitle)
+						else
+							input.EntryTitle(placeholder= "Your title")
+					.entryComponentTitle Summary
+					.entryDetailsGroup
+						.mainEditor
+							if (entry.entryText)
+								textarea.postDescription(maxlength="100" placeholder="Write a short summary of less than 100 characters.") !{entry.entryText}
+							else
+								textarea.postDescription(maxlength="100" placeholder="Write a short summary of less than 100 characters.")
+							//- .editorTools.unreset(id= "toolbar_" +entry.id)
+							//- if (entry.entryText)
+							//- 	.editorText.unreset(id= "editor_" +entry.id) !{entry.entryText}
+							//- else
+							//- 	.editorText.unreset(id= "editor_" +entry.id)
+							//- 		p Write something here...
+					.entryComponentTitle Link
+					.entryDetailsGroup
+						.linkContainer
+							if (entry.entryLink)
+								input.entryLink(placeholder="http://example.com" value= entry.entryLink) 
+								a.entryLinkPreview(href= entry.entryLink target="_blank")
+									+externalLink
+							else
+								input.entryLink(placeholder="http://example.com")
+								a.entryLinkPreview.hidden(href="#" target="_blank")
+									+externalLink
+					.entryComponentTitle Image
+					.entryDetailsGroup
+						.mainImage(id= "imageArea_" +entry.id)
+							if (entry.entryImageURL)
+								.file-upload.imageBlock(data-type="mainImage" data-image-key= entry.entryImageKey)
+									form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
+										input#file-input.file-upload-input(type='file', name='image', accept='image/jpg')
+										.drag-text
+											button.file-upload-btn(type='button') Add Image
+											h3 Or just drag and drop a file
+									.file-upload-content
+										img.file-upload-image(src=entry.entryImageURL, alt='your image')
+										.image-title-wrap
+											button.remove-image(type='button')
+												| Remove 
+												span.image-title Uploaded Image
+							else 
+								.file-upload.imageBlock(data-type="mainImage")
+									form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
+										input#file-input.file-upload-input(type='file', name='image', accept='image/jpg')
+										.drag-text
+											button.file-upload-btn(type='button') Add Image
+											h3 Or just drag and drop a file
+									.file-upload-content
+										img.file-upload-image(src='#', alt='your image')
+										.image-title-wrap
+											button.remove-image(type='button')
+												| Remove 
+												span.image-title Uploaded Image
+
+	else
+		.sectionArea
+			.TemplateHolder(id= entry.id)
+				.entryDetails
+					.entryComponentTitle Title
+					.entryDetailsGroup
+						if (entry.entryTitle)
+							.EntryTitle #{entry.entryTitle}
+						else
+							.EntryTitle Untitled
+					.entryComponentTitle Description
+					.entryDetailsGroup
+						.mainEditor
+							textarea.postDescription(maxlength="100" placeholder="Write a short summary of less than 100 characters.") !{entry.entryText}
+							//- .editorTools.unreset(id= "toolbar_" +entry.id)
+							//- if (entry.entryText)
+							//- 	.editorText.unreset(id= "editor_" +entry.id) !{entry.entryText}
+							//- else
+							//- 	.editorText.unreset(id= "editor_" +entry.id)
+							//- 		p Write something here...
+					.entryComponentTitle Link
+					.entryDetailsGroup
+						.linkContainer
+							if (entry.entryLink)
+								a.EntryLink(href= entry.entryLink target="_blank") #{entry.entryLink}
+								.removeLink Remove link
+							else
+								.addEntryLink + Add link
+					.entryComponentTitle Image
+					.entryDetailsGroup
+						.mainImage(id= "imageArea_" +entry.id)
+							if (entry.entryImageURL)
+								.imageBlock(data-type= "mainImage" data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+									.deleteMainImage x
+									form.imageForm(action= "/' + coreURL + '/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+										label.uploadFile
+											input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+							else 
+								.imageBlock(data-type= "mainImage")
+									form.imageForm(action= "/' + coreURL + '/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+										label.uploadFile
+											input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+
+
+
+block scripts
+	script(src='/js/entryEditing.js')
+
+//- Curata becomes a logo
+	//- Then next to it will be the current Currata you are in (or could be a sidebar thing and switch)
+	//- Somewhere in the menu bar also the current list switch
+	//- Somewhere a button to quickly visit your Curata 
+	//- Option to change which list is default and its location (essentially extra features become available upon creating another list inside an existing curata)
+
+
+//- You create a template and start curating
+	//- Inside the template
+
+//- At any particular time you are 'in' or 'inside' a specific list, inside a specific curata
+	//- Within which you can make quick entries
+	//- Within which you can quickly change between lists (and thus also entries)
+	//- Within which you can quickly change between curatas and it will give the last used list
+
+//- Library/Templates -- public and personal (private) templates by categories, names and even description for the purpose of the template
+
+//- Browse -- public lists and curatas by categories and other filters
+
+//- Creating an entry
+	//- There is a button for 'show preview'
+	//- It is possible to quickly edit style or design of list
+	//- It is possible to quickly edit the template itself and make this change come to effect with all templates and entries as well. As such, it must change the order number of each particular template.
+
+//- Things will change anyway. If that will happen anyway, I'd like to do it proactively. Albeit that is uncomfortable, scary. and possibly painful.

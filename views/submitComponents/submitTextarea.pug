@@ -1,0 +1,7 @@
+mixin submitText(component)
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="textarea" data-order= component.componentOrder)
+		.editorSortable
+			.editor
+				.editorTools.unreset(id= "toolbar_" +component.id)
+				.editorText.unreset(id= "editor_" +component.id)
+					p Write something here...

@@ -1,10 +1,20 @@
 .registration-block {
-	width: 800px;
-	height: 600px;
+/*	width: 800px;*/
+	width: 100%;
+/*	height: 100%;*/
 /*	margin: 40px auto;*/
-	margin: 75px 20px;
+	margin: 100px 100px;
 /*	background-color: #fdfdfd;*/
 	background-color: transparent;
+
+	height: 80vh
+/*	margin-bottom: 0;*/
+}
+
+.registrationBlock__registerPage {
+	width: 100%;
+    height: 100%;
+    background-color: #1d323c;
 }
 
 .registration-form {
@@ -12,13 +22,27 @@
 	margin: auto;
 }
 
-.registration-title {
+.titleBlock__registerPage {
 	width: 400px;
 	margin: auto;
 /*	text-align: center;*/
 	text-align: left;
 	padding: 20px;
-	padding-top: 80px;
+	padding-top: 110px;
+}
+
+.title__registerPage {
+	font-size: 45px;
+	font-weight: 600;
+	color: white;
+}
+
+.subtitle__registerPage {
+	color: #b7b7b7;
+	font-size: 25px;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	font-weight: 600;
 }
 
 .registration-title h2 {
@@ -36,7 +60,7 @@
 	font-weight: 600;
 	width: 200px;
 	text-align: left;
-	font-size: 16px;
+	font-size: 17px;
 	cursor: pointer;
 	transition: 85ms ease;
 	box-shadow: 3px 3px 0px 0px #673ab785;
@@ -52,6 +76,7 @@
 	box-shadow: 6px 6px 0px 0px #e6e6e6;
 	border-bottom: none;
 	border-right: none;
+	margin-bottom: 10px;
 }
 
 .form-group {
@@ -63,10 +88,16 @@
 	border-bottom: none;
 }
 
+.registration-input {
+	font-size: 18px !important;
+	padding: 15px !important;
+}
+
 .registration-input:focus {
 	transform: scale(1.03);
 	background-color: #f5f5f5 !important;
 	border: 1px solid #ececec;
+	border-left: 3px solid #673ab7;
 }
 
 .first-input {
@@ -79,13 +110,8 @@
 	border-bottom-right-radius: 3px;
 }
 
-form.signin-form .submit {
-	height: 100%; /* this is for login button, make it specific for just that later*/
-	/* width: 100%; */
-	margin-right: 5px;
-}
-
-.login-button {
+.login-button,
+.signup-button {
 	height: 100%;
 	background-color: transparent !important;
 	color: #555 !important;
@@ -94,11 +120,40 @@ form.signin-form .submit {
 	font-weight: 600;
 	padding: 12px; /* neutralizing the padding of default input padding */
 	font-size: 14px !important;
+	cursor: pointer;
 }
 
-.login-button:hover {
-	background-color: rgba(0,0,0,0.08) !important;
-	cursor: pointer;
+.login-button {
+	color: #ffffff !important;
+}
+
+.signup-button {
+	background-color: #673ab7 !important;
+	color: white !important;
+	padding-bottom: 10px;
+	padding-top: 14px;
+}
+
+.signup-button:hover {
+	background-color: #7e57c2 !important;
+}
+
+.signin-form,
+.form__forgotPass {
+  margin: auto;
+  width: 600px;
+  text-align: center;
+  height: 200px;
+}
+
+/* fields that differ, write in separate classes rather than overwriting, less chance of messing up things later*/
+
+.signin-form {
+	margin-top: 200px;
+}
+
+.form__forgotPass {
+	margin-top: 150px;
 }
 
 .login-input {
@@ -106,5 +161,272 @@ form.signin-form .submit {
 	border-radius: 3px;
 	border: 1px solid #eee;
 	margin-right: 16px;
-	padding: 12px;
+	padding: 10px;
+
+	margin-left: auto;
+	margin-right: auto;
+	width: 325px;
+	padding: 15px !important;
+	display: block !important;
+	margin-bottom: 10px !important;
+	font-size: 18px !important;
+}
+
+.login-input:focus {
+	border-left: 3px solid #673ab7;
+}
+
+.login-button {
+	width: 325px !important;
+	font-size: 18px !important;
+	transition: .2s ease-in-out !important;
+	margin-top: 5px !important;
+	padding: 10px !important;
+/*	background-color: #7e57c2 !important;*/
+	background-color: #673ab7 !important;
+	box-shadow: 3px 3px 0px 0px #673ab785;
+}
+
+.login-button:hover {
+	background-color: #152229 !important;
+	box-shadow: 3px 3px 0px 0px #19191985;
+}
+
+.login-title {
+	font-size: 45px;
+	text-align: left;
+	width: 325px;
+	margin: 0 auto;
+	margin-bottom: 10px;
+/*	color: #555;*/
+	color: #ececec;
+	font-weight: 600;
+}
+
+form.signin-form .submit {
+/*	height: 100%; 
+	 width: 100%; 
+	margin-right: 5px;*/
+}
+
+.account-manager {
+	background-color: #1d323c;
+}
+
+.forgotPass {
+	color: #b1b1b1;
+	text-align: left;
+	margin: 0 auto;
+	width: 325px;
+	margin-bottom: 13px;
+	cursor: pointer;
+	display: block;
+}
+
+.forgotPass:hover {
+	text-decoration: underline;
+}
+
+.loginPageLink,
+.signUpLinkSimple {
+    margin: 0;
+  /*  width: 150px;*/
+    padding: 8px;
+    margin-right: 5px;
+	font-size: 18px;
+    transition: .2s ease-in-out;
+	height: 100%;
+/*    border-radius: 3px;*/
+    box-sizing: border-box;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.signUpLinkSimple {
+	color: #fff;
+	background-color: #673ab7;
+	box-shadow: 3px 3px 0px 0px #673ab785;
+}
+
+.loginPageLink {
+    margin-left: auto;
+    margin-right: 10px;
+    color: #333;
+}
+
+.signUpLinkSimple:hover {
+	background-color: #152229;
+}
+
+.loginPageLink:hover {
+	color: #888;
+}
+
+.signupPageLink {
+	margin-top: 20px;
+/*	border-radius: 3px;*/
+/*	padding: 0px 2px;*/
+	padding: 0px 16px;
+	font-weight: 600;
+	width: 240px;
+	text-align: center;
+	cursor: pointer;
+	transition: 85ms ease;
+	box-shadow: 3px 3px 0px 0px #673ab785;
+	background-color: #673ab7;
+    color: white;
+    font-family: 'GothamRounded';
+ 	font-size: 59px;
+    margin-left: 35px;
+    text-transform: lowercase;
+    display: block;
+}
+
+.signupPageLink:hover {
+    transform: scale(1.01);
+	background-color: #7e57c2;
+    color: white;
+    border-radius: 3px;
+}
+
+.landingTitleP1,
+.landingTitleP2 {
+  font-size: 90px;
+  font-weight: 600;
+  font-style: italic;
+  max-width: 825px;
+  display: inline-block;
+}
+
+.landingTitleP2 {
+	background-color: #b09ada2e;
+	margin-left: 18px;
+}
+
+.landingSubtitle {
+	font-size: 30px;
+	font-weight: 400;
+	color: #656565;
+	font-style: italic;
+	max-width: 700px;
+	margin-left: 10px;
+	margin-top: 7px;
+}
+
+.landing-nav {
+	background-color: white;
+  	padding: 10px 0px;
+  	flex-wrap: wrap;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	/*  padding: 12px 15px;*/
+	padding: 6px 15px;
+}
+
+.logoTitleBlack__generic,
+.logoTitleWhite__generic {
+	border-radius: 4px;
+	padding: 8px 20px;
+	box-sizing: border-box;
+	font-size: 21px;
+	font-weight: 600;
+	transition: .2s ease-in-out;
+}
+
+.logoTitleBlack__generic {
+	color: #333;
+}
+
+.logoTitleBlack__generic:hover {
+	color: #888;
+}
+
+.logoTitleWhite__generic {
+	color: white;
+}
+
+.logoTitleWhite__generic:hover {
+	color: #ccc;
+}
+
+.title__landingPage {
+	margin: auto;
+	text-align: left;
+	padding: 20px;
+	padding-top: 110px;
+}
+
+.accountExists__registerPage {
+	background-color: transparent;
+	border: none;
+	box-shadow: none;
+	width: auto;
+	padding: 0;
+	font-size: 14px;
+	color: #b1b1b1;
+	margin-left: 16px;	
+	margin-top: 20px;
+    border-radius: 3px;
+    display: inline-block;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+    transition: 85ms ease;
+}
+
+.accountExists__registerPage:hover {
+	text-decoration: underline;
+	color: #ececec;
+}
+
+.container__registerPage {
+	background-color: #1d323c;
+}
+
+.body__registerPage {
+	background-color: #1d323c;
+}
+
+.signUpBackup__loginPage {
+	background-color: transparent;
+    font-size: 16px;
+    padding: 0;
+    color: #bdbdbd;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 12px;
+    font-weight: bold;
+    display: block;
+    transition: .2s ease-in-out;
+}
+
+.signUpBackup__loginPage:hover {
+	color: #eee;
+}
+
+.subtitle__forgotPass {
+	width: 325px;
+	margin: 0 auto;
+	text-align: left;
+	font-size: 18px;
+	margin-bottom: 30px;
+	color: #bbbbbb;
+}
+
+.examplesSection__landingPage {
+	width: 100%;
+}
+
+.examplesTitle__landingPage {
+    font-size: 70px;
+    background-color: #f1ecf9;
+    width: 340px;
+    border-bottom: 3px solid #333;
+    margin-bottom: 50px;
+    margin-left: 125px;
+    font-style: italic;
+    font-weight: 600;
+    line-height: 49px;
 }

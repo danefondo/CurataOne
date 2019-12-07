@@ -1,0 +1,11 @@
+mixin submitExpandable(component)
+	li.component__submitEntry.drag.draggable-item.drag.draggable-item(id= component.id, data-component="expandable" data-order= component.componentOrder)
+		button.expandable.unsortable
+			input.ElementTitle(placeholder="Title", value= component.componentTitle)
+		.content
+			.editorSortable
+				.simpleEditor
+					.editorTools.unreset(id= "toolbar_" +component.id)
+					.editorText.unreset(id= "editor_" +component.id)
+						p Write something here...
+

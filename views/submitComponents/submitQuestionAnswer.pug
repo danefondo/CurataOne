@@ -1,0 +1,16 @@
+mixin submitQuestionAnswer(component)
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="questionAnswer" data-order= component.componentOrder)
+		ul.questions.sortableList(id= "sortable_" +component.id)
+			//- li.questionBlock.sortableListItem(id= item.id)
+			li.questionBlock.sortableListItem
+				button.collapsible.unsortable
+					input.QuestionTitle(placeholder="Question", data-type="question")
+				.content
+					.editorSortable
+						.simpleEditor
+							//- .editorTools.unreset(id= "toolbar_" +item.id)
+							.editorTools.unreset
+							//- .editorText.unreset(id= "editor_" +item.id)
+							.editorText.unreset
+								p Write your answer...!
+		.addNewButton + Add Question

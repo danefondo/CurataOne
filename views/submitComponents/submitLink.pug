@@ -1,0 +1,5 @@
+mixin submitLink(component)
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="link" data-order= component.componentOrder)
+		.linkContainer
+			input.ComponentLink(placeholder= "Your link")
+			.saveComponentLink Save

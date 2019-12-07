@@ -77,7 +77,7 @@ const entrySchema = new mongoose.Schema({
 	entryOrder: Number,
 	// draft or published
 	entryState: String,
-	entryDate: Date,
+	lastUpdated: Date,
 	// serves as category
 	entryCategory: String,
 	entryTags: [String],
@@ -86,14 +86,17 @@ const entrySchema = new mongoose.Schema({
 	curataId: String,
 	dateCreated: Date,
 	creator: {
-		type: String,
-		required: true
+		firstName: String,
+		lastName: String,
+		creator_id: String
 	},
 	owner: {
-		type: String,
-		required: true
+		firstName: String,
+		lastName: String,
+		owner_id: String
 	},
-	contributors: [{type: Schema.Types.ObjectId, ref: 'Contributor'}]
+	contributors: [{type: Schema.Types.ObjectId, ref: 'Contributor'}],
+	collaborators: [{type: Schema.Types.ObjectId, ref: 'User'}]
 });
 
 const Entry = module.exports = mongoose.model('Entry', entrySchema);

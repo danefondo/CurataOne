@@ -24,8 +24,9 @@ html {
 
 body {
 	font-family: Verdana, Geneva, sans-serif;
-	background-color: #f9f9f9;
-/*  background-color: #ffffff;*/
+/*	background-color: #f9f9f9;*/
+  background-color: #ffffff;
+/*  background-color: #fbfbfb;*/
 	overscroll-behavior-y: none;
 }
 
@@ -46,7 +47,7 @@ input {
 	/*border-radius: 4px;*/
 	border-radius: 0;
 	background-color: #fdfdfd;
-	font-family: Verdana, Geneva, sans-serif;
+	font-family: 'GothamRounded';
 }
 
 h1 {
@@ -71,7 +72,7 @@ input[type="text"]:focus, input[type="password"]:focus {
 input[type="submit"] {
 	background-color: #673ab7;
 	color: white;
-	font-family: Verdana, Geneva, sans-serif;
+	font-family: 'GothamRounded';
 }
 
 input[type="submit"]:hover {
@@ -99,14 +100,10 @@ div, p {
 }
 
 .container {
-/*	background-color: #fdfdfd;*/
-	background-color: #f9f9f9;
-/*  background-color: white;*/
 	display: flex;
 	flex-wrap: wrap;
-/*	justify-content: center;*/
 	max-width: 100%; /* new */
-	height: 100vh;
+	height: 100%;
 }
 
 /*
@@ -171,6 +168,167 @@ span.filter-button-name {
 
 /*
 ===========================
+INDEX OF ELEMENTS & PAGES
+===========================
+
+I have chosen this naming convention to prevent any overlap or reuse of the same classes in different contexts, to prevent any breaking of the application or its design as a consequence of misnaming. It also enables reuse of simple keywords without requiring inventing or using new or strange words to name elements. Such modularization enables working on each page almost completely separately, as if working on it in a vacuum or test tub, not having to worry about something else being unaffected. I suggest this is more managable, as the code is chunked into small, easily editable parts over which it is easy to have an overview.
+
+Better methods may exist.
+
+In all cases, the variables must akin to naming conventions in Swift, be logical and clearly understandable in context. Likewise, it must be systematic. Everything must be organized to its maximum organizational potential.
+
+.headerMeta__
+
+.pageTitle__
+
+.pageDescription__
+
+*/
+
+
+/*
+===========================
+PAGE: submitEntry.pug
+===========================
+*/
+
+.container__submitEntry {
+  margin-top: 50px;
+  width: 70%;
+  margin-bottom: 100px;
+}
+
+.headerMeta__submitEntry {
+  max-width: 680px;
+  margin: 0 auto 25px auto;
+}
+
+.pageTitle__submitEntry {
+  font-size: 45px;
+/*  font-weight: bold;*/
+  columns: #333;
+  margin-bottom: 10px;
+}
+
+.pageTitleSpan__submitEntry {
+  font-weight: bold;
+}
+
+.pageDescription__submitEntry {
+  font-size: 23px;
+  color: #a9a9a9;
+}
+
+.pageContent__submitEntry {
+  margin: 0 auto;
+  max-width: 680px;
+}
+
+.pageBlock__submitEntry {
+  padding: 25px 0px;
+}
+
+.submissionTemplate__submitEntry {
+  max-width: 650px;
+  height: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+  width: 650px;
+}
+
+.submissionComponentName__submitEntry {
+  padding: 15px 10px 12px 0px;
+  font-size: 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #9E9E9E;
+  margin-bottom: 0px;
+}
+
+.submissionComponentName__submitEntry span {
+  float: right;
+  text-transform: none;
+  font-size: 16px !important;
+  color: #adadad;
+  margin-left: 10px;
+  cursor: default;
+}
+
+.submissionComponentContent__submitEntry {
+  background-color: white;
+  margin: 0px auto 25px auto;
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+  padding: 18px;
+  font-size: 20px;
+  color: #0e0e0e;
+  border-radius: 6px;
+  text-transform: capitalize;
+  position: relative;
+}
+
+.submissionTitleInput__submitEntry {
+  background: transparent;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0px 0px 0px 0px;
+  width: 95%;
+  min-height: 24px;
+  padding: 4px 8px;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  font-family: 'GothamRounded';
+  height: 40px;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  text-rendering: auto;
+  cursor: text;
+  white-space: pre-wrap;
+  -webkit-rtl-ordering: logical;
+  flex-direction: column;
+  transition-property: background-color,border-color,box-shadow;
+  transition-duration: 85ms;
+  transition-timing-function: ease;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  border: none;
+}
+
+.submissionTitleInput__submitEntry:focus {
+  background: #fff;
+  border: none;
+  box-shadow: inset 0 0 0 2px #4725a9;
+}
+
+.submissionComponentContainer__submitEntry {
+
+}
+
+.component__submitEntry {
+  padding: 18px;
+  margin: 15px auto;
+  font-size: 20px;
+  box-shadow: 0px 5px 5px 1px #efefef;
+  color: #333;
+  border-radius: 6px;
+  text-transform: capitalize;
+  position: relative;
+  margin: 0px auto 0px auto;
+  background-color: white;
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+}
+
+
+
+/*
+===========================
 === All Curatas page 
 ===========================
 */
@@ -192,32 +350,53 @@ span.filter-button-name {
 
 .curataLink {
   border-radius: 4px;
-  padding: 25px;
-  width: 100%;
-  height: 100%;
+  padding: 0px 25px;
+/*  width: 100%;
+  height: 100%;*/
   box-sizing: border-box;
   display: block;
   font-size: 28px;
   font-weight: bold;
   color: #424242;
+  margin-top: 5px;
+  margin-bottom: 3px;
 }
 
 .singleCurata {
-  background-color: #fff;
-/*  border: 1px solid #efefef;*/
-  border-radius: 4px;
   margin: 12px 15px;
+  display: inline-block;
   box-shadow: 0px 5px 5px 1px #f3f3f3;
   transition: .2s ease;
-  cursor: pointer;
-  width: 250px;
-  height: 250px;
-  display: inline-block;
   overflow: hidden;
 }
 
 .singleCurata:hover {
   transform: scale(1.03);
+}
+
+.singleCurataLink {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: block;
+}
+
+.singleCurataBlock {
+  position: relative;
+  width: 250px;
+  height: 50px;
+  background-color: white;
+}
+
+.singleCurataContent {
+  background-color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  width: 250px;
+  height: 200px;
+/*  overflow: hidden;*/
+  position: relative;
 }
 
 .noDefaultCurata {
@@ -352,6 +531,730 @@ p.noDefaultCurataTextSmall {
 }
 
 
+.changeOrder {
+/*  background-image: url(/images/updown.png);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-color: transparent;*/
+  /* put the height and width of your image here */
+/*  height: 30px;
+  width: 30px;*/
+  margin: 10px;
+/*  padding: 11px 22px !important;*/
+  border: none;
+}
+
+.changeOrder:focus {
+    outline: none;
+}
+
+.changeOrder:hover {
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 0 #c2ccd1;
+}
+
+.modificationButtons {
+/*  margin-top: 42px;*/
+/*  margin-left: 10px;*/
+  margin: 0 auto;
+  margin-bottom: 50px;
+  width: 93%;
+}
+
+#searchFilter, #searchEntries {
+    width: 100%;
+    margin-top: 35px;
+    margin-bottom: 15px;
+/*    margin-left: 15px;*/
+    height: 52px;
+    background-color: #ffffff;
+    border: 1px solid #f3f3f3;
+    border-radius: 4px;
+    font-size: 18px;
+    box-shadow: 0px 2px 5px 1px #f3f3f3;
+}
+
+#searchEntries {
+  width: 680px;
+}
+
+.modifiedSearch {
+  width: 580px !important;
+}
+
+.searchContainer {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.filterButton {
+  padding: 12px 12px;
+  margin: 0px 6px;
+  border-radius: 4px;
+  font-size: 18px;
+  color: #555;
+  font-weight: bold;
+  border: none;
+  background-color: #f1f1f1;
+  font-family: 'GothamRounded';
+  margin-top: 15px;
+  outline: none;
+  transition: .2s ease;
+  cursor: pointer;
+}
+
+.filterButton:hover {
+  background-color: #ccc;
+  transform: scale(1.02);
+}
+
+.openFilters {
+  margin-left: 0px;
+  transition: .2s ease;
+}
+
+.closeFilters {
+  background-color: transparent;
+  font-size: 18px;
+}
+
+.listViewCss {
+  display: block;
+  width: 100% !important;
+  height: 150px;
+}
+
+.collabIndicator {
+  background-image: url(/images/collabIndicator.png);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-color: transparent;
+  /* put the height and width of your image here */
+  height: 30px;
+  width: 30px;
+  margin: 10px;
+  border: none;
+  background-size: 20px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transition: .2s ease;
+}
+
+.collabIndicator:focus {
+    outline: none; 
+}
+
+.collabIndicator:hover {
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 0 #c2ccd1;
+}
+
+.collabTooltipText {
+  visibility: hidden;
+  width: 150px;
+  background-color: #f1f1f1;
+  color: #000000;
+  text-align: center;
+  border-radius: 2px;
+  padding: 7px 4px;
+  position: absolute;
+  z-index: 1;
+  border-bottom: 1px solid #d8d8d8;
+  top: 0px;
+  left: 121%;
+  font-size: 15px;
+}
+
+.collabTooltip:hover,{
+  transform: scale(1.02);
+  background-color: #dedede;
+}
+
+.collabTooltip:hover .collabTooltipText {
+  visibility: visible;
+}
+
+.dateCreated {
+  padding-left: 25px;
+  font-size: 14px;
+  color: #666;
+  margin-top: 0px;
+}
+
+.curataOwner {
+  padding-left: 25px;
+  color: #4e4e4e;
+  font-size: 16px;
+}
+
+
+/*
+===========================
+=== My Entries page
+===========================
+*/
+
+/*
+===========================
+=== Single list of entries view
+===========================
+*/
+
+.smallText__listSettings {
+  font-size: 14px;
+  text-align: left;
+  padding: 5px;
+}
+
+.name__listSettings {
+  font-weight: bold;
+  display: block;
+  padding: 5px 0px;
+}
+
+.name__listSettings:hover {
+  color: #555;
+}
+
+.entriesTitleArea {
+  display: flex;
+  align-items: flex-start;
+  vertical-align: middle;
+  align-self: center;
+}
+
+.settingsTitle__listSettings {
+  text-align: left;
+  font-size: 18px;
+}
+
+.listTitle__listSettings {
+  background: transparent;
+  border-radius: 3px;
+  box-shadow: none;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0px 0px 0px 10px;
+  width: 95%;
+  min-height: 24px;
+  padding: 4px 8px;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  font-family: 'GothamRounded';
+  height: 40px;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  text-rendering: auto;
+  cursor: text;
+  white-space: pre-wrap;
+  -webkit-rtl-ordering: logical;
+  flex-direction: column;
+  transition-property: background-color,border-color,box-shadow;
+  transition-duration: 85ms;
+  transition-timing-function: ease;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  border: 1px solid #eee;
+  font-size: 28px;
+  height: 50px;
+  margin: 10px 0px 10px 0px;
+  color: #333;
+  background-color: white;
+}
+
+.listTitle__listSettings:focus {
+  background: #fff;
+  border: none;
+  box-shadow: inset 0 0 0 2px #4725a9;
+}
+
+.datesArea {
+/*  background-color: #fbfbfb;*/
+  padding: 5px 10px;
+/*  border-top: 1px solid #eaeaea;*/
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  display: block;
+}
+
+.creatorField {
+  display: inline-block;
+  padding: 0px 10px;
+  padding-bottom: 5px;
+  font-size: 13px;
+  color: #ababab;
+}
+
+.lastUpdated, .creationDate {
+  display: inline-block;
+  font-size: 13px;
+  color: #ababab;
+  padding: 0px 10px;
+  padding-top: 5px;
+  float: right;
+  padding-bottom: 5px;
+}
+
+
+.modifiedButtons {
+  width: 650px;
+  margin: 0px;
+  margin-bottom: 20px;
+}
+
+.modifiedFilter {
+  position: relative;
+  display: inline-block;
+  bottom: 2px;
+}
+
+.listTitleBlock {
+  border-radius: 4px;
+  text-transform: capitalize;
+/*  width: 200px;*/
+  padding: 25px;
+  padding-left: 0px;
+}
+
+.entriesListTitle {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 30px;
+  transition: .2s ease-in-out;
+  max-width: 325px; 
+}
+
+.entriesListTitle:hover {
+  transform: scale(1.02);
+}
+
+.listHeaderContainer {
+  width: 650px;
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  border-radius: 4px;
+  padding-left: 15px;
+  margin-left: -15px;
+}
+
+.listHeader {
+  width: 650px;
+  display: flex;
+  align-items: center;
+/*  margin-top: 15px;*/
+  transition: .2s ease-in-out;
+  cursor: pointer;
+}
+
+.listHeaderContainer:hover {
+  background-color: #f3f3f3;
+}
+
+/*.listHeader:hover ~ .listHeaderContainer {}*/
+
+.listContainer {
+  margin-top: 10px;
+}
+
+.listCount {
+  display: inline-block;
+  margin-left: 20px;
+  background-color: #eeeeee;
+  padding: 5px 10px;
+  padding-bottom: 3px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.addEntryFromList {
+  border-radius: 4px;
+  text-transform: capitalize;
+  margin-left: 0px;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+/*  background-color: #eeeeee;*/
+/*  color: #616161;*/
+  background-color: #673ab7;
+  color: white;
+  font-weight: bold;
+  padding: 0px 10px 0px 10px;
+  height: 40px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  position: absolute;
+  right: 35px;
+}
+
+.addEntryFromList:hover {
+  transform: scale(1.03);
+/*  background-color: #d6d6d6;*/
+  background-color: #7E57C2;
+}
+
+.addNewEntryBlock {
+  border-radius: 4px;
+  text-transform: capitalize;
+  margin-left: 0px;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  color: #353535;
+  font-weight: bold;
+  padding: 0px 10px 0px 10px;
+  height: 40px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  position: absolute;
+  right: 3%;
+  box-shadow: inset 0 0 0 1px #eee;
+}
+
+.addNewEntryBlock:hover {
+  transform: scale(1.03);
+/*  background-color: #d6d6d6;*/
+}
+
+.modifiedEntryBlock {
+  width: 160px;
+/*  margin-top: 10px;*/
+  margin-left: 25px;
+  margin-bottom: 25px;
+  position: absolute;
+  right: 69%;
+  font-size: 18px;
+  font-weight: bold;
+  top: 52%;
+  margin-right: 0px;
+}
+
+.modifiedSingleList {
+/*  padding-bottom: 1px;*/
+  font-weight: bold;
+  font-size: 18px;
+  display: block;
+}
+
+.nothingFoundImage {
+  width: 300px;
+  height: 300px;
+  box-sizing: border-box;
+  display: inline-block;
+  margin-top: -45px;
+}
+
+.modifiedRibbon {
+    height: 95px;
+}
+
+.createNewListTitle, {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.noContentBlock,
+.noEntriesBlock,
+.nothingFoundBlock {
+  margin-bottom: 15px;
+  background-color: #eee;
+  height: 250px;
+  border-radius: 4px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  margin-left: -12px;
+  margin-top: -10px;
+}
+
+.noContentBlock:hover, 
+.noEntriesBlock:hover,
+.nothingFoundBlock:hover {
+  transform: scale(1.02);
+}
+
+.noContentMessage,
+.noEntriesMessage,
+.nothingFoundMessage {
+  display: inline-block;
+  width: 630px;
+  padding: 25px;
+  font-size: 25px;
+  font-weight: bold;
+  color: #333;
+}
+
+.noEntriesBlock,
+.nothingFoundBlock {
+  height: 150px;
+  margin-left: 0px;
+
+  width: 640px;
+  height: 225px;
+}
+
+
+.noEntriesMessage,
+.nothingFoundMessage {
+  width: 600px;
+}
+
+.entriesList {
+  width: 100%;
+}
+
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  background-color: #f3f3f3;
+  border-radius: 4px;
+  width: 660px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 20px;
+  transition: 0.3s;
+  font-size: 17px;
+  border-radius: 4px;
+  margin: 0px 5px;
+  font-family: 'GothamRounded';
+  font-size: 17px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.activeTab {
+  background-color: #fff;
+  box-shadow: 0px 5px 5px 1px #efefef;
+}
+
+.postCount--dashboard__entries {
+  display: block;
+  padding: 0 20px;
+  margin: 0 5px;
+}
+
+.dashboardHeader {
+  margin-top: 20px;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
+}
+
+.draftIndicator {
+  position: absolute;
+  top: 19px;
+  right: 65px;
+  width: 135px;
+  text-align: center;
+  padding: 5px 0px;
+/*  border: 1px solid #e0e0e0;*/
+  border-radius: 4px;
+  font-weight: bold;
+  color: #555;
+  background-color: #f3f3f3;
+  transition: .2s ease-in-out
+}
+
+.draftIndicator:hover {
+  background-color: #efefef;
+}
+
+.trashedIndicator {
+  position: absolute;
+  top: 19px;
+  right: 65px;
+  width: 135px;
+  text-align: center;
+  padding: 5px 0px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #333;
+  font-weight: bold;
+  color: #eee;
+  transition: .2s ease-in-out
+}
+
+.trashedIndicator:hover {
+  background-color: #555;
+  border-color: #555;
+}
+
+.deletingIndicator {
+  position: absolute;
+  top: 19px;
+  right: 65px;
+  width: 135px;
+  text-align: center;
+  padding: 5px 0px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: darkred;
+  font-weight: bold;
+  color: #eee;
+  transition: .2s ease-in-out
+}
+
+.deletingIndicator:hover {
+  background-color: red;
+  border-color: #555;
+}
+
+.modal__deleteEntry,
+.modal__trashEntry,
+.modal__deleteList,
+.modal__deleteAccount,
+.modal__deleteSpace,
+.modal__changePassword {
+  display: none;
+}
+
+.createNewTemplate {
+  background-color: #673ab7;
+  padding: 12px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  box-sizing: border-box;
+  height: 60px;
+  width: 250px;
+  border-radius: 3px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  display: block;
+}
+
+.createNewTemplate:hover {
+  background-color: #7e57c2 !important;
+  transform: scale(1.02);
+}
+
+.createNewTemplateText {
+  color: white;
+}
+
+.templateContainer  {
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  margin-top: 23px;
+  font-size: 26px;
+  color: #333;
+  font-weight: bold;
+  border: 1px solid #eaeaea;
+  padding: 20px 15px;
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+  cursor: pointer;
+  transition: .2s ease;
+  display: block;
+/*  overflow: scroll;
+  width: 450px;*/
+}
+
+.templateContainer:hover {
+  transform: scale(1.02);
+}
+
+.templateName {
+/*  line-height: 125px;*/
+  text-align: center;
+  padding-top: 62.5px;
+  padding-bottom: 62.5px;
+}
+
+.templateList {
+  overflow: hidden;
+  overflow-y: scroll;
+  height: 325px;
+  padding: 10px;
+  padding-top: 0px;
+  margin-top: 10px;
+}
+
+/*::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}*/
+
+/*
+===========================
+=== Page: Create a new list
+===========================
+*/
+
+.templateDetailsTitle {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+
+/*
+===========================
+=== Curata Settings Page
+===========================
+*/
+
+.autoSaveNotice {
+  margin-top: 10px;
+  color: #949494;
+}
+
+/*
+===========================
+=== Editing entry page
+===========================
+*/
+
+.floatUntrash {
+  float: right;
+  line-height: 42px;
+  margin-right: 25px;
+  padding: 8px;
+}
+
+.inTrash {
+  margin-left: 50px;
+  font-weight: bold;
+  color: #555;
+}
+
 /*
 ===========================
 ========= DROPDOWN 
@@ -481,7 +1384,7 @@ p.noDefaultCurataTextSmall {
   background-color: white;
   display: block;
 /*  height: 24px;*/
-  height: 32px;
+  height: 28px;
   padding: 8px;
 }
 
@@ -511,7 +1414,8 @@ a {
 }
 .Dropdown-profile {
   position: relative;
-  background-color: #f9f9f9;
+  background-color: transparent;
+/*  background-color: #f9f9f9;*/
 /*  min-width: 170px;*/
 }
 .Dropdown-profile .Photo {
@@ -524,12 +1428,12 @@ a {
   border-bottom-right-radius: 2px;
 /*  height: 24px;
   width: 24px;*/
-  height: 32px;
-  width: 32px;
+  height: 28px;
+  width: 28px;
 }
 
 .Dropdown-profile:hover {
-	background-color: rgba(0,0,0,0.08);
+	background-color: #152229;
 }
 
 .Dropdown-profile .Name {
@@ -548,7 +1452,8 @@ a {
   z-index: 9998 !important;
   background-color: white;
   box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.2);
-  margin-top: 15px;
+/*  margin-top: 15px;*/
+  margin-top: 10px;
   position: absolute;
   overflow: hidden;
   transition: all 0.3s;
@@ -556,7 +1461,8 @@ a {
 }
 
 .SettingsNav {
-  right: 25px;
+/*  right: 25px;*/
+  right: 20px;
 }
 
 .Dropdown-nav ul {
@@ -585,7 +1491,8 @@ a {
     width: 3px;
     height: 28px;
 /*    background-color: #3d6def;*/
-    background-color: #673ab7;
+/*    background-color: #673ab7;*/
+    background-color: #1e323c;
     left: 0px;
     top: 50%;
     transform: translateY(-50%);
@@ -598,7 +1505,8 @@ a {
 
 .Dropdown-nav li a:hover {
 /*  color: #3d6def;*/
-  color: #673ab7;
+/*  color: #673ab7;*/
+  color: #1e323c;
 }
 .Dropdown-nav li .OptionLink {
   position: absolute;
@@ -664,9 +1572,11 @@ a {
 }
 
 .Upgrade {
-	background-color: #fffcd4 !important;
+/*	background-color: #fffcd4 !important;*/
+  background-color: #1e323c!important;
+  color: #fff !important;
 	font-weight: bold;
-	color: #673ab7 !important;
+/*	color: #673ab7 !important;*/
 	border-radius: 3px;
 }
 
@@ -883,7 +1793,7 @@ h2.CheckOthers {
   margin-top: 10px;
 }
 
-.imageBlock {
+/*.imageBlock {
   width: 200px;
   min-height: 150px;
   background-color: white;
@@ -892,7 +1802,7 @@ h2.CheckOthers {
   text-align: center;
   line-height: 150px;
   margin-top: 10px;
-}
+}*/
 
 /*
 ===========================
@@ -909,7 +1819,13 @@ h2.CheckOthers {
 .componentDescription,
 .publicElementTitle,
 .curataSettingsTitle,
-.curataDescription {
+.curataDescription,
+.inputField__accountSettings,
+.password__accountSettings,
+.passwordConfirmation__accountSettings,
+.passwordCurrent__accountSettings,
+.newListDescription--dashboard__entries,
+.newListTitle--dashboard__entries {
   background: transparent;
   border-radius: 3px;
   box-shadow: none;
@@ -917,23 +1833,14 @@ h2.CheckOthers {
   font-weight: 700;
   line-height: 24px;
   margin: 0px 0px 0px 10px;
-  width: 95%;
   min-height: 24px;
   padding: 4px 8px;
   resize: none;
   overflow: hidden;
   overflow-wrap: break-word;
   font-family: 'GothamRounded';
-  height: 40px;
-  letter-spacing: normal;
-  word-spacing: normal;
-  text-transform: none;
-  text-indent: 0px;
-  text-shadow: none;
   text-rendering: auto;
-  cursor: text;
   white-space: pre-wrap;
-  -webkit-rtl-ordering: logical;
   flex-direction: column;
   transition-property: background-color,border-color,box-shadow;
   transition-duration: 85ms;
@@ -949,38 +1856,82 @@ h2.CheckOthers {
 .ListTitle:focus, 
 .ListDescription:focus,
 .curataSettingsTitle:focus,
-.curataDescription:focus {
+.curataDescription:focus,
+.title__accountSettings:focus,
+.inputField__accountSettings:focus,
+.password__accountSettings:focus,
+.passwordConfirmation__accountSettings:focus,
+.passwordCurrent__accountSettings:focus,
+.newListDescription--dashboard__entries:focus,
+.newListTitle--dashboard__entries:focus {
   background: #fff;
   border: none;
-  box-shadow: inset 0 0 0 2px #4725a9;
+/*  box-shadow: inset 0 0 0 2px #4725a9;*/
 }
 
-.ListTitle {
+.ListTitle,
+.newListTitle--dashboard__entries {
   background: white;
   box-shadow: inset 0 0 0 1px #ececec;
+  margin-left: 0px;
+  margin-top: 10px;
+  font-weight: 200;
+  font-size: 18px;
 }
 
-.curataSettingsTitle {
+.curataSettingsTitle,
+.inputField__accountSettings,
+.password__accountSettings,
+.passwordConfirmation__accountSettings,
+.passwordCurrent__accountSettings {
   border: 1px solid #fff;
   font-size: 28px;
   height: 50px;
-/*  width: 80%;*/
   margin: 10px 0px 0px 0px;
   color: #333;
   background-color: white;
 }
 
+.inputField__accountSettings,
+.password__accountSettings,
+.passwordConfirmation__accountSettings,
+.passwordCurrent__accountSettings {
+/*  width: 85%;*/
+  width: 100%;
+}
+
+.passwordCurrent__accountSettings {
+  font-size: 24px;
+}
+
+/*.passwordBlock {
+  margin-bottom: 15px !important;
+}*/
+
+.passwordConfirmationBlock {
+  margin-top: 0px !important;
+  display: none;
+}
+
 .ListDescription,
 .componentDescription,
-.curataDescription {
+.curataDescription,
+.newListDescription--dashboard__entries {
   min-height: 40px;
   height: 120px;
   font-size: 18px;
-  overflow: scroll;
+  overflow: auto;
   font-weight: 400;
   color: #464646;
   background: white;
   box-shadow: inset 0 0 0 1px #ececec;
+}
+
+.ListDescription,
+.newListDescription--dashboard__entries {
+  margin-left: 0px;
+  margin-top: 10px;
+  padding: 10px;
 }
 
 .curataDescription {
@@ -994,20 +1945,71 @@ h2.CheckOthers {
 
 .EntryTitle {
   margin-left: 0px;
-  padding-left: 0px;
-  font-size: 35px;
+  padding-left: 5px;
+/*  font-size: 35px;*/
+  font-size: 20px;
+  font-weight: 400;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.entryLink {
+  font-size: 20px;
+  font-family: 'GothamRounded';
+  padding: 4px 5px;
+  width: 95%;
+}
+
+.entryLinkPreview {
+  display: inline-block;
+/*  margin-top: 20px;*/
+  margin-top: 1px;
+  float: right;
+  color: #663ab7;
+  transition: .2s ease-in-out;
+  box-sizing: border-box;
+}
+
+.entryLinkPreview:hover {
+  color: #9575CD;
+}
+
+.externalLink__liveSpace .externalLink path {
+  stroke: #333;
+}
+
+.externalLink__liveSpace .extLinkPath {
+  fill: #333;
+}
+
+.externalLink path {
+  stroke: #663ab7;
+}
+
+.entryLinkPreview:hover > .externalLink path {
+  stroke-width: 3px;
+}
+
+.extLinkPath {
+  stroke: none !important;
+  fill: #663ab7;
 }
 
 .entryDetailsGroup {
   background-color: white;
   margin: 0px auto 25px auto;
-  box-shadow: 0px 5px 5px 1px #f3f3f3;
+/*  box-shadow: 0px 5px 5px 1px #f3f3f3;*/
+  box-shadow: 0px 5px 5px 1px #f5f5f5;
   padding: 18px;
+  padding-bottom: 10px;
+  padding-top: 10px;
   font-size: 20px;
   color: #0e0e0e;
   border-radius: 6px;
-  text-transform: capitalize;
+/*  text-transform: capitalize;*/
   position: relative;
+
+  border: 1px solid #eee;
 }
 
 .publicElementTitle {
@@ -1187,7 +2189,7 @@ h2.CheckOthers {
   display: inline-block;
 }
 
-.cancelDeleteEntry {
+.cancelDeleteEntry, .trashEntry, .untrashEntry, .permaDeleteList {
   background: transparent;
   padding: 0px;
   margin: 0px;
@@ -1199,11 +2201,14 @@ h2.CheckOthers {
   color: #424242;
 }
 
-.cancelDeleteEntry:hover {
+.cancelDeleteEntry:hover, .trashEntry:hover, .untrashEntry:hover, .permaDeleteList:hover {
   color: #8a8a8a;
 }
 
-.cancelDeleteEntry:hover .trashIcon {
+.cancelDeleteEntry:hover .trashIco,
+.trashEntry:hover .trashIcon,
+.untrashEntry:hover .trashIcon,
+.permaDeleteList:hover .trashIcon {
   fill: #8a8a8a !important;
 }
 
@@ -1221,6 +2226,20 @@ h2.CheckOthers {
 .settingsButton svg {
   vertical-align: middle;
   line-height: 24px;
+}
+
+.modifiedSettings {
+  background-color: #eee;
+  margin-left: 15px;
+  align-self: center;
+}
+
+.modifiedSettings:hover {
+  background-color: #cccccc !important;
+}
+
+.modifiedSettings path {
+  fill: #333;
 }
 
 .showPreview {
@@ -1247,8 +2266,8 @@ h2.CheckOthers {
   text-align: center;
   margin: 0px 5px;
   background-color: white;
-  border: 1px solid #efefef;
-  box-shadow: 0px 5px 7px 1px #f5f5f5;
+  border: 1px solid #e8e8e8;
+/*  box-shadow: 0px 5px 7px 1px #f5f5f5;*/
   transition: .2s ease;
   cursor: pointer;
 }
@@ -1277,7 +2296,11 @@ h2.CheckOthers {
 }
 
 .entryState {
-  font-size: 18px;
+  padding: 9px;
+  color: #333;
+  border-radius: 4px;
+  font-weight: bold;
+  background-color: #f7f7f7;
 }
 
 .goBack {
@@ -1336,7 +2359,7 @@ h2.CheckOthers {
 
 .entryPreviewArea {
   height: 100%;
-  margin: 0 auto;
+  margin: 50px auto 0px auto;
 }
 
 .closeWindowBtn {
@@ -1346,6 +2369,13 @@ h2.CheckOthers {
   color: #2b2b2b;
   margin-left: 25px;
   margin-right: 15px;
+  cursor: pointer;
+}
+
+.closeWindowBtn:hover {
+  background-color: #1e323c;
+  color: white;
+  font-weight: bold;
 }
 
 /* Curatas */
@@ -1353,11 +2383,13 @@ h2.CheckOthers {
 .curataContainer {
   margin-top: 50px;
   width: 70%;
+  margin-bottom: 100px;
 }
 
 .entriesContainer {
   margin-top: 50px;
   width: 70%;
+  margin-bottom: 100px;
 }
 
 .curataList {
@@ -1466,20 +2498,25 @@ h2.CheckOthers {
 }
 
 .sideNav {
-  width: 200px;
+/*  width: 200px;*/
+  width: 285px;
   top: 64px;
 /*  position: fixed;*/
   left: 0;
+/*  margin-right: 20px;*/
   overflow: hidden;
   z-index: 1001;
 /*  height: calc(100% - 64px);*/
-  background-color: #f9f9f9;
+/*  background-color: #f9f9f9;*/
+  background-color: #ffffff;
+  border-right: 1px solid #ececec;
+  display: inline-block;
 }
 
 .sideNavButtons {
   padding-top: 50px;
-  padding-left: 20px;
-  padding-right: 20px;
+/*  padding-left: 20px;
+  padding-right: 20px;*/
 }
 
 .size18 {
@@ -1501,52 +2538,89 @@ h2.CheckOthers {
 }
 
 .viewCurataLive {
-  width: 110px;
-  background-color: #607d8b;
+  width: 200px;
+  background-color: #f3f3f3;
   cursor: pointer;
   border-radius: 4px;
   padding: 12px 16px;
   margin: 40px auto 0px auto;
   box-sizing: border-box;
-  color: white;
+  color: #333;
+/*  color: #989898;*/
+  text-align: center;
   transition: .2s ease-in-out;
   font-weight: bold;
   display: block;
 }
 
 .viewCurataLive:hover {
-  background-color: #78909C !important;
+  background-color: #1d323c !important;
   transform: scale(1.02);
+  color: #fff;
 }
 
-.addNewList, .createNewEntry, .addNewTemplate {
+.addNewList, 
+.addNewEntry,
+.createNewEntry, 
+.addNewTemplate,
+.createList--dashboard__entries {
   width: 150px;
-/*  background-color: #ff0844;*/
   background-color: #673ab7;
+/*  background-color: #ff6922;*/
   cursor: pointer;
   border-radius: 4px;
   padding: 12px 16px;
-  margin: 20px 12px 55px 5px;
+  margin: 20px 12px 55px 0px;
   box-sizing: border-box;
   color: white;
   transition: .2s ease-in-out;
   font-weight: bold;
+  font-size: 23px;
+  display: inline-block;
+}
+
+.createList--dashboard__entries {
+  margin-bottom: 0px;
+  margin-left: 0px;
+}
+
+.createListArea--dashboard__entries {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+
+.createNewEntry {
+  display: block;
 }
 
 .addNewTemplate {
   width: 175px;
 }
 
-.addNewList {
+.addNewList,
+.addNewEntry {
   width: 215px;
+  background-color: #673ab7;
 }
 
-.addNewList:hover, 
+.addNewList {
+  border: 1px solid #e2e1e1;
+  background-color: white;
+  color: #333;
+}
+
+.addNewEntry:hover, 
 .createNewEntry:hover, 
-.addNewTemplate:hover {
+.addNewTemplate:hover,
+.createList--dashboard__entries:hover {
 /*  background-color: #ff0140d1 !important;*/
   background-color: #7E57C2 !important;
   transform: scale(1.02); 
+}
+
+.addNewList:hover {
+  transform:  scale(1.02);
 }
 
 .curataSwitcher {
@@ -1554,19 +2628,21 @@ h2.CheckOthers {
 }
 
 .currentCurataSwitch {
-/*  max-width: 160px;*/
-  max-width: 180px;
+/*  max-width: 180px;*/
   cursor: pointer;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
 /*  box-shadow: 0px 2px 0px 0 #e8e8e8;*/
-  border-radius: 4px;
-  padding: 12px 5px;
-  background-color: #eee;
+/*  border-radius: 4px;*/
+  border: 1px solid #efefef;
+  padding: 10px 5px;
+/*  background-color: #eee;*/
 /*  background-color: #333333;*/
-  margin: 40px auto 0px auto;
+  background-color: #fbfbfb;
+/*  margin: 40px auto 0px auto;*/
   box-sizing: border-box;
-  color: #616161;
+/*  color: #616161;*/
+  color: #c5c5c5;
   transition: .2s ease-in-out;
   font-weight: bold;
   position: relative;
@@ -1575,6 +2651,7 @@ h2.CheckOthers {
 .currentCurataSwitch:hover {
 /*  background-color: #424242 !important;*/
   background-color: #d0d0d0 !important;
+  color: #545454;
 /*  transform: scale(1.02);*/
 }
 
@@ -1603,7 +2680,6 @@ h2.CheckOthers {
   display: flex;
   flex-wrap: wrap;
 }
-
 
 
 button.button-white.confirmEntryDelete, button.button-white.confirmComponentDelete, {
@@ -1673,8 +2749,11 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 /*New code: css related to dialog starts below*/
-.deleteModal, .createModal {
-  position:absolute;
+.deleteModal, 
+.createModal,
+.createEntryModal__space {
+/*  position:absolute;*/
+  position: fixed;
   z-index:9999;
   top: 20%;
   right: 0;
@@ -1723,17 +2802,42 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   padding-top: 30px;
   margin-left: auto;
   margin-right: auto;
+  margin-left: -30px;
 }
 
-.button-outline.cancelEntryDelete, .button-outline.cancelComponentDelete{
+.modifiedActionGroup {
+  margin-left: 0px;
+}
+
+.button-outline.cancelEntryDelete, 
+.button-outline.cancelComponentDelete,
+.button-outline.cancelPermaDeleteEntry,
+.button-outline.cancelTrashEntry,
+.button-outline.cancelPermaDeleteList,
+.button-outline.cancelPermaDeleteAccount,
+.button-outline.cancelPermaDeleteSpace,
+.button-outline.cancelChangePassword {
   width:98px;
 }
-.button-filled.confirmEntryDelete, .button-filled.confirmComponentDelete{
+.button-filled.confirmEntryDelete, 
+.button-filled.confirmComponentDelete,
+.button-filled.confirmPermaDeleteEntry,
+.button-filled.confirmTrashEntry,
+.button-filled.confirmPermaDeleteList,
+.button-filled.confirmPermaDeleteAccount,
+.button-filled.confirmPermaDeleteSpace,
+.button-filled.confirmChangePassword {
   width:98px;
   margin-right:12px;
 }
 
-.modalBackground, .confirmBackground {
+.modalBackground,
+.confirmBackground,
+.modalBackground__deleteEntry,
+.modalBackground__deleteList,
+.modalBackground__deleteAccount,
+.modalBackground__deleteSpace,
+.modalBackground__changePassword {
   background-color: darkgrey;
   opacity: 0.5;
   top: 0;
@@ -1759,7 +2863,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   max-width: 650px;
   height: 100%;
   margin: 0 auto;
-  margin-top: 20px;
+/*  margin-top: 20px;*/
+  margin-top: 100px;
   width: 650px;
 }
 
@@ -1784,7 +2889,21 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 
 
+.container--create__newList {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 50px; 
+}
 
+.form--create__newList {
+  margin-top: 35px;
+}
+
+.formTitle--create__newList {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
 
 
 
@@ -1943,63 +3062,13 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   float: right;
 }
 
-
-.templateContainer  {
-  border-radius: 4px;
-  background-color: #f5f5f5;
-  margin-top: 23px;
-  font-size: 26px;
-  color: #333;
-  font-weight: bold;
-  border: 1px solid #eaeaea;
-  padding: 20px 15px;
-  box-shadow: 0px 5px 5px 1px #f3f3f3;
-  cursor: pointer;
-  transition: .2s ease;
-/*  overflow: scroll;
-  width: 450px;*/
-}
-
-.templateContainer:hover {
-  transform: scale(1.02);
-}
-
-.templateName {
-  line-height: 125px;
-  text-align: center;
-}
-
-.createNewTemplate {
-  background-color: #673ab7;
-  padding: 12px;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  box-sizing: border-box;
-  height: 40px;
-  width: 250px;
-  border-radius: 3px;
-  transition: .2s ease-in-out;
-  cursor: pointer;
-  display: block;
-}
-
-.createNewTemplate:hover {
-  background-color: #7e57c2 !important;
-  transform: scale(1.02);
-}
-
-.createNewTemplateText {
-  color: white;
-}
-
 .ribbonList {
   display: inline-block;
 /*  width: 550px;*/
   width: 600px;
-  padding: 25px;
-  font-size: 18px;
+  padding: 29px 25px;
+/*  font-size: 18px;*/
+  font-size: 25px;
   font-weight: bold;
 /*  color: #424242;*/
 }
@@ -2031,12 +3100,12 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 */
 
 .title4vh {
-  font-size: 4vh;
+  font-size: 32px;
   margin-bottom: 5px;
 }
 
 .title2p5vh {
-  font-size: 2.5vh;
+  font-size: 21px;
 }
 
 .title20px {
@@ -2044,23 +3113,32 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   font-weight: 400;
 }
 
-.curataPageTitle {
-  font-size: 45px;
+.pageTitle__default,
+.curataPageTitle,
+.pageTitle__accountSettings {
+  font-size: 55px;
   font-weight: bold;
+  margin-bottom: 10px;
   color: #333;
 }
 
+.pageDescription__default {
+  font-size: 35px;
+  color: #ccc;
+}
+
 .entryMetaTitle {
-  font-size: 45px;
-  color: #616161;
+  font-size: 20px;
+  color: #555555;
   font-weight: bold;
-  margin-top: 100px;
-  margin-bottom: 25px;
+  margin-left: 165px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .entryContentTitle {
   font-size: 45px;
-  color: #616161;
+  color: #9e9e9e;
   font-weight: bold;
   margin-bottom: -40px;
   margin-top: 100px;
@@ -2220,8 +3298,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 .CreateListArea {
-  width: 375px;
-  height: 360px;
+  width: 550px;
+/*  height: 360px;*/
   border: 1px solid rgb(228, 228, 228);
   border-radius: 3px;
   margin-top: 30px;
@@ -2234,14 +3312,22 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   padding-top: 18px;
 }
 
-.deleteCurataButton {
+.deleteAccountText {
+  font-size: 17px;
+  color: #424242;
+  padding-top: 25px;
+  line-height: 23px;
+}
+
+.deleteSpaceButton,
+.deleteAccountButton {
   text-align: center;
   background-color: #a70029;
   padding: 15px;
   margin-top: 20px;
-  width: 115px;
+  width: 150px;
   border-radius: 3px;
-  border: 2px solid #710000;
+/*  border: 2px solid #710000;*/
   transition: .2s ease-in-out;
   cursor: pointer;
   display: block;
@@ -2250,7 +3336,12 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   font-size: 16px;
 }
 
-.deleteCurataButton:hover {
+.deleteAccountButton {
+  margin-bottom: 20px;
+}
+
+.deleteSpaceButton:hover,
+.deleteAccountButton:hover {
   transform: scale(1.02);
 }
 
@@ -2261,9 +3352,16 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   border-radius: 3px;
   max-width: 638px;
   margin-bottom: 50px;
+  margin-top: 40px;
 }
 
-.curataSettingsArea {
+.deleteCurataText {
+  line-height: 20px;
+  font-weight: bold;
+}
+
+.curataSettingsArea,
+.settingsContainer__accountSettings {
   padding: 30px;
   padding-left: 0px;
   /* border: 1px solid #eee; */
@@ -2272,7 +3370,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   max-width: 700px;
 }
 
-.curataSettingsGroup {
+.curataSettingsGroup,
+.section__accountSettings {
 /*  padding: 30px;
   border: 1px solid #f9f9f9;
   margin: 28px auto;
@@ -2298,7 +3397,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   background-color: #fff;  */
 }
 
-.curataSettingsGroupTitle {
+.curataSettingsGroupTitle,
+.sectionTitle__accountSettings {
   font-size: 19px;
   margin-bottom: -16px;
   color: #757575;
@@ -2308,7 +3408,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 .CreateListButton {
   text-align: center;
-  background-color: #ff0744;
+  background-color: #673ab7;
   padding: 15px;
   margin: 0 auto;
   margin-top: 20px;
@@ -2326,7 +3426,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   transform: scale(1.02);
 }
 
-.CreateListBigText {
+.CreateListBigText {-
   font-size: 20px;
   text-align: center;
   margin-top: 10px;
@@ -2346,6 +3446,11 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   flex-flow: row nowrap;
   align-items: center;
   height: 44px;
+  position: relative;
+}
+
+.templateTitleInstruction, .listTitleInstruction {
+  font-size: 23px;
 }
 
 
@@ -2353,7 +3458,9 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 /* DROPDOWN */
 
-.drop-down2 {
+.drop-down2, 
+.curata-drop-down,
+.entry-drop-down {
 /*    display: inline-block;*/
   display: flex;
   flex-wrap: wrap;
@@ -2364,7 +3471,9 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 /*  opacity: 0;*/
 }
 
-.drop-down__button2 {
+.drop-down__button2, 
+.curata-drop-down__button,
+.entry-drop-down__button {
 /*    background: linear-gradient(to right,#3d6def, #8FADFE);*/
     display: inline-block;
     align-self: flex-end;
@@ -2377,7 +3486,9 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 .drop-down__menu-box2, 
-.drop-down__menu-box3 {
+.drop-down__menu-box3,
+.curata-drop-down__menu-box,
+.entry-drop-down__menu-box {
     position: absolute;
     top: 30px;
     width: 165px;
@@ -2397,6 +3508,10 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     z-index: 1000;
 }
 
+.curata-drop-down__menu-box {
+  right: -3px;
+}
+
 .drop-down__menu-box3 {
   width: 160px;
   top: 40px;
@@ -2406,13 +3521,17 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 
 .drop-down--active .drop-down__menu-box2,
-.drop-down--active .drop-down__menu-box3 {
+.drop-down--active .drop-down__menu-box3,
+.drop-down--active .curata-drop-down__menu-box,
+.drop-down--active .entry-drop-down__menu-box {
     visibility: visible;
     opacity: 1;
     margin-top: 15px;
 }
 
-.drop-down__menu-box2:before {
+.drop-down__menu-box2:before,
+.curata-drop-down__menu-box:before,
+.entry-drop-down__menu-box:before {
     content: '';
     background-color: transparent;
     border-right: 8px solid transparent;
@@ -2424,13 +3543,17 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     right: 18px;
 }
 
-.drop-down__menu-box2:after {
+.drop-down__menu-box2:after.
+.curata-drop-down__menu-box:after,
+.entry-drop-down__menu-box:after {
     content: '';
     background-color: transparent;
 }
 
 .drop-down__menu2,
-.drop-down__menu3 {
+.drop-down__menu3,
+.curata-drop-down__menu,
+.entry-drop-down__menu {
     margin: 0;
     padding: 0 13px;
     list-style: none;
@@ -2442,7 +3565,9 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 .drop-down__item2,
-.drop-down__item3 {
+.drop-down__item3,
+.curata-drop-down__item,
+.entry-drop-down__item {
     font-size: 13px;
     padding: 10px 0;
     text-align: left;
@@ -2454,27 +3579,17 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     display: list-item;
 }
 
-.drop-down__item2:hover {
+.drop-down__item2:hover,
+.drop-down__item3:hover,
+.curata-drop-down__item:hover,
+.entry-drop-down__item:hover {
   color: #673ab7;
 }
 
-.drop-down__item3:hover {
-  color: #673ab7;
-}
-
-.drop-down__item2:before {
-    content: '';
-    position: absolute;
-    width: 3px;
-    height: 28px;
-    background-color: #673ab7;
-    left: -13px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: none;
-}
-
-.drop-down__item3:before {
+.drop-down__item2:before,
+.drop-down__item3:before,
+.curata-drop-down__item:before,
+.entry-drop-down__item:before {
     content: '';
     position: absolute;
     width: 3px;
@@ -2487,8 +3602,23 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 .drop-down__item2:hover:before,
-.drop-down__item3:hover:before {
+.drop-down__item3:hover:before,
+.curata-drop-down__item:hover:before,
+.entry-drop-down__item:hover:before {
     display: block;
+}
+
+.curata-drop-down__item,
+.entry-drop-down__item {
+  padding: unset;
+}
+
+.curata-drop-down__item a,
+.entry-drop-down__item a {
+  width: 100%;
+  height: 100%;
+  display: block;
+  padding: 10px 0px;
 }
 
 .drop-down-extra-styling {
@@ -2505,7 +3635,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 .drop-down-extra-width {
-  width: 180px;
+/*  width: 180px;*/
+  width: 265px;
   right: 10px;
 }
 
@@ -2539,11 +3670,17 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 .curataName {
   padding: 20px;
-  font-size: 25px;
-  color: #555;
+  font-size: 35px;
+  font-weight: bold;
+  color: #333;
   margin-bottom: -25px;
   text-align: center;
   margin-top: 20px; 
+  display: block;
+}
+
+.curataName:hover {
+  color: #333;
 }
 
 .IsRequired {
@@ -2742,7 +3879,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 
 .singleList {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 /*  background-color: #fbfbfb;*/
   background-color: #ffffff;
 /*  border: 1px solid #f5f5f5;*/
@@ -2752,10 +3889,15 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   box-shadow: 0px 5px 5px 1px #f3f3f3;
   transition: .2s ease-in-out;
   cursor: pointer;
+  position: relative;
 }
 
 .singleList:hover {
   transform: scale(1.02);
+}
+
+.modifiedIndex {
+  z-index: 1001;
 }
 
 .messageBlock {
@@ -2820,3 +3962,303 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   height: 250px;
 }
 
+
+.saveButton__accountSettings,
+.changePasswordButton__accountSettings {
+  float: right;
+  border-radius: 4px;
+  padding: 10px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #673AB7;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.saveButton__accountSettings:hover,
+.changePasswordButton__accountSettings:hover {
+  transform: scale(1.03);
+}
+
+.availabilityNotifier__accountSettings,
+.passwordErrorNotifier__accountSettings,
+.passwordChangeErrorNotifier__accountSettings {
+  display: none;
+  position: absolute;
+  width: 35%;
+  height: 60px;
+  box-shadow: 0px 3px 5px 0px #f1f1f1;
+  right: -45%;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  transition: .2s ease;
+  text-align: center;
+}
+
+.passwordChangeErrorNotifier__accountSettings {
+  position: relative;
+  width: 100%;
+  right: 0px;
+  background-color: #b63a3a;
+}
+
+.block__accountSettings {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;;
+}
+
+.defaultNotificationContainer {
+  position: fixed;
+  left: 15px;
+  bottom: 15px;
+  width: 250px;
+/*  height: 100px;*/
+  background-color: white;
+  box-shadow: 0px 3px 5px 0px #f1f1f1;
+/*  border: 1px solid #f1f1f1;*/
+  border-radius: 4px;
+  z-index: 99999;
+  display: none;
+}
+
+.dismissDefaultNotification {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  padding: 3px 7px;
+  cursor: pointer;
+  transition: .2s ease-in-out;
+  color: #616161;
+}
+
+.dismissDefaultNotification:hover {
+  border-radius: 360px;
+  background-color: #ececec;
+}
+
+.defaultNotification {
+  padding: 25px;
+  color: #484848;
+  font-weight: bold;
+}
+
+.statusMessage {
+  vertical-align: middle;
+  margin-left: 25px;
+  color: #777777;
+}
+
+
+
+
+
+.file-upload {
+  background-color: #ffffff;
+/*  width: 600px;*/
+  margin: 0 auto;
+/*  padding: 20px;*/
+  box-sizing: border-box;
+}
+
+.file-upload-btn {
+/*  width: 100%;*/
+  width: 50%;
+  margin: 0;
+/*  color: #fff;*/
+  font-size: 29px;
+  color: #673ab7;
+/*  background: #1FB264;*/
+  background: transparent;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+/*  border-bottom: 4px solid #15824B;*/
+  transition: all .2s ease;
+  outline: none;
+/*  text-transform: uppercase;*/
+  font-weight: 700;
+
+  font-family: 'GothamRounded';
+  margin-bottom: 10px;
+}
+
+.file-upload-btn:hover {
+  background: #1AA059;
+  color: #ffffff;
+  transition: all .2s ease;
+  cursor: pointer;
+}
+
+.file-upload-btn:active {
+  border: 0;
+  transition: all .2s ease;
+}
+
+.file-upload-content {
+  display: none;
+  text-align: center;
+}
+
+.file-upload-input {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.image-upload-wrap {
+/*  margin-top: 20px;
+  border: 4px dashed #1FB264;*/
+  position: relative;
+}
+
+.image-dropping,
+.image-upload-wrap:hover {
+/*  background-color: #1FB264;
+  border: 4px dashed #ffffff;*/
+  background-color: #f9f9f9;
+  border-color: 4px solid #efefef;
+  border-radius: 3px;
+}
+
+.image-title-wrap {
+  padding: 0 15px 15px 15px;
+  color: #222;
+}
+
+.drag-text {
+  text-align: center;
+  padding: 60px 40px;
+  color: white;
+}
+
+.drag-text h3 {
+/*  font-weight: 100;
+  text-transform: uppercase;*/
+/*  color: #15824B;*/
+/*  padding: 60px 0;*/
+  color: #555;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.file-upload-image {
+  max-height: 200px;
+  max-width: 200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.remove-image {
+  width: 200px;
+  margin: 0;
+  color: #fff;
+  background: #cd4535;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: 4px solid #b02818;
+  transition: all .2s ease;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.remove-image:hover {
+  background: #c13b2a;
+  color: #ffffff;
+  transition: all .2s ease;
+  cursor: pointer;
+}
+
+.remove-image:active {
+  border: 0;
+  transition: all .2s ease;
+}
+
+.sections__liveSpace {
+  display: inline-block;
+  width: calc(100% - 286px);
+}
+
+
+.listChoicesTitle__space  {
+  font-size: 35px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.listChoices__space {
+
+}
+
+.listChoicesContainer__space {
+
+}
+
+.createEntryModal__space {
+  width: 500px !important;
+  padding: 25px;
+  overflow-y: auto;
+  height: 600px;
+  border-radius: 4px;
+  background-color: #fbfbfb;
+}
+
+.listChoice__space {
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  text-transform: capitalize;
+/*  border: 1px solid #eaeaea;*/
+  box-shadow: 0px 5px 5px 1px #f3f3f3;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  position: relative;
+}
+
+/*.listChoice__space:hover {
+  transform: scale(1.02);
+}*/
+
+.listChoiceLink__space {
+    padding: 29px 25px 15px 25px;
+    font-weight: bold;
+    display: block;
+}
+
+.listName__space {
+    font-weight: bold;
+    font-size: 35px;
+    transition: .2s ease-in-out;
+}
+
+.addEntry__space {
+    border-radius: 4px;
+    text-transform: capitalize;
+    background-color: #f3f3f3;
+    text-align: center;
+    color: #353535;
+    font-weight: bold;
+    padding: 10px 10px 10px 10px;
+    transition: .2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    margin-left: auto;
+    margin-top: 10px;
+    max-width: 150px;
+}
+
+.addEntry__space:hover {
+  background-color: #dcdcdc;
+}

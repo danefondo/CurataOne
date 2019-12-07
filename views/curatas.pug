@@ -1,6 +1,7 @@
 extends layout_buttonless
 
 block content
+	- var coreURL = 'dashboard';
 	.allCuratasContainer
 		if (error && error == "error")
 			.errorContainer
@@ -13,25 +14,64 @@ block content
 				.submitErrorText 
 		else if (curatas && curatas.length)
 			.allCuratas
-				.curataPageTitle All my Curatas
+				.curataPageTitle All my Spaces
 				if (user.defaultCurataId == none || user.defaultCurataId == undefined || !user.defaultCurataId)
-					a.addNewCurata.alteredNewCurata.blackBackground(href='/curatas/' + user.username + '/curatas/curate') 
-						.addNewCurataText + New Curata
+					a.addNewCurata.alteredNewCurata.blackBackground(href='/' + coreURL + '/' + user.username + '/curatas/curate') 
+						.addNewCurataText + New Space
 					.noDefaultCurata
-						p.noDefaultCurataText You have no default Curata.
+						p.noDefaultCurataText You have no default Space.
 						p.noDefaultCurataTextSmall If you want the dashboard button to take you to a specific Curata, rather than all of your Curatas, then set your desired Curata as default.
 				else
-					a.addNewCurata.alteredNewCurata(href='/curatas/' + user.username + '/curatas/curate')
-						.addNewCurataText + New Curata
+					a.addNewCurata.alteredNewCurata(href='/' + coreURL + '/' + user.username + '/curatas/curate')
+						.addNewCurataText + New Space
+				.searchFilter
+					input#searchFilter(type='text', placeholder='Search for a Space...')
+				button.filterButton.openFilters Filters
+				.modificationButtons.hidden
+					button.filterButton.resetSort All
+					button.filterButton.sortAlpha ABC
+					button.filterButton.changeOrder Reverse
+					button.filterButton.selfSort My Curatas 
+					button.filterButton.collabSort Collaborations
+					button.filterButton.ownerSort By owner
+					button.filterButton.ascendingDate Newest
+					button.filterButton.descendingDate Oldest
+					button.filterButton.viewAsList List view
+					button.filterButton.closeFilters x
 				ul.curatasList
 					each curata in curatas
 						li.singleCurata
-							a.curataLink(href='/curatas/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+							.singleCurataBlock
+								a.singleCurataLink(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id)
+								.curata-drop-down
+									.curataDropdown.curata-drop-down__button.unsortable
+										span.component-more ...
+									.curata-drop-down__menu-box.unsortable
+										ul.curata-drop-down__menu
+											li.curata-drop-down__item
+												a.settingsLink(target= '_blank' href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+											li.curata-drop-down__item
+												a.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+							a.singleCurataContent(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id)
+								//- if (curata.collaborators && curata.collaborators.length) 
+								//- 	.collabIndicator.collabTooltip
+								//- 		.collabTooltipText 
+								//- 			a.viewCollaborators.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/collaborators') View collaborators
+								.dateCreated(data-date= curata.dateCreated) #{moment(curata.dateCreated).format('MMMM Do YYYY')}
+								.curataLink #{curata.curataName}
+								.curataOwner(data-username= user.username) #{curata.ownerName}
+							//- .addressContainer
+							//- 	if (curata.curataCustomDomain && curata.curataCustomDomain.length)
+							//- 		.customDomain(href= 'http://' + curata.curataCustomDomain)
+							//- 			p #{curata.curataCustomDomain}
+							//- 	else if (curata.curataAddress && curata.curataAddress.length && curata.curataAddress !== 'no-address')
+							//- 		.customAddress(href= 'http://' + curata.curataAddress + '.curata.one')
+							//- 			p #{curata.curataAddress}
 		else
 			.allCuratas
-				.curataPageTitle All my Curatas
+				.curataPageTitle All my Spaces
 				.noCuratas
-					.noCuratasText You have no Curatas.
+					.noCuratasText You have no Spaces.
 					.noCuratasTextSmall Why not create one?
-					a.addNewCurata(href='/curatas/' + user.username + '/curatas/curate')
-						.addNewCurataText + New Curata
+					a.addNewCurata(href='/' + coreURL + '/' + user.username + '/curatas/curate')
+						.addNewCurataText + New Space

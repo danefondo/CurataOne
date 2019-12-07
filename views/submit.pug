@@ -1,0 +1,17 @@
+extends layout_buttonless_public
+
+block content
+	.modal__deleteAccount
+		.modalBackground__deleteAccount
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to delete your account?
+				.msg-body Your account will be permanently deleted and you will lose ownership and access to all your existing content.
+				.action-group
+					.cancelPermaDeleteAccount.button-outline CANCEL
+					.confirmPermaDeleteAccount.button-filled DELETE
+	.curataContainer.sideNavMargin
+		.pageTitle__accountSettings Submit entry to #{curata.curataName}
+		.pageDescription__submitEntry
+		each list in curata.curataList
+			p #{list.listName}

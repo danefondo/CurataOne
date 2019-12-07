@@ -1,0 +1,63 @@
+extends layout_buttonless
+
+include entryMixins/entryHeading
+include entryMixins/entryImage
+include entryMixins/entryTextarea
+include entryMixins/entryGallery
+include entryMixins/entryQuote
+include entryMixins/entryInfoBox
+include entryMixins/entryExampleBox
+include entryMixins/entryExpandable
+include entryMixins/entryQuestionAnswer
+include entryMixins/entrySectionBreak
+include entryMixins/entryList
+include entryMixins/entryChecklist
+
+
+//- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
+block content
+	- var coreURL = 'dashboard';
+	.entryPreviewArea
+		if (entry.entryState == "Draft")
+			p Entry not yet published.
+		else if (entry.entryState == "Published")
+			if (user)
+				a.editTemplate(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+			if (entry.entryTitle) 
+				.entryTitle__published #{entry.entryTitle}
+			else
+				.entryTitle__published Untitled
+			if (entry.entryText)
+				.entryDescription__published !{entry.entryText}
+			if (entry.entryComponents.length)
+				ul.entryComponents
+					each component in entry.entryComponents
+						if component.componentType == "heading"
+							+entryHeading(component, entry, template)
+						if component.componentType == "textarea"
+							+entryText(component, entry, template)
+						if component.componentType == "image"
+							+entryImage(component, entry, template)
+						if component.componentType == "image-gallery"
+							+entryImageGallery(component, entry, template)
+						if component.componentType == "question-answer"
+							+entryQuestionAnswer(component, entry, template)
+						if component.componentType == "expandable"
+							+entryExpandable(component, entry, template)
+						if component.componentType == "quote"
+							+entryQuote(component, entry, template)
+						if component.componentType == "info-box"
+							+entryInfoBox(component, entry, template)
+						if component.componentType == "example-box"
+							+entryExampleBox(component, entry, template)
+						if component.componentType == "section-break"
+							+entrySectionBreak(component, entry, template)
+						if component.componentType == "list"
+							if component.componentList.length
+								+entryList(component, entry, template)
+						if component.componentType == "checklist"
+							if component.componentList.length
+								+entryChecklist(component, entry, template)
+						//- if component.componentType == "link"
+						//- 	+entryLink(component, entry, template)
+

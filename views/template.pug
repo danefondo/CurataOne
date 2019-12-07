@@ -1,12 +1,14 @@
 extends layout_buttonless
 
 block heading
+	- var coreURL = 'dashboard';
 	.helperNavigation
 		.navlinks-container
-			a.navlink(href= '/curatas/' + user.username + '/curatas/' + entry.curataId + '/lists/' + listId + '/entries/' + entry.id + '/editing/') &larr;
+			a.navlink(href= '/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + listId + '/entries/' + entry.id + '/editing/') &larr;
 			//- a.navlink.inline Cancel
 
 block content
+	- var coreURL = 'dashboard';
 	.curataId(data-curataId= entry.curataId)
 	.entryId(data-entryId= entry.id)
 	.emptyConfirmModal
@@ -23,7 +25,7 @@ block content
 		.createModal.templateArchives.z-index1200
 			.cancelListCreating x
 			.big-content-wrapper.wrapperWidth
-				//- a.createNewTemplate(href= '/curatas/' + user.username + '/curatas/' + curata.id + '/templates/newTemplateWithList')
+				//- a.createNewTemplate(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/templates/newTemplateWithList')
 					.createNewTemplateText + Create new template
 				.msg-title Archived components of your template by component type
 				//- For each componentType, create one div with that componentType name
@@ -45,7 +47,7 @@ block content
 				//- 	.archiveContainer
 	.templateArea
 		.templateDetails
-			p.title4vh Customize your template. 
+			p.templateDetailsTitle Customize your template. 
 			p.inline Don't worry, your template is automatically saved!
 			.tooltip2.inline
 				| ?

@@ -1,0 +1,48 @@
+extends layout_buttonless
+
+block heading
+	- var coreURL = 'dashboard';
+	.helperNavigation
+		.navlinks-container
+			a.navlink(href='/' + coreURL + '/' + user.username + '/curatas/' + curataId) &larr; Back to lists
+			//- a.navlink Cancel
+			p.messageUpdate.inline
+
+block content
+	- var coreURL = 'dashboard';
+	.curataId(data-curataId= curataId)
+	.emptyConfirmModal
+		.confirmBackground
+		.deleteModal.z-index1300
+			.content-wrapper
+				.msg-title Are you sure you want to permanently delete this archived component?
+				.msg-body The component will be removed and you will not be able to restore it. If you delete a component here, you delete it everywhere, along with any linked content.
+				.action-group
+					.cancelComponentDelete.button-outline CANCEL
+					.confirmComponentDelete.button-filled DELETE
+	.emptyModal
+		.modalBackground
+		.createModal.templateArchives.z-index1200
+			.cancelListCreating x
+			.big-content-wrapper.wrapperWidth
+				//- a.createNewTemplate(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/templates/newTemplateWithList')
+					.createNewTemplateText + Create new template
+				.msg-title Archived components of your template by component type
+				//- For each componentType, create one div with that componentType name
+				//- And inside each div, you list for each component in list, all the components that equal that componentType
+				.emptyArchives One moment! Fetching archives...
+				.archiveContainer
+	.container--create__newList
+		.form--create__newList
+			p.formTitle--create__newList Create your list
+			.CreateListArea
+				.listDetails
+					p.listTitleInstruction Give your list a name:
+					input.ListTitle(placeholder= 'Your list title')
+				.listDetails
+					p.listTitleInstruction Describe its purpose:
+					textarea.ListDescription(placeholder= 'Describe what this list is about in less than 100 characters.')
+				//- a.CreateListButton Create list!
+block scripts
+	script(src='/js/sortable.js')
+	script(src='/js/draggable.js')

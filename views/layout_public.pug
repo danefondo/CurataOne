@@ -1,7 +1,9 @@
+include images/profileIcon
+
 doctype html
 html
 	head
-		title Curate
+		title Curata
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
 		link(rel='stylesheet' href='/css/reset.css')
 		link(rel='stylesheet', href='/css/unreset.css')
@@ -9,79 +11,62 @@ html
 		link(rel='stylesheet' href='/css/registration.css')
 		link(rel='stylesheet' href='/css/navigation.css')
 		link(rel='stylesheet' href='/css/MultiForm.css')
+		link(rel='stylesheet' href='/css/spectrum.css')
 		link(rel='stylesheet' href='/css/browse.css')
 		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css')
 		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js')
-		link(rel='stylesheet' href='/css/public.css')
+		script(src='https://cdn.ckeditor.com/ckeditor5/11.2.0/decoupled-document/ckeditor.js')
+		script(src='https://momentjs.com/downloads/moment.min.js')
+		link(rel='stylesheet' href='/css/ckeditor.css')
 		link(rel='stylesheet' href='/css/responsive.css')
+		link(rel='stylesheet' href='/css/public.css')
+
 	body
+		- var coreURL = 'dashboard';
 		//- .top-bar
 		.nav-container
 			.title-container
 				a.title-btn(href='/') Curata
 			if user
-				//- AND if user is admin, then some extra things, like button to access edit mode
-				//- EG if user.id == curata.user or if user.id in curata.admins
 				.navlinks-container
 					// show menu items based on what the user has (used) and their settings
 					if (user.defaultCurataId && user.defaultCurataId !== "N/A")
-						a.dashboardBtn.navlink(href='/curatas/' + user.username + '/curatas/' + user.defaultCurataId) Dashboard
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas/' + user.defaultCurataId) Dashboard
 					else 
-						a.dashboardBtn.navlink(href='/curatas/' + user.username + '/curatas') Dashboard
-					a.navlink(href='/browse') Browse
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas') Dashboard
+					//- a.topNavigationLink__topBar(href='/browse') Browse
+					a.topNavigationLink__topBar(href= '/' + coreURL + '/' + user.username + '/curatas') My Spaces
 				.logout-container
-					//- #create.drop-down
-					//- 	#create-button.dropDown.drop-down__button.unsortable
-					//- 		a.navlink + Create
-					//- 	.drop-down__menu-box.unsortable
-					//- 		ul.drop-down__menu
-					//- 			li.drop-down__item.DeleteComponent(data-name="delete") Delete
-					//- 			li.drop-down__item Settings
-					//- 			li.drop-down__item Add label
-					//- 			li.drop-down__item Mark as
-					//- 			li.drop-down__item Move to
-					a.navlink(href='/my-curations') My Curations
 					.DropdownX
 						.Dropdown-profile
+							.Photo
+								+profileIcon
+							//- img.Photo(src='https://img.icons8.com/pastel-glyph/64/ffffff/gender-neutral-user.png')
 							.userId(id= user.id, data-username= user.username) 
-							//- img.Photo(src='//s3-us-west-2.amazonaws.com/s.cdpn.io/33381/profile/profile-80.jpg?1')
-							img.Photo(src='https://img.icons8.com/pastel-glyph/64/000000/gender-neutral-user.png')
-							span.Name Robert Unyx
-							span.MenuIcon
-								span.MenuIcon-line
-								span.MenuIcon-line
-								span.MenuIcon-line
-						nav.Dropdown-nav
+						nav.Dropdown-nav.SettingsNav
 							ul.Dropdown-group
 								li
-									a.entypo-newspaper.NavLinkX(href='#') Profile
+									a.entypo-newspaper.NavLinkX(href= '/' + coreURL + '/' + user.username + '/curatas') My Curatas
 									a.entypo-plus.OptionLink(href='#')
-								li
-									a.entypo-docs.NavLinkX.Upgrade(href='#') Upgrade
-									a.entypo-plus.OptionLink(href='#')
+								//- li
+								//- 	a.entypo-newspaper.NavLinkX(href='#') Profile
+								//- li
+								//- 	a.entypo-docs.NavLinkX.Upgrade(href='#') Upgrade
+								//- 	a.entypo-plus.OptionLink(href='#')
 								li
 									a.entypo-archive.NavLinkX(href='#') Account settings
 									a.entypo-plus.OptionLink(href='#')
 								li
-									a.entypo-docs.NavLinkX(href='#') View mobile site
-									a.entypo-plus.OptionLink(href='#')
-								li
 									a.entypo-logout.NavLinkX(href='/accounts/logout') Logout
+			else
+				a.loginPageLink(href='/accounts/loginForm') Login
 		block heading
-		if !user
-			.container
-				block content
-				.so-good-container
-					span.so-good Be so good they can't ignore you.
-		else 
-			.container
-				block content
-				.so-good-container
-					span.so-good Be so good they can't ignore you.
+		.container
+			block content
+			.so-good-container
+				span.so-good Let's put an end to information pollution.
 			block scripts
 			script(src='/js/main.js')
+			script(src='/js/live.js')
 			script(src='/js/MultiForm.js')
-
-
-

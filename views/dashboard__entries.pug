@@ -1,0 +1,513 @@
+extends layout_buttonless
+
+//- Inside one Curata, opens up the different category lists inside it
+	//- So these links lead to the contents of these lists
+	//- Upon clicking any one of those, you are then greeted with entries
+
+	//- Depending on Curata, you have to display the right list
+
+include images/externalLink
+
+
+block content
+	- var coreURL = 'dashboard';
+	.modal__deleteEntry
+		.modalBackground__deleteEntry
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to delete this entry?
+				.msg-body The entry will be permanently deleted and you will not be able to restore it.
+				.action-group
+					.cancelPermaDeleteEntry.button-outline CANCEL
+					.confirmPermaDeleteEntry.button-filled DELETE
+	.modal__trashEntry
+		.modalBackground__trashEntry
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to move this entry to the trash?
+				.action-group
+					.cancel__trashEntry.button-outline CANCEL
+					.confirm__trashEntry.button-filled TRASH
+	.emptyModal
+		.modalBackground
+		.createModal
+			.cancelListCreating x
+			.big-content-wrapper
+				.createNewListTitle Create new list
+				.createListArea--dashboard__entries
+					.templateDetails
+						.listDetails
+							p.listTitleInstruction Give your list a name:
+							input.newListTitle--dashboard__entries(placeholder= 'What do you want to call your list?')
+						.listDetails
+							p.listTitleInstruction Describe its purpose:
+							textarea.newListDescription--dashboard__entries(placeholder= 'What is this list about?')
+						.createList--dashboard__entries Create list
+	.sideNav
+		.curataSwitcher
+			.currentCurataSwitch(id= curata.id) Switch Space
+			.drop-down__menu-box3.unsortable.drop-down-extra-width
+				.curataSwitchHeader Switch current Space
+				if (user.defaultCurataId && curata.id == user.defaultCurataId)
+					.defaultCurata Default Space
+				else
+					.makeDefault Make default
+				ul.drop-down__menu3
+					each space in curatas
+						if (space.id !== curata.id)
+							li.drop-down__item3.drop-down-extra-styling
+								a.curata-link(href='/' + coreURL + '/' + user.username + '/curatas/' + space.id) #{space.curataName}
+		a.curataName(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+		.goToAllCuratas
+			a.allCuratasLink(href='/' + coreURL + '/' + user.username + '/curatas') View all my Spaces
+		a.viewCurataLive(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+		//- if curata exists & selected, display 
+		ul.sideNavButtons
+			li.sideNavLinkContainer
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id) Space
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/entries') Entries
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/appearance') Appearance
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+	.curataContainer.sideNavMargin
+		.dashboardHeader
+			.curataPageTitle Entries
+			.addNewEntry
+				p.addNewListText + New entry
+			.addNewList 
+				p.addNewListText + New list
+		.tab
+			button.tablinks.activeTab(data-tab="All") All 
+				.postCount--dashboard__entries (#{allCount})
+			button.tablinks(data-tab= "Published") Published
+				.postCount--dashboard__entries (#{publishedCount})
+			button.tablinks(data-tab= "Drafts") Drafts
+				.postCount--dashboard__entries (#{draftCount})
+			button.tablinks(data-tab= "Trash") Trashed
+				.postCount--dashboard__entries (#{trashedCount})
+			button.tablinks(data-tab= "Lists") Lists only
+				.postCount--dashboard__entries (#{listCount})
+		.searchContainer
+					input#searchEntries(type='text', placeholder='Search...')
+		//- button.filterButton.openFilters Filters
+		//- .modificationButtons.modifiedButtons.hidden
+		//- 	button.filterButton.resetSort All
+		//- 	button.filterButton.sortAlpha ABC
+		//- 	button.filterButton.changeOrder Reverse
+		//- 	button.filterButton.selfSort My Curatas 
+		//- 	button.filterButton.collabSort Collaborations
+		//- 	button.filterButton.ownerSort By owner
+		//- 	button.filterButton.ascendingDate Newest
+		//- 	button.filterButton.descendingDate Oldest
+		//- 	button.filterButton.viewAsList List view
+		//- 	button.filterButton.closeFilters x
+		#All.tabcontent.block
+			ul.curataList
+				if (curata.curataList && curata.curataList.length)
+					each list in curata.curataList
+						if (list.entries && list.entries.length)
+							.listContainer(data-id= list.id)
+								.listHeaderContainer
+									a.listHeader(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id)
+										li.listTitleBlock
+											if (list.listName && list.listName.length)
+												.entriesListTitle #{list.listName}
+											else
+												.entriesListTitle Untitled list
+										.listCount #{list.entries.length}
+									.addNewEntryBlock + add new entry
+								ul.entriesList
+									if (list.entries && list.entries.length)
+										// if more than 10 in list, display 'go to list to view more' button below
+										each entry in list.entries
+											if (entry.entryTitle)
+												li.singleList(data-id= entry.id)
+													a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+													if (entry.entryState == "Draft")
+														.draftIndicator
+															p Draft
+													if (entry.entryState == "Trashed")
+														.trashedIndicator
+															p Trashed
+													.entry-drop-down
+														.entryDropdown.entry-drop-down__button.unsortable
+															span.component-more ...
+														.entry-drop-down__menu-box.unsortable
+															ul.entry-drop-down__menu
+																if (entry.entryState !== "Trashed")
+																	if (entry.entryState == "Published")
+																		li.entry-drop-down__item
+																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																	li.entry-drop-down__item
+																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																	if (entry.entryState == "Published")
+																		li.entry-drop-down__item
+																			a.dropLink.instaDraftEntry Make draft
+																	li.entry-drop-down__item
+																		a.dropLink.instaTrashEntry Trash
+																else
+																	li.entry-drop-down__item
+																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																	li.entry-drop-down__item
+																		a.dropLink.instaUntrashEntry Untrash
+																	li.entry-drop-down__item
+																		a.dropLink.permaDeleteEntry Delete
+													a.datesArea(data-created= entry.dateCreated href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing')
+														.creatorField(id= entry.owner.owner_id) Owner: #{entry.owner.firstName} #{entry.owner.lastName}
+														if (entry.lastUpdated)
+															.lastUpdated(data-date= entry.lastUpdated) Last updated: #{moment(entry.lastUpdated).format('MMM D, YYYY')}
+														else
+															.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
+											else
+												li.singleList(data-id= entry.id)
+													a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
+													if (entry.entryState == "Draft")
+														.draftIndicator
+															p Draft
+													if (entry.entryState == "Trashed")
+														.trashedIndicator
+															p Trashed
+													.entry-drop-down
+														.entryDropdown.entry-drop-down__button.unsortable
+															span.component-more ...
+														.entry-drop-down__menu-box.unsortable
+															ul.entry-drop-down__menu
+																if (entry.entryState !== "Trashed")
+																	if (entry.entryState == "Published")
+																		li.entry-drop-down__item
+																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																	li.entry-drop-down__item
+																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																	if (entry.entryState == "Published")
+																		li.entry-drop-down__item
+																			a.dropLink.instaDraftEntry Make draft
+																	li.entry-drop-down__item
+																		a.dropLink.instaTrashEntry Trash
+																else
+																	li.entry-drop-down__item
+																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																	li.entry-drop-down__item
+																		a.dropLink.instaUntrashEntry Untrash
+																	li.entry-drop-down__item
+																		a.dropLink.permaDeleteEntry Delete
+													.datesArea(data-created= entry.dateCreated)
+														.creatorField(id= entry.owner.owner_id) Owner: #{entry.owner.firstName} #{entry.owner.lastName}
+														if (entry.lastUpdated)
+															.lastUpdated(data-date= entry.lastUpdated) Last updated: #{moment(entry.lastUpdated).format('MMM D, YYYY')}
+														else
+															.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
+									else
+										.noEntriesBlock
+											.noEntriesMessage You have no entries in this list.
+				else 
+					.noContentBlock
+						.noContentMessage You have no lists.	
+		#Published.tabcontent
+			ul.curataList
+				- var publishedExist = "false";
+				each list in curata.curataList
+					//- If list has any published articles, show list
+					- for (var i = 0; i < list.entries.length; i++)
+						if (list.entries[i].entryState == "Published")
+							- i += 999999999
+							- publishedExist = "true";
+							.listContainer(data-id= list.id)
+								.listHeaderContainer
+									a.listHeader(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id)
+										li.listTitleBlock
+											if (list.listName && list.listName.length)
+												.entriesListTitle #{list.listName}
+											else
+												.entriesListTitle Untitled list
+										//- .listCount #{list.entries.length}
+									.addNewEntryBlock + add new entry
+								ul.entriesList
+									if (list.entries)
+										each entry in list.entries
+											if (entry.entryState == "Published")
+												if (entry.entryTitle)
+													li.singleList(data-id= entry.id)
+														a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+														.entry-drop-down
+															.entryDropdown.entry-drop-down__button.unsortable
+																span.component-more ...
+															.entry-drop-down__menu-box.unsortable
+																ul.entry-drop-down__menu
+																	if (entry.entryState !== "Trashed")
+																		if (entry.entryState == "Published")
+																			li.entry-drop-down__item
+																				a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		if (entry.entryState == "Published")
+																			li.entry-drop-down__item
+																				a.dropLink.instaDraftEntry Make draft
+																		li.entry-drop-down__item
+																			a.dropLink.instaTrashEntry Trash
+																	else
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		li.entry-drop-down__item
+																			a.dropLink.instaUntrashEntry Untrash
+																		li.entry-drop-down__item
+																			a.dropLink.permaDeleteEntry Delete
+														.datesArea(data-created= entry.dateCreated)
+															.creatorField Owner: #{entry.owner.firstName} #{entry.owner.lastName}
+															if (entry.lastUpdated)
+																.lastUpdated(data-date= entry.lastUpdated) Last updated: #{moment(entry.lastUpdated).format('MMM D, YYYY')}
+															else
+																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
+												else
+													li.singleList(data-id= entry.id)
+														a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
+														.entry-drop-down
+															.entryDropdown.entry-drop-down__button.unsortable
+																span.component-more ...
+															.entry-drop-down__menu-box.unsortable
+																ul.entry-drop-down__menu
+																	if (entry.entryState !== "Trashed")
+																		if (entry.entryState == "Published")
+																			li.entry-drop-down__item
+																				a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		if (entry.entryState == "Published")
+																			li.entry-drop-down__item
+																				a.dropLink.instaDraftEntry Make draft
+																		li.entry-drop-down__item
+																			a.dropLink.instaTrashEntry Trash
+																	else
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		li.entry-drop-down__item
+																			a.dropLink.instaUntrashEntry Untrash
+																		li.entry-drop-down__item
+																			a.dropLink.permaDeleteEntry Delete
+														.datesArea(data-created= entry.dateCreated)
+															.creatorField(id= entry.owner.owner_id) Owner: #{entry.owner.firstName} #{entry.owner.lastName}
+															if (entry.lastUpdated)
+																.lastUpdated(data-date= entry.lastUpdated) Last updated: #{moment(entry.lastUpdated).format('MMM D, YYYY')}
+															else
+																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
+						//- else 
+						//- 	- i += 1
+				if (publishedExist == "false")
+					.noContentBlock
+						.noContentMessage You have no published entries.
+		#Drafts.tabcontent
+			ul.curataList
+				- var draftsExist = "false";
+				each list in curata.curataList
+					//- If list has any drafts, show list
+					- for (var i = 0; i < list.entries.length; i++)
+						if (list.entries[i].entryState == "Draft")
+							- i += 999999999
+							- draftsExist = "true";
+							.listContainer(data-id= list.id)
+								.listHeaderContainer
+									a.listHeader(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id)
+										li.listTitleBlock
+											if (list.listName && list.listName.length)
+												.entriesListTitle #{list.listName}
+											else
+												.entriesListTitle Untitled list
+										//- .listCount #{list.entries.length}
+									.addNewEntryBlock + add new entry
+								ul.entriesList
+									if (list.entries)
+										each entry in list.entries
+											if (entry.entryState == "Draft")
+												if (entry.entryTitle)
+													li.singleList(data-id= entry.id)
+														a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+														.draftIndicator
+															p Draft
+														.entry-drop-down
+															.entryDropdown.entry-drop-down__button.unsortable
+																span.component-more ...
+															.entry-drop-down__menu-box.unsortable
+																ul.entry-drop-down__menu
+																	if (entry.entryState !== "Trashed")
+																		if (entry.entryState == "Published")
+																			li.entry-drop-down__item
+																				a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		li.entry-drop-down__item
+																			a.dropLink.instaTrashEntry Trash
+																	else
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		li.entry-drop-down__item
+																			a.dropLink.instaUntrashEntry Untrash
+																		li.entry-drop-down__item
+																			a.dropLink.permaDeleteEntry Delete
+														.datesArea(data-created= entry.dateCreated)
+															.creatorField(id= entry.owner.owner_id) Owner: #{entry.owner.firstName} #{entry.owner.lastName}
+															if (entry.lastUpdated)
+																.lastUpdated(data-date= entry.lastUpdated) Last updated: #{moment(entry.lastUpdated).format('MMM D, YYYY')}
+															else
+																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
+												else
+													li.singleList(data-id= entry.id)
+														a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
+														.draftIndicator
+															p Draft
+														.entry-drop-down
+															.entryDropdown.entry-drop-down__button.unsortable
+																span.component-more ...
+															.entry-drop-down__menu-box.unsortable
+																ul.entry-drop-down__menu
+																	if (entry.entryState !== "Trashed")
+																		if (entry.entryState == "Published")
+																			li.entry-drop-down__item
+																				a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		li.entry-drop-down__item
+																			a.dropLink.instaTrashEntry Trash
+																	else
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		li.entry-drop-down__item
+																			a.dropLink.instaUntrashEntry Untrash
+																		li.entry-drop-down__item
+																			a.dropLink.permaDeleteEntry Delete
+														.datesArea(data-created= entry.dateCreated)
+															.creatorField(id= entry.owner.owner_id) Owner: #{entry.owner.firstName} #{entry.owner.lastName}
+															if (entry.lastUpdated)
+																.lastUpdated(data-date= entry.lastUpdated) Last updated: #{moment(entry.lastUpdated).format('MMM D, YYYY')}
+															else
+																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
+						//- else
+						//- 	- i += 1 
+				if (draftsExist == "false")
+					.noContentBlock
+						.noContentMessage You have no drafts.
+		#Trash.tabcontent
+			ul.curataList
+				- var trashExist = "false";
+				each list in curata.curataList
+					//- If list has any drafts, show list
+					- for (var i = 0; i < list.entries.length; i++)
+						if (list.entries[i].entryState == "Trashed")
+							- i += 999999999
+							- trashExist = "true";
+							.listContainer(data-id= list.id)
+								.listHeaderContainer
+									a.listHeader(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id)
+										li.listTitleBlock
+											if (list.listName && list.listName.length)
+												.entriesListTitle #{list.listName}
+											else
+												.entriesListTitle Untitled list
+										//- .listCount #{list.entries.length}
+								ul.entriesList
+									if (list.entries)
+										each entry in list.entries
+											if (entry.entryState == "Trashed")
+												if (entry.entryTitle)
+													li.singleList(data-id= entry.id)
+														a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+														.trashedIndicator
+															p Trashed
+														.entry-drop-down
+															.entryDropdown.entry-drop-down__button.unsortable
+																span.component-more ...
+															.entry-drop-down__menu-box.unsortable
+																ul.entry-drop-down__menu
+																	if (entry.entryState !== "Trashed")
+																		if (entry.entryState == "Published")
+																			li.entry-drop-down__item
+																				a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		li.entry-drop-down__item
+																			a.dropLink.instaTrashEntry Trash
+																	else
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		li.entry-drop-down__item
+																			a.dropLink.instaUntrashEntry Untrash
+																		li.entry-drop-down__item
+																			a.dropLink.permaDeleteEntry Delete
+														.datesArea(data-created= entry.dateCreated)
+															.creatorField(id= entry.owner.owner_id) Owner: #{entry.owner.firstName} #{entry.owner.lastName}
+															if (entry.lastUpdated)
+																.lastUpdated(data-date= entry.lastUpdated) Last updated: #{moment(entry.lastUpdated).format('MMM D, YYYY')}
+															else
+																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
+												else
+													li.singleList(data-id= entry.id)
+														a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
+														.trashedIndicator
+															p Trashed
+														.entry-drop-down
+															.entryDropdown.entry-drop-down__button.unsortable
+																span.component-more ...
+															.entry-drop-down__menu-box.unsortable
+																ul.entry-drop-down__menu
+																	if (entry.entryState !== "Trashed")
+																		if (entry.entryState == "Published")
+																			li.entry-drop-down__item
+																				a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		li.entry-drop-down__item
+																			a.dropLink.instaTrashEntry Trash
+																	else
+																		li.entry-drop-down__item
+																			a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		li.entry-drop-down__item
+																			a.dropLink.instaUntrashEntry Untrash
+																		li.entry-drop-down__item
+																			a.dropLink.permaDeleteEntry Delete
+														.datesArea(data-created= entry.dateCreated)
+															.creatorField(id= entry.owner.owner_id) Owner: #{entry.owner.firstName} #{entry.owner.lastName}
+															if (entry.lastUpdated)
+																.lastUpdated(data-date= entry.lastUpdated) Last updated: #{moment(entry.lastUpdated).format('MMM D, YYYY')}
+															else
+																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
+									else
+										.noEntriesBlock
+											.noEntriesMessage You have no entries!
+						//- else
+						//- 	- i += 1 
+				if (trashExist == "false")
+					.noContentBlock
+						.noContentMessage Wonderful, your trash is empty!
+		#Lists.tabcontent
+			ul.entriesList
+				if (curata.curataList && curata.curataList.length)
+					each list in curata.curataList
+						.listContainer(data-id= list.id)
+							.singleList.modifiedSingleList
+								a.ribbonList.modifiedRibbon(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id)
+									if (list.listName && list.listName.length)
+										.entriesListTitle #{list.listName}
+									else
+										.entriesListTitle Untitled list
+									.listCount #{list.entries.length}
+								a.addNewEntryBlock.modifiedEntryBlock(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id + '/createNewEntry') + add new entry
+								.entry-drop-down
+									.entryDropdown.entry-drop-down__button.unsortable
+										span.component-more ...
+									.entry-drop-down__menu-box.unsortable
+										ul.entry-drop-down__menu
+												li.entry-drop-down__item
+													a.dropLink.liveLink(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/lists/' + list.id) View list
+												li.entry-drop-down__item
+													a.dropLink.instaTrashEntry List settings
+				else 
+					.noContentBlock
+						.noContentMessage You have no lists.
+
+//- If only one category/group/list, then show entries and option to add new entry or create new list/category (from template, not quite a category)
+	//- else, show the many different groups
+
+
+//- p My singular Curata list view, with all the entries for a single list, like Failory's startup cemetry, a list only of startups that have failed and their case studies
+//- p Where if settings required, then if user is logged in and is admin for that curata list or for some entry (in which case it is marked for the person specifically that such and such they can edit), then there is a button to add new entry (from template).
+
+//- If only one curataList, display its list items directly, meaning display the list itself as multiple list management is not relevant
+
+//- If multiple lists, create a list of lists OR maybe it would be useful  to also see lists in this management board?

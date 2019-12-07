@@ -1,0 +1,79 @@
+extends layout_buttonless
+
+block content
+	.modal__changePassword
+		.modalBackground__changePassword
+		.deleteModal
+			.content-wrapper
+				.msg-title Enter your current password
+				.msg-body Verify it's you.
+				input.passwordCurrent__accountSettings(placeholder= "Your current password"  type="password" data-fieldType= "password")
+				.passwordChangeErrorNotifier__accountSettings
+					.passwordChangeError__accountSettings
+				.action-group.modifiedActionGroup
+					.cancelChangePassword.button-outline CANCEL
+					.confirmChangePassword.button-filled CHANGE
+	.modal__deleteAccount
+		.modalBackground__deleteAccount
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to delete your account?
+				.msg-body Your account will be permanently deleted and you will lose ownership and access to all your existing content.
+				.action-group
+					.cancelPermaDeleteAccount.button-outline CANCEL
+					.confirmPermaDeleteAccount.button-filled DELETE
+	.curataContainer.sideNavMargin
+		.pageTitle__accountSettings Account settings
+		//- p.autoSaveNotice Changes are automatically saved.
+		.settingsContainer__accountSettings
+			//- p Text is automatically saved
+			.settingGroup__accountSettings
+				.sectionTitle__accountSettings Change your first name
+				.section__accountSettings
+					.block__accountSettings
+						input.inputField__accountSettings(placeholder= "Your title" value= user.firstname data-fieldType= "firstName")
+						.saveButton__accountSettings.inline Save
+						.availabilityNotifier__accountSettings
+							.availabilityStatus__accountSettings
+			.settingGroup__accountSettings
+				.sectionTitle__accountSettings Change your last name
+				.section__accountSettings
+					.block__accountSettings
+						input.inputField__accountSettings(placeholder= "Your title" value= user.lastname data-fieldType= "lastName")
+						.saveButton__accountSettings.inline Save
+						.availabilityNotifier__accountSettings
+							.availabilityStatus__accountSettings
+			.settingGroup__accountSettings
+				.sectionTitle__accountSettings Change your username
+				.section__accountSettings
+					.block__accountSettings
+						input.inputField__accountSettings(placeholder= "Your title" value= user.username data-fieldType= "username")
+						.saveButton__accountSettings.inline Save
+						.availabilityNotifier__accountSettings
+							.availabilityStatus__accountSettings
+			//- .settingGroup__accountSettings
+			//- 	.sectionTitle__accountSettings Change your email
+			//- 	.section__accountSettings
+			//- 		.block__accountSettings
+			//- 			input.inputField__accountSettings(placeholder= "Your title" value= user.email data-fieldType= "email")
+			//- 			.saveButton__accountSettings
+			.settingGroup__accountSettings
+				.sectionTitle__accountSettings Change your password
+				.section__accountSettings.passwordBlock
+					.block__accountSettings
+						input.password__accountSettings(placeholder= "**********"  type="password" data-fieldType= "password")
+				.section__accountSettings.passwordConfirmationBlock
+					.block__accountSettings
+						input.passwordConfirmation__accountSettings(placeholder= "Confirm new password"  type="password" data-fieldType= "password")
+						.changePasswordButton__accountSettings.inline Save
+						.passwordErrorNotifier__accountSettings
+							.passwordError__accountSettings
+			.settingGroup__accountSettings
+				.sectionTitle__accountSettings Delete your account
+				.section__accountSettings
+					.deleteAccountText Deleting your account will not delete public Curatas, however, you will lose ownership and access to your public Curatas. All private content will be deleted. The ownership of your Curatas will either be passed on to the most active top contributor if any or the Curata's ownership will be reassigned to the official Curata account. The deleting of your account will cancel all memberships.
+					.deleteAccountButton
+						p.deleteAccountButtonText Delete account
+
+block scripts
+	script(src='/js/accountSettings.js')

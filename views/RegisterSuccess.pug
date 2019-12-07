@@ -3,13 +3,14 @@ extends layout_buttonless
 include images/HappyImage
 
 block content
+	- var coreURL = 'dashboard';
 	.HappyContainer
 		+HappyImage
 	.RegisterSuccessContainer
 		.WelcomeBlock
 			h1.RegisterSuccess.WelcomeMessage Welcome aboard!
 			h1.RegisterSuccess.WelcomeSubtitle You have successfully signed up
-		a.StartCuratingBlock(href='/curatas/' + user.username + '/curatas/curate')
+		a.StartCuratingBlock(href='/' + coreURL + '/' + user.username + '/curatas/curate')
 			h1.StartCurating Start curating
 		.CheckOthersBlock
 			h2.CheckOthers Check out cool curations made by fellow curators:

@@ -1,0 +1,4 @@
+mixin submitHeading(component)
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="heading" data-order= component.componentOrder)
+		.sub-sortable-container
+			input.ElementTitle(placeholder= "Write something...")

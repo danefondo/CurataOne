@@ -1,0 +1,15 @@
+mixin submitList(component)
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="list" data-order= component.componentOrder)
+		ul.listItems.sortableList(id= "sortable_" +component.id)
+			li.ListItem.sortableListItem
+				input.listItemInput(placeholder= "Write something")
+				.showLinkContainer Add link
+				.linkContainer.hidden
+					input.linkInput(placeholder= "Your link")
+					.saveListItemLink Save
+					.cancelListItemLink Cancel
+		.addNewListItemButton + Add Item
+
+
+
+

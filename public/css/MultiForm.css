@@ -13,30 +13,34 @@ html, body {
   height: 100%;
 }
 
-h1 {
-  font-size: 6vh;
-}
-
 body {
   font-family: 'GothamRounded';
   position: relative;
 }
 
-.scroll-view {
-  height: 100%;
-  overflow-y: hidden;
-  overflow-x: hidden;
+.process {
+  width: 100%;
+}
+
+.fields {
+  margin: 0 50px 0 0px;
+  padding: 0 50px 0 0px;
+  position: relative;
 }
 
 fieldset {
   position: relative;
   flex: none;
   flex-basis: 100%;
-  padding-left: 10vh;
-  padding-top: 9vh;
+  padding-left: 100px;
+  padding-right: 50px;
+  padding-top: 50px;
+  display: none;
+  max-width: 1000px;
 }
-fieldset .input-holder {
-  margin-top: 10vh;
+
+.fieldTitle {
+  font-size: 45px;
 }
 
 .btn {
@@ -71,12 +75,13 @@ fieldset .input-holder {
 .back-btn {
   position: absolute;
   top: 85px;
-  padding: 3vh 4vh;
+  padding: 20px 30px;
   color: #555;
   background: transparent;
-  font-size: 3vh;
+  font-size: 26px;
   border: none;
   display: none;
+  outline: none;
 }
 
 .back-btn:hover {
@@ -85,22 +90,19 @@ fieldset .input-holder {
 }
 
 .next-btn {
-  position: absolute;
-  bottom: 6vh;
-  left: 15vh;
+  margin-left: 100px;
+  margin-top: 50px;
   font-weight: bold;
-  font-size: 20px;
-/*  width: calc(100% - 30vh);*/
-  width: 40vh;
+  font-size: 25px;
+  font-family: 'GothamRounded';
+  width: 200px;
   height: 50px;
   color: white;
-  background: linear-gradient(to right, #673AB7 0%, #9575CD 100%);
-  border-radius: 10rem;
-  box-shadow: 0 0.4rem 1rem 0.1rem rgba(103, 58, 183, 0.28);
-  padding: .5rem 1rem;
-  font-size: 1.25rem;
-  line-height: 1.5;
+  background: #673AB7;
+  border-radius: 4px;
+  padding: 12px;
   cursor: pointer;
+  outline: none;
 }
 
 .img-picker-div {
@@ -200,8 +202,9 @@ fieldset.form-group {
 }
 
 .CurataCreatedField {
-  margin-top: 50px !important;
+  margin-top: 160px !important;
   padding-top: 10px;
+  max-width: 850px;
 }
 
 .CurataCreatedField h2 {
@@ -212,16 +215,16 @@ fieldset.form-group {
  border: 2px solid #a70000 !important;
 }
 
-.Questions {
-  margin-top: 50px;
+.fieldSubtitle {
+  font-size: 34px;
 }
 
-.CurationName h1 {
-  font-size: 4vh;
+.fieldSection {
+  margin-top: 60px;
 }
 
 .input-holder {
-  margin-top: 2.5vh !important;
+  margin-top: 15px !important;
   display: flex;
   flex-wrap: wrap;
 }
@@ -240,28 +243,23 @@ fieldset.form-group {
   color: #42239a;
 }
 
-.CurationDescription {
-  margin-top: 60px;
-}
-
-.CurationDescription h1 {
-  font-size: 3vh;
-}
-
 .CurationDescriptionInput {
   border: none;
   width: 100%;
-  height: 80px;
+  height: 120px;
   margin-top: 10px;
   padding: 16px;
   font-size: 22px;
   border: 2px solid #f1f1f1;
   border-radius: 2px;
+  box-sizing: border-box;
+  resize: none;
 }
 
 .CurationNameInput:focus, .CurationDescriptionInput:focus {
   border: 2px solid #4725a9;
   border-radius: 2px;
+  background-color: #f2f2f2;
 }
 
 .CurationInstruction {
@@ -469,11 +467,6 @@ fieldset.form-group {
   box-shadow: 0px 5px 5px 1px #efefef;
 }
 
-.BackupView {
-  display: flex;
-  flex-direction: column;
-}
-
 .TemplateConstructor {
   display: flex;
   flex-wrap: wrap;
@@ -568,12 +561,12 @@ fieldset.form-group {
   background-color: white;
 }
 
-.CreateTemplateButton {
+.createEntryButton {
   text-align: center;
   background-color: #673ab7;
   padding: 15px;
   margin: 0;
-  margin-top: 20px;
+  margin-top: 40px;
   width: 150px;
   border-radius: 3px;
   transition: .2s ease-in-out;
@@ -584,7 +577,7 @@ fieldset.form-group {
   font-size: 23px;
 }
 
-.CreateTemplateButton:hover {
+.createEntryButton:hover {
   transform: scale(1.02);
 }
 
@@ -667,7 +660,7 @@ fieldset.form-group {
 
 .largeTitle {
   margin-bottom: 15px;
-  font-size: 50px;
+  font-size: 55px;
   font-weight: 600;
 }
 
@@ -691,4 +684,12 @@ fieldset.form-group {
 
 .zeroSideMargins {
   margin: 0 auto;
+}
+
+.currentForm {
+  display: block;
+}
+
+.topMargin110 {
+  margin-top: 110px !important;
 }

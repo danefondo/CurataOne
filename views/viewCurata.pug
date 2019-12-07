@@ -17,41 +17,97 @@
 
 //- List on Curata About page one of my personal wishlists... to curate, organize all the world's productivity information across a few Curatas so as to make it unnecessary to have this informations scattered around blogs, Quora posts, wikipedias, books, etc. -- and that people would have the best of the best information on the matter, so everybody doesn't have to go through that journey again and again and they could comfortably know that this is as good as it gets and the rest is implementation. I believe this is possible and that it is good. As all perspectives still get represented.
 
+//- extends layout_public
 extends layout_public
 
 include entryDesigns/entryOne
+include images/filledArrow
+include images/externalLink
 
 block heading
+	- var coreURL = 'dashboard';
 	.helperNavigation
-		.navlinks-container
+		.navlinksContainer__liveCurata
 			a.navlink &larr;
-			p.inline 5213 Hearts
-			p.inline #2 Curata This Month
-			p.inline View independent version
+			a.externalLink__liveSpace(href="#")
+				+externalLink 
+			if (user.id == curata.owner.owner_id)
+				if (curata.admins.length > 0)
+					each admin in curata.admins
+						if (admin == user.id)
+							a.edit__liveSpace(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id) Edit
+			//- p.navlink__liveCurata.recognitionBar__liveCurata.inline #2 Curata this month
+			if user
+				.navlink__liveCurata.upvoteSpace__liveCurata.inline 
+					if (user.likedSpaces.length > 0)
+						- if (user.likedSpaces.includes(curata.id))
+							+filledArrow
+							img.upvoteSpaceImage__liveCurata.inline
+							span.upvoteSpaceButtonText__liveCurata  Upvoted
+						- else if (!user.likedSpaces.includes(curata.id))
+							img.likeSpaceButton__liveCurata.inline(src= '/images/empty-heart.png')
+							span.likeSpaceButtonText__liveCurata Like
+					else
+						span Like
+					//- if (curata.likeCount && curata.likeCount.length && curata.likeCount > 0)
+					//- 	span.likeCount #{curata.likeCount}
+					//- 	span  Hearts
+					//- else if (curata.likeCount == 1)
+					//- 	span.likeCount #{curata.likeCount}
+					//- 	span  Heart
+					//- else if (curata.likeCount > 1)
+					//- 	span.likeCount #{curata.likeCount}
+					//- 	span  Hearts	
+			//- only show submit button if there are any lists and template
+			div.navlink__liveCurata.inline.saveToSpace__liveCurata Save
+			if (curata.curataList.length == 1 || curata.curataList.length < 2) 
+				a.navlink__liveCurata.inline.submit__liveCurata(href="/browse/curatas/" + curata.id + "/submit/lists/" + curata.curataList[0].id) Submit
+			else
+				a.navlink__liveCurata.inline.submit__liveCurata(href="/browse/curatas/" + curata.id + "/submit") Submit
+			//- if user
+			//- 	p.navlink__liveCurata.inline.upvote__liveCurata Upvote
+			//- else
+			//- 	p.navlink__liveCurata.inline.upvote__liveCurata Sign in or create an account to vote
 
 block content
 	//- if public, show | if not, display message
-	.curataTitleArea
-		p.curataTitle #{curata.curataName}
-		p.curataDescription #{curata.curataDescription}
-	.curataListsArea
-		.curataLists
-			if (lists)
+	.curataId(data-curataId= curata.id)
+	if user
+		.userId(id= user.id)
+	.section__liveCurata
+		.header__liveCurata
+			p.mainTitle__liveCurata #{curata.curataName}
+			p.mainDescription__liveCurata #{curata.curataDescription}
+	.section__liveCurata
+		.lists__liveCurata
+			if (lists && lists.length)
 				each list in lists
-					.curataListGroup
-						p.curataListTitle #{list.listName}
-						.curataList(id= list.id)
-							if (list.entries)
-								each entry in list.entries
-									if (entry.entryState == "Published")
-										.curataListEntry(id= entry.id href='/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
-											if (entry.entryLink)
-												a.curataEntryLink(href= entry.entryLink target="_blank") Link
-											if (entry.entryTitle)
-													a.curataEntryTitle(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
-											else
-													a.curataEntryTitle(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled category
-											if (entry.entryImageURL)
-												.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+					- var publishedExist = "false";
+					if (list.entries && list.entries.length)
+						// handle case if there are no published entries
+						- for (var i = 0; i < list.entries.length; i++)
+							if (list.entries[i].entryState == "Published")
+								- i += 9999999
+								- publishedExist = "true";
+						if (publishedExist == "true")
+							.listContainer__liveCurata
+								p.listTitle__liveCurata #{list.listName}
+								.list__liveCurata(id= list.id)
+									each entry in list.entries
+										if (entry.entryState == "Published")
+											.entry__liveCurata(id= entry.id href='/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
+												if (entry.entryLink)
+													a.entryTitle__liveCurata(href= entry.entryLink target="_blank") Link
+												if (entry.entryTitle)
+														a.entryTitle__liveCurata(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
+												else
+														a.entryTitle__liveCurata(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled category
+												if (entry.entryImageURL)
+													.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+						//- else
+						//- 	.nothingPublished__liveCurata
+						//- 		p There are no published entries in this list.
+					//- else 
+					//- 	.noEntries__liveCurata You have no entries
 			else 
-				Curata is empty.
+				.noLists__liveCurata Curata is empty.

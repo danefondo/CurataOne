@@ -1,10 +1,11 @@
 mixin image(component, entry, template)
+	- var coreURL = "dashboard";
 	li.Component.componentCSS.drag.draggable-item(id= component.id, data-component="image" data-order= component.componentOrder)
 		.sub-sortable-container
 			if (component.componentURL)
 				.imageBlock(data-image-key= component.componentImageKey style='background-image: url(' + component.componentURL + ');') + Upload Image
 					.deleteImage x
-					form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+					form.imageForm(action= "/" + coreURL + "/UploadSingleImage" method="POST" enctype= "multipart/form-data")
 						input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
 				if (component.componentTitle)
 					.ImageTitleBlock
@@ -29,7 +30,7 @@ mixin image(component, entry, template)
 						.addImageDescription + Add Description
 			else 
 				.imageBlock + Upload Image
-					form.imageForm(action= "/curatas/UploadSingleImage" method="POST" enctype= "multipart/form-data")
+					form.imageForm(action= "/" + coreURL + "/UploadSingleImage" method="POST" enctype= "multipart/form-data")
 						input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
 				if (component.componentTitle)
 					.ImageTitleBlock

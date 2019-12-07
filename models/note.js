@@ -23,3 +23,5 @@ const noteSchema = new mongoose.Schema({
 });
 
 const Note = module.exports = mongoose.model('Note', noteSchema);
+
+// Highest admins can delete any notes. Therefore if an owner deletes their account, but their notes still remain all around the Curata, then it will be possible to delete them

@@ -1,0 +1,15 @@
+mixin submitChecklist(component)
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="checklist" data-order= component.componentOrder)
+		ul.listItems.sortableList(id= "sortable_" +component.id)
+			li.ListItem.ChecklistItem.sortableListItem
+				input.checklistBox(type="checkbox")
+				input.listItemInput(placeholder= "Write something")
+				.showLinkContainer Add Link
+				.linkContainer.hidden
+					input.linkInput(placeholder= "Your link")
+					.saveListItemLink Save
+					.cancelListItemLink Cancel
+		.addNewListItemButton + Add Item
+
+
+

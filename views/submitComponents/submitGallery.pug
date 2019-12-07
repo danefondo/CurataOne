@@ -1,0 +1,5 @@
+mixin submitImageGallery(component)
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="gallery" data-order= component.componentOrder)
+		.sub-sortable-container
+			.imageBlock + Click to upload
+				.imageMeta

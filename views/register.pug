@@ -1,0 +1,101 @@
+doctype html
+html
+	head
+		title Curata
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		link(rel='stylesheet' href='/css/reset.css')
+		link(rel='stylesheet', href='/css/unreset.css')
+		link(rel='stylesheet' href='/css/main.css')
+		link(rel='stylesheet' href='/css/registration.css')
+		link(rel='stylesheet' href='/css/navigation.css')
+		link(rel='stylesheet' href='/css/MultiForm.css')
+		link(rel='stylesheet' href='/css/spectrum.css')
+		link(rel='stylesheet' href='/css/browse.css')
+		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css')
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js')
+		script(src='https://cdn.ckeditor.com/ckeditor5/11.2.0/decoupled-document/ckeditor.js')
+		script(src='https://momentjs.com/downloads/moment.min.js')
+		link(rel='stylesheet' href='/css/ckeditor.css')
+		link(rel='stylesheet' href='/css/responsive.css')
+
+	body.body__registerPage
+		- var coreURL = 'dashboard';
+		//- .top-bar
+		.nav-container
+			.title-container
+				a.logoTitleWhite__generic(href='/') Curata
+			if user
+				.navlinks-container
+					// show menu items based on what the user has (used) and their settings
+					if (user.defaultCurataId && user.defaultCurataId !== "N/A")
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas/' + user.defaultCurataId) Dashboard
+					else 
+						a.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas') Dashboard
+					a.topNavigationLink__topBar(href='/browse') Browse
+					a.topNavigationLink__topBar(href='/library') Library
+				.logout-container
+					.DropdownX.modifiedSize
+						.CurateNew.modifiedStyle
+							span.Name + Curate
+						nav.Dropdown-nav.modifiedDropdown
+							ul.Dropdown-group
+								li
+									a.entypo-newspaper.NavLinkX.Upgrade(href='/create') New entry
+								li
+									a.entypo-docs.NavLinkX(href='#') New list
+								li
+									a.entypo-docs.NavLinkX(href='#') New Curata
+					a.navlink(href='/' + coreURL + '/' + user.username + '/curatas') My Curatas
+					.DropdownX
+						.Dropdown-profile
+							//- img.Photo(src='//s3-us-west-2.amazonaws.com/s.cdpn.io/33381/profile/profile-80.jpg?1')
+							.Photo
+								+profileIcon
+							//- img.Photo(src='https://img.icons8.com/pastel-glyph/64/ffffff/gender-neutral-user.png')
+							span.Name.userId(id= user.id, data-username= user.username) #{user.firstname}
+							span.MenuIcon
+								span.MenuIcon-line
+								span.MenuIcon-line
+								span.MenuIcon-line
+						nav.Dropdown-nav.SettingsNav
+							ul.Dropdown-group
+								li
+									a.entypo-newspaper.NavLinkX(href= '/' + coreURL + '/' + user.username + '/curatas') View all my Curatas
+									a.entypo-plus.OptionLink(href='#')
+								li
+									a.entypo-newspaper.NavLinkX(href='#') Profile
+								li
+									a.entypo-docs.NavLinkX.Upgrade(href='#') Upgrade
+									a.entypo-plus.OptionLink(href='#')
+								li
+									a.entypo-archive.NavLinkX(href='#') Account settings
+									a.entypo-plus.OptionLink(href='#')
+								li
+									a.entypo-logout.NavLinkX(href='/accounts/logout') Logout
+		block heading
+		if !user
+			.container.container__registerPage
+				.registrationBlock__registerPage
+					.titleBlock__registerPage
+						h1.title__registerPage Sign up on Curata
+						h2.subtitle__registerPage ...and curate your heart out.
+					.registration-form
+						form(method='POST', action='/accounts/register')
+							.form-groups
+								.form-group
+									input.registration-input.first-input(name='email' type='text' placeholder='Email address' autocomplete="falsess")
+								.form-group
+									input.registration-input(name='username' type='text' placeholder='Username' autocomplete="off")
+								.form-group
+									input.registration-input(name='password' type='password' placeholder='Enter a password for authentication' autocomplete="off")
+								.form-group.last-form-group
+									input.registration-input.last-input(name='passcheck' type='password' placeholder='Confirm your password' autocomplete="off")
+							.submit
+								input(type='submit' value='Create account' class='register-button')
+								a.accountExists__registerPage(href='/accounts/loginForm') Already have an account?
+			block scripts
+			script(src='/js/main.js')
+
+
+

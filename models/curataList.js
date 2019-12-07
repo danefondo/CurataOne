@@ -20,12 +20,14 @@ const curataListSchema = new mongoose.Schema({
 	private: Boolean,
 	dateCreated: Date,
 	creator: {
-		type: String,
-		required: true
+		firstName: String,
+		lastName: String,
+		creator_id: String
 	},
 	owner: {
-		type: String,
-		required: true
+		firstName: String,
+		lastName: String,
+		owner_id: String
 	},
 	admins: [{type: Schema.Types.ObjectId, ref: 'User'}],
 	curataId: String

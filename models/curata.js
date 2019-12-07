@@ -13,6 +13,7 @@ const CurataSchema = new mongoose.Schema({
 	},
 	curataDescription: String,
 	curataAddress: String,
+	curataCustomDomain: String,
 	templates: [{type: Schema.Types.ObjectId, ref: 'Template'}],
 	curataList: [{type: Schema.Types.ObjectId, ref: 'curataList'}],
 	curataFiles: {
@@ -21,21 +22,28 @@ const CurataSchema = new mongoose.Schema({
 	category: String,
 	private: Boolean,
 	purpose: String,
+	likeCount: Number,
+	specialStatus: String,
 	dateCreated: Date,
 	creator: {
-		type: String,
-		required: true
+		firstName: String,
+		lastName: String,
+		creator_id: String
 	},
 	owner: {
-		type: String,
-		required: true
+		firstName: String,
+		lastName: String,
+		owner_id: String
 	},
-	admins: [{type: Schema.Types.ObjectId, ref: 'User'}]
+	ownerName: String,
+	admins: [{type: Schema.Types.ObjectId, ref: 'User'}],
+	collaborators: [{type: Schema.Types.ObjectId, ref: 'User'}]
 });
 
 const Curata = module.exports = mongoose.model('Curata', CurataSchema);
 
 /*
 
+specialStatus exists for cases where a particular curata is currently at the top and receives something like
 
 */

@@ -1,0 +1,40 @@
+extends layout_buttonless
+
+
+block content
+	- var coreURL = 'dashboard';
+	.sideNav
+		.curataSwitcher
+			.currentCurataSwitch(id= curata.id) Switch Space
+			.drop-down__menu-box3.unsortable.drop-down-extra-width
+				.curataSwitchHeader Switch current Space
+				if (user.defaultCurataId && curata.id == user.defaultCurataId)
+					.defaultCurata Default Space
+				else
+					.makeDefault Make default
+				ul.drop-down__menu3
+					each space in curatas
+						if (space.id !== curata.id)
+							li.drop-down__item3.drop-down-extra-styling
+								a.curata-link(href='/' + coreURL + '/' + user.username + '/curatas/' + space.id) #{space.curataName}
+		a.curataName(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+		.goToAllCuratas
+			a.allCuratasLink(href='/' + coreURL + '/' + user.username + '/curatas') View all my Spaces
+		//- if curata exists & selected, display 
+		a.viewCurataLive(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+		ul.sideNavButtons
+			li.sideNavLinkContainer
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id) Space
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/entries') Entries
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/appearance') Appearance
+				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+	.curataContainer.sideNavMargin
+		.curataPageTitle My files
+		.Images
+			if (images && images.length)
+				.theGallery
+					each image in images
+						if (image.imageURL && image.imageURL.length)
+							.imageContainer.grid-item
+								img.curataEntryImage(data-image-key= image.imageKey src= image.imageURL) 
+								.deleteImg x

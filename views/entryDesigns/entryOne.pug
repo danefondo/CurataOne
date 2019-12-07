@@ -1,0 +1,10 @@
+mixin entryOne(component, entry, template)
+	.curataListEntry(id= entry.id href='/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
+		if (entry.entryLink)
+			a.curataEntryLink(href= entry.entryLink target="_blank") Link
+		if (entry.entryTitle)
+				p.curataEntryTitle #{entry.entryTitle}
+		else
+				p.curataEntryTitle Untitled category
+		if (entry.entryImageURL)
+			.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')

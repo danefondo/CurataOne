@@ -1,0 +1,11 @@
+mixin submitInfoBox(component)
+	li.component__submitEntry.drag.draggable-item(id= component.id, data-component="infoBox" data-order= component.componentOrder)
+		.sub-sortable-container
+			.infoBlock
+				.infoTitle
+				.infoContent
+				.editorSortable
+					.simpleEditor
+						.editorTools.unreset(id= "toolbar_" +component.id)
+						.editorText.unreset(id= "editor_" +component.id)
+							p Write something here...
