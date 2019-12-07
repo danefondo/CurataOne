@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const apiKey = process.env.MAILGUN_TOKEN;
 const domain = process.env.MAILGUN_DOMAIN;
 const mailgun = require('mailgun-js')({apiKey: apiKey, domain: domain});

@@ -8,7 +8,6 @@ const crypto = require('crypto');
 // Bring in User Model
 let User = require('../models/user');
 const mail = require('../utils/mail');
-require('dotenv').config();
 
 // Generate token
 // const generateToken = (username) => {
