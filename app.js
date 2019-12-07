@@ -5,8 +5,6 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
-const dotenv = require('dotenv');
-dotenv.config();
 const config = require('./config/database');
 // Curata -- modularized content
 
