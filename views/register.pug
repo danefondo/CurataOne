@@ -22,6 +22,8 @@ html
 	body.body__registerPage
 		- var coreURL = 'dashboard';
 		//- .top-bar
+		.defaultErrorsContainer
+			.defaultErrors
 		.nav-container
 			.title-container
 				a.logoTitleWhite__generic(href='/') Curata
@@ -81,21 +83,54 @@ html
 						h1.title__registerPage Sign up on Curata
 						h2.subtitle__registerPage ...and curate your heart out.
 					.registration-form
-						form(method='POST', action='/accounts/register')
+						//- form(method='POST', action='/accounts/register')
+						.form
+							.notifier__register
+								h2 Errors
 							.form-groups
 								.form-group
+									.inputTitleContainer
+										.inputTitleText Email address
 									input.registration-input.first-input(name='email' type='text' placeholder='Email address' autocomplete="falsess")
+									.inputErrorContainer
+										.inputErrorText
+									.serverErrorContainer
+										.serverErrorText
 								.form-group
+									.inputTitleContainer
+										.inputTitleText Username
 									input.registration-input(name='username' type='text' placeholder='Username' autocomplete="off")
+									.inputErrorContainer
+										.inputErrorText
+									.serverErrorContainer
+										.serverErrorText
 								.form-group
-									input.registration-input(name='password' type='password' placeholder='Enter a password for authentication' autocomplete="off")
+									.inputTitleContainer
+										.inputTitleText Password (at least 8 characters)
+									input.registration-input.inline.passwordInput(name='password' type='password' placeholder='Enter a password (at least 8 characters)' autocomplete="off")
+									.showPassContainer
+										img.showPass.inline(src= '/images/eye-icon.png')
+									.inputErrorContainer
+										.inputErrorText
+									.serverErrorContainer
+										.serverErrorText
 								.form-group.last-form-group
-									input.registration-input.last-input(name='passcheck' type='password' placeholder='Confirm your password' autocomplete="off")
-							.submit
-								input(type='submit' value='Create account' class='register-button')
+									.inputTitleContainer
+										.inputTitleText Confirm password
+									input.registration-input.last-input.passwordInput(name='passcheck' type='password' placeholder='Confirm your password' autocomplete="off")
+									.showPassContainer
+										img.showPass.inline(src= '/images/eye-icon.png')
+									.inputErrorContainer
+										.inputErrorText
+									.serverErrorContainer
+										.serverErrorText
+							.buttonGroup
+								.register-button Create account
+								//- input(type='submit' value='Create account' class='register-button')
 								a.accountExists__registerPage(href='/accounts/loginForm') Already have an account?
 			block scripts
 			script(src='/js/main.js')
+			script(src='/js/coreExternal.js')
 
 
 

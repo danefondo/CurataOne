@@ -29,6 +29,64 @@ function generateToken() {
 	})
 }
 
+router.post('/checkEmail', function(req, res) {
+	let email = req.body.email;
+	console.log("email: ", email);
+
+	let fail = false;
+	let message;
+
+	// 1. sanitize email, once safe, do query
+		// if fail here, send back with message that email not in correct format
+
+	User.findOne({email: email}, function(err, user) {
+		if (user) {
+			message = 'Email already taken.';
+			fail = true;
+			console.log(message);
+
+			res.json({
+				fail: fail,
+				message: message
+			});
+		} else {
+			res.json({
+				fail: fail
+			});
+		}
+	})
+});
+
+
+router.post('/checkUsername', function(req, res) {
+	let username = req.body.username;
+
+	let fail = false;
+	let message = '';
+
+	// 1. sanitize username, once safe, do query
+		// if fail here, send back with message that username not in correct format
+
+	User.findOne({"username": username}, function(err, user) {
+		if (user) {
+			message = 'Username already taken.';
+			fail = true;
+			console.log(message);
+
+			res.json({
+				fail: fail,
+				message: message
+			})
+		} else {
+			res.json({
+				fail: fail
+			});
+		}
+	})
+});
+
+
+
 router.post('/register', function(req, res) {
 	const email = req.body.email;
 	const username = req.body.username;
@@ -37,12 +95,13 @@ router.post('/register', function(req, res) {
 	const dateCreated = new Date();
 	// code change
 
-	// // check if username already exists
-	// User.find({"username": username}, function(err, docs) {
-	// 	if (docs.length) {
-	// 		//  username  already exists
-	// 	}
-	// })
+	// check if username already exists
+	User.find({"username": username}, function(err, docs) {
+		if (docs.length) {
+			console.log("Username already exists.");
+			//  username  already exists
+		}
+	})
 
 	/*
 	if (password !== passcheck) {

@@ -85,6 +85,11 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	// coreURL is also the logic separator, sometimes, the coreURL might also be dashboard/entries 
 	let coreURL = 'dashboard';
 
+	$('input').focus(function(){
+	  var that = this;
+	  setTimeout(function(){ that.selectionStart = that.selectionEnd = 10000; }, 0);
+	});
+
 	/* SPECIAL (CUSTOM) FUNCTIONS */
 
 	// More on jQuery special events: http://benalman.com/news/2010/03/jquery-special-events/
