@@ -65,6 +65,9 @@ app.use(bodyParser.json());
 // Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get("*", (req, res) => {
+  res.redirect(`https://${req.headers.host}${req.url}`);
+});
 
 
 /*====== AUTHENTICATION ======*/
@@ -181,10 +184,6 @@ function ensureAuthenticated(req, res, next){
 let port = process.env.PORT;
 if (port == null || port == "") {
 	port = 3000;
-
-app.get("*", (req, res) => {
-  res.redirect(`https://${req.headers.host}${req.url}`);
-});
   // port = 27018;
 }
 
