@@ -182,9 +182,9 @@ let port = process.env.PORT;
 if (port == null || port == "") {
 	port = 3000;
 
-// app.get("*", (req, res) => {
-//   res.redirect(`https://${req.headers.host}${req.url}`);
-// });
+app.get("*", (req, res) => {
+  res.redirect(`https://${req.headers.host}${req.url}`);
+});
   // port = 27018;
 }
 
