@@ -54,6 +54,13 @@ let ListItem = require('./models/listItem');
 let Note = require('./models/note');
 let Task = require('./models/task');
 
+app.use((req, res, next) => {
+  if (req.protocol === 'http') {
+    res.redirect(301, `https://${req.headers.host}${req.url}`);
+  }
+  next();
+})
+
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -178,11 +185,6 @@ function ensureAuthenticated(req, res, next){
 let port = process.env.PORT;
 if (port == null || port == "") {
 	port = 3000;
-  let appHTTP = express();
-  appHTTP.get("*", (req, res) => {
-      // logger.info("redirect", process.env.NODE_ENV); -- winston logger
-    res.redirect(`https://${req.headers.host}${req.url}`);
-  });
   // port = 27018;
 }
 
