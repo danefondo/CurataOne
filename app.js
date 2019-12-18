@@ -65,6 +65,16 @@ app.use(bodyParser.json());
 // Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+  console.log("IN REDIRECT");
+  if(req.protocol === 'http') {
+      res.redirect(`https://${req.headers.host}${req.url}`);
+      console.log("AFTER REDIRECT");
+  }
+  next();
+});
+console.log("AFTER GET");
+
 
 /*====== AUTHENTICATION ======*/
 
@@ -115,16 +125,6 @@ app.get('/my-curations', function(req, res) {
 app.get('/successful-registration', function(req, res) {
 	res.render('RegisterSuccess');
 });
-
-app.use((req, res, next) => {
-  console.log("IN REDIRECT");
-  if(req.protocol === 'http') {
-      res.redirect(301, `https://${req.headers.host}${req.url}`);
-      console.log("AFTER REDIRECT");
-  }
-  next();
-});
-console.log("AFTER GET");
 
 
 
