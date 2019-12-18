@@ -54,13 +54,6 @@ let ListItem = require('./models/listItem');
 let Note = require('./models/note');
 let Task = require('./models/task');
 
-app.use((req, res, next) => {
-  if (req.protocol === 'http') {
-    res.redirect(`https://${req.headers.host}${req.url}`);
-  }
-  next();
-})
-
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -178,6 +171,13 @@ function ensureAuthenticated(req, res, next){
     res.redirect('/');
   }
 }
+
+app.use((req, res, next) => {
+  if (req.protocol === 'http') {
+    res.redirect(`https://${req.headers.host}${req.url}`);
+  }
+  next();
+})
 
 
 
