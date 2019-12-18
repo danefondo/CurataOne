@@ -6,6 +6,9 @@ const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
+
+const http = require('http');
+const enforce = require('express-sslify');
 // Curata -- modularized content
 
 
@@ -38,6 +41,8 @@ db.on('error', function(err) {
 // Initializing the app
 const app = express();
 app.locals.moment = require('moment');
+
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 // Bring in models
 let User = require('./models/user');
@@ -199,4 +204,7 @@ app.listen(port, function(){
   console.log('Server started on port ' + port);
 });
 
+http.createServer(app).listen(app.get('port'), function() {
+    console.log('Express server listening on port ' + app.get('port'));
+});
 
