@@ -65,10 +65,6 @@ app.use(bodyParser.json());
 // Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get("*", (req, res) => {
-  res.redirect(`https://${req.headers.host}${req.url}`);
-});
-
 
 /*====== AUTHENTICATION ======*/
 
@@ -94,6 +90,13 @@ app.get('*', function(req, res, next){
   res.locals.user = req.user || null;
   next();
 });
+
+app.get("*", (req, res) => {
+  console.log("IN REDIRECT");
+  res.redirect(`https://${req.headers.host}${req.url}`);
+  console.log("AFTER REDIRECT");
+});
+console.log("AFTER GET");
 
 
 
