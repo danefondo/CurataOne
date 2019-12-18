@@ -91,10 +91,15 @@ app.get('*', function(req, res, next){
   next();
 });
 
-app.get("*", (req, res) => {
+
+
+app.use((req, res, next) => {
   console.log("IN REDIRECT");
-  res.redirect(`https://${req.headers.host}${req.url}`);
-  console.log("AFTER REDIRECT");
+  if(req.protocol === 'http') {
+      res.redirect(301, `https://${req.headers.host}${req.url}`);
+      console.log("AFTER REDIRECT");
+  }
+  next();
 });
 console.log("AFTER GET");
 
