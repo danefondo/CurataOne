@@ -14,10 +14,15 @@ $(document).ready(function () {
 		let doneTypingInterval = 1500;  //time in ms (5 seconds)
 
 		$('input[name="username"]').on('input', function() {
-			let field = $(this);
+			let inputField = $(this);
+			let data = {
+				field: 'username',
+				value: inputField.val(),
+				inputField
+			};
 		    clearTimeout(typingTimer);
-		    if (field.val()) {
-		        typingTimer = setTimeout(doneTyping, doneTypingInterval, field);
+		    if (inputField.val()) {
+		        typingTimer = setTimeout(doneTyping, doneTypingInterval, data);
 		    }
 		});
 	}
@@ -30,10 +35,17 @@ $(document).ready(function () {
 		let doneTypingInterval = 1500;  //time in ms (5 seconds)
 
 		$('input[name="email"]').on('input', function() {
-			let field = $(this);
+			let inputField = $(this);
+			let data = {
+				field: 'email',
+				value: inputField.val(),
+				inputField
+			};
+			//data.field = field;
+			//data.checkType = 'checkEmail';
 		    clearTimeout(typingTimer);
-		    if (field.val()) {
-		        typingTimer = setTimeout(doneTyping, doneTypingInterval, field);
+		    if (inputField.val()) {
+		        typingTimer = setTimeout(doneTyping, doneTypingInterval, data);
 		    }
 		});
 	}
@@ -41,157 +53,131 @@ $(document).ready(function () {
 
 
 	//user is "finished typing," do something
-	function doneTyping(input) {
-		let name = input.attr('name');
-		console.log(input);
+	function doneTyping(data) {
+		console.log(data);
 
-	    if (name === "email") {
-	    	let email = input.val();
-	    	console.log("email: ", email); 
-			$.ajax({
-				data: {
-					email
-				},
-				type: 'POST',
-				url: '/accounts/checkEmail',
-				success: function(response) {
-					console.log("resp. ", response);
-					if (response.fail === true) {
-						input.siblings('.serverErrorContainer').css("display", "flex");
-						input.siblings('.serverErrorContainer').children('.serverErrorText').text(response.message);
-					} else {
-						input.siblings('.serverErrorContainer').css("display", "none");
-						input.siblings('.serverErrorContainer').children('.serverErrorText').text("");
-					}
-				},
-				error: function(err) {
-					console.log("Couldn't check email.");
-					// display error message
-				}
-			});
-	    } 
+		let input = data.inputField;
+		delete data.inputField;
+		//let checkType = data.checkType;
 
-	    if (name === "username") {
-	    	let username = input.val();
-	    	console.log("username: ", username);
-			$.ajax({
-				data: {
-					username
-				},
-				type: 'POST',
-				url: '/accounts/checkUsername',
-				success: function(response) {
-					if (response.fail === true) {
-						input.siblings('.serverErrorContainer').css("display", "flex");
-						input.siblings('.serverErrorContainer').children('.serverErrorText').text(response.message);
-					} else {
-						input.siblings('.serverErrorContainer').css("display", "none");
-						input.siblings('.serverErrorContainer').children('.serverErrorText').text("");
-					}
-				},
-				error: function(err) {
-					console.log("Couldn't check email.");
-					// display error message
+    	//let value = input.val();
+    	//console.log("value: ", value);
+		$.ajax({
+			data,
+			type: 'POST',
+			url: '/accounts/checkUnique',
+			success: function(response) {
+				console.log("resp. ", response);
+				if (response.fail === true) {
+					input.siblings('.inputErrorContainer').children('.inputErrorText').show().text(response.message);
+				} else {
+					input.siblings('.inputErrorContainer').children('.inputErrorText').hide().text("");
 				}
-			});
-	    }
+			},
+			error: function(err) {
+				console.log("Couldn't do check for " + checkType + ".");
+				// display error message
+			}
+		});
 	}
 
 	function initShowPass() {
 		$('.showPassContainer').on('click', function() {
 			let input = $(this).siblings('input');
 			if (input.attr('type') === 'text') {
-				$(this).children('.showPass').attr('src', '/images/eye-icon.png');
+				$(this).children('.showPass').attr('src', '/images/white-eye.png');
 				return input.attr('type', 'password');
 			}
 			input.attr('type', 'text');
-			$(this).children('.showPass').attr('src', '/images/black-eye-icon.png');
+			$(this).children('.showPass').attr('src', '/images/white-eye-read.png');
 
 		})
 	}
 	initShowPass();
 
-	function initInputToggle() {
-		$('.registration-input').on('focus', function() {
-			// registration form title
-			let input = $(this);
-			input.siblings('.inputTitleContainer').show();
-			// registration input focus
-			$(this).parent().addClass('registration-input-focus');
-		})
+	// function initInputToggle() {
+	// 	$('.input__registration').on('focus', function() {
+	// 		// registration form title
+	// 		let input = $(this);
+	// 		input.siblings('.inputTitleContainer').show();
+	// 		// registration input focus
+	// 		$(this).parent().addClass('registration-input-focus');
+	// 	})
 
-		$('.registration-input').on('blur', function() {
-			let input = $(this);
-			input.siblings('.inputTitleContainer').hide();
-			$(this).parent().removeClass('registration-input-focus');
-		})
-	}
-	initInputToggle();
+	// 	$('.input__registration').on('blur', function() {
+	// 		let input = $(this);
+	// 		input.siblings('.inputTitleContainer').hide();
+	// 		$(this).parent().removeClass('registration-input-focus');
+	// 	})
+	// }
+	// initInputToggle();
 
-	function validatePassword(password, passcheck, username, email) {
+	// function validatePassword(password, passcheck, username, email) {
 
-			let error;
-			let isError = false;
-			let errorArray = [];
+	// 		let error;
+	// 		let isError = false;
+	// 		let errorArray = [];
 
-			// in the future, iterate over error array and display all the errors
+	// 		// in the future, iterate over error array and display all the errors
 
-			function activatePasswordError(error, input) {
-				let errorContainer = input.siblings('.inputErrorContainer');
+	// 		function activatePasswordError(error, input) {
+	// 			let errorContainer = input.siblings('.inputErrorContainer');
 
-				//let errorMessage = errorNotifierText.text();
-				// if (!errorMessage.length > 0 || errorMessage !== error) {
-					//errorContainer.css("background-color", "#b63a3a");
-					errorContainer.show();
-					errorContainer.children('.inputErrorText').text(error);
-				// }
-			}
+	// 			//let errorMessage = errorNotifierText.text();
+	// 			// if (!errorMessage.length > 0 || errorMessage !== error) {
+	// 				//errorContainer.css("background-color", "#b63a3a");
+	// 				errorContainer.show();
+	// 				errorContainer.children('.inputErrorText').text(error);
+	// 			// }
+	// 		}
 
-			// check that passwords not empty
-			if (!password || !passcheck) {
-				error = "Password fields cannot be empty.";
-				isError = true;
-				errorArray.push(error);
-				return activatePasswordError(error);
-			} 
-			// check if passwords match
-			if (password !== passcheck) {
-				error = "Passwords do not match.";
-				isError = true;
-				errorArray.push(error);
-				return activatePasswordError(error);
-			}
-			// check if passwords don't equal username or email
-			if (password === username || password === email) {
-				error = "Password cannot be the same as your username or email.";
-				isError = true;
-				errorArray.push(error);
-				return activatePasswordError(error);
-			}
-			// check that password is at least 8 characters long
-			if (password.length < 8 || passcheck.length < 8) {
-				error = "Password must be at least 8 characters long.";
-				isError = true;
-				errorArray.push(error);
-				return activatePasswordError(error);
-			}
+	// 		// check that passwords not empty
+	// 		if (!password || !passcheck) {
+	// 			error = "Password fields cannot be empty.";
+	// 			isError = true;
+	// 			errorArray.push(error);
+	// 			return activatePasswordError(error);
+	// 		} 
+	// 		// check if passwords match
+	// 		if (password !== passcheck) {
+	// 			error = "Passwords do not match.";
+	// 			isError = true;
+	// 			errorArray.push(error);
+	// 			return activatePasswordError(error);
+	// 		}
+	// 		// check if passwords don't equal username or email
+	// 		if (password === username || password === email) {
+	// 			error = "Password cannot be the same as your username or email.";
+	// 			isError = true;
+	// 			errorArray.push(error);
+	// 			return activatePasswordError(error);
+	// 		}
+	// 		// check that password is at least 8 characters long
+	// 		if (password.length < 8 || passcheck.length < 8) {
+	// 			error = "Password must be at least 8 characters long.";
+	// 			isError = true;
+	// 			errorArray.push(error);
+	// 			return activatePasswordError(error);
+	// 		}
 
-			// check that password is less than 64 characters long
-			if (password.length > 64 || passcheck.length > 64) {
-				error = "Password must be less than 64 characters long.";
-				isError = true;
-				errorArray.push(error);
-				return activatePasswordError(error);
-			}
+	// 		// check that password is less than 64 characters long
+	// 		if (password.length > 64 || passcheck.length > 64) {
+	// 			error = "Password must be less than 64 characters long.";
+	// 			isError = true;
+	// 			errorArray.push(error);
+	// 			return activatePasswordError(error);
+	// 		}
 
-			// check that password is less than 64 characters long
-			if (username.length > 35) {
-				error = "Username must be less than 35 characters.";
-				isError = true;
-				errorArray.push(error);
-				return activatePasswordError(error);
-			}
-	}
+	// 		// check that password is less than 64 characters long
+	// 		if (username.length > 35) {
+	// 			error = "Username must be less than 35 characters.";
+	// 			isError = true;
+	// 			errorArray.push(error);
+	// 			return activatePasswordError(error);
+	// 		}
+
+	// 		// IF PASSTYPE && PASSTYPE == RESET --> check that not previous pass
+	// }
 
 	function validateEmail(input, regex) {
 		// if no mistakes, we want maximum speed validation
@@ -249,7 +235,10 @@ $(document).ready(function () {
 	}
 
 	function initRegisterAccount(){
-		$('.register-button').on('click', function() {
+		$('.form-register').on('submit', function(e) {
+			e.preventDefault();
+			$('.register-button').attr('disabled', 'disabled');
+			$('.register-button').attr('value', 'Creating account...');
 			// forms are not to be used; ajax is superior.
 
 			// rather than preventing certain typing, simply don't allow it to pass until in correct format; however, users could potentially disable the frontend JavaScript, therefore this correct format should still be validated with the backend
@@ -257,11 +246,31 @@ $(document).ready(function () {
 			let username = $('input[name="username"]').val();
 			let password = $('input[name="password"]').val();
 			let passcheck = $('input[name="passcheck"]').val();
+			attemptRegister(email, username, password, passcheck);
 
+
+/*
 			// pre-validate; if no errors, quickpass; else, check individual errors.
 			let emailValidation = validateEmail(email, emailRegex);
 			let usernameValidation = validateUsername(username, usernameRegex);
-			let passwordValidation = validatePassword(password, passcheck, username, email)
+			// let passwordValidation = validatePassword(password, passcheck, username, email);
+
+
+			// if (emailValidation === true && usernameValidation === true && passwordValidation === true) {
+			if (emailValidation === true && usernameValidation === true) {
+				console.log("All pass. Attempt create user.");
+				attemptRegister(email, username, password);
+			} else {
+				console.log("Incorrect format. Here are the errors.");
+				displayRelevantErrors();
+			}
+
+*/
+
+			/* TODO
+			- on success, redirect
+			- on fail, remove disabled, change text value, show error
+			*/
 
 			// $.ajax({
 			// 	data: {
@@ -283,15 +292,6 @@ $(document).ready(function () {
 			// 	}
 			// });
 
-
-
-			// if (emailValidation === true && usernameValidation === true && passwordValidation === true) {
-			// 	console.log("All pass. Attempt create user.");
-			// 	attemptRegister(email, username, password);
-			// } else {
-			// 	console.log("Incorrect format. Here are the errors.");
-			// 	displayRelevantErrors();
-			// }
 			// validate form
 				// does email pass validation
 				// does username pass validation
@@ -310,12 +310,34 @@ $(document).ready(function () {
 	}
 	initRegisterAccount()
 
-	function attemptRegister(email, username, password) {
-
+	function attemptRegister(email, username, password, passcheck) {
+		$.ajax({
+			data: {
+				email,
+				username,
+				password,
+				passcheck
+			},
+			url: '/accounts/register',
+			type: 'POST',
+			success: function(response) {
+				window.location.replace(response.redirectURL);
+			},
+			error: function(err) {
+				$('.inputErrorText').empty();
+				err.responseJSON.errors.forEach(eachError => {
+					$(`input[name="${eachError.param}"]`).siblings('.inputErrorContainer').children('.inputErrorText').show().text(eachError.msg);
+				});
+				$('.register-button').removeAttr('disabled');
+				$('.register-button').attr('value', 'Create account');
+				// display error message
+			}
+		})
 	}
 
 	function initLogin() {
 		$('.login-button').on('click', function(){
+
 			$.ajax({
 
 			})

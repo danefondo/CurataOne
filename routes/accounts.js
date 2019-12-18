@@ -4,10 +4,12 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const path = require('path');
 const passport = require('passport');
-const crypto = require('crypto');
 // Bring in User Model
 let User = require('../models/user');
 const mail = require('../utils/mail');
+const accountController = require('../controller/accounts');
+const accountUtil = require('../utils/account')
+const validator = require('../controller/validator');
 
 // Generate token
 // const generateToken = (username) => {
@@ -16,154 +18,13 @@ const mail = require('../utils/mail');
 
 // this resource suggest using async for crypto.randomBytes
 // https://github.com/nodejs/help/issues/457
-function generateToken() {
-	return new Promise(function(resolve, reject) {
-		crypto.randomBytes(32, function(ex, buf) {
-			if (ex) {
-				reject();
-			}
-	 		const token = buf.toString('hex');
-	 		console.log("tok", token);
-	 		resolve(token);
-		})
-	})
-}
-
-router.post('/checkEmail', function(req, res) {
-	let email = req.body.email;
-	console.log("email: ", email);
-
-	let fail = false;
-	let message;
-
-	// 1. sanitize email, once safe, do query
-		// if fail here, send back with message that email not in correct format
-
-	User.findOne({email: email}, function(err, user) {
-		if (user) {
-			message = 'Email already taken.';
-			fail = true;
-			console.log(message);
-
-			res.json({
-				fail: fail,
-				message: message
-			});
-		} else {
-			res.json({
-				fail: fail
-			});
-		}
-	})
-});
 
 
-router.post('/checkUsername', function(req, res) {
-	let username = req.body.username;
+router.post('/checkUnique', accountController.checkUnique);
 
-	let fail = false;
-	let message = '';
-
-	// 1. sanitize username, once safe, do query
-		// if fail here, send back with message that username not in correct format
-
-	User.findOne({"username": username}, function(err, user) {
-		if (user) {
-			message = 'Username already taken.';
-			fail = true;
-			console.log(message);
-
-			res.json({
-				fail: fail,
-				message: message
-			})
-		} else {
-			res.json({
-				fail: fail
-			});
-		}
-	})
-});
+router.post('/register', validator.register, accountController.register);
 
 
-
-router.post('/register', function(req, res) {
-	const email = req.body.email;
-	const username = req.body.username;
-	const password = req.body.password;
-	const passcheck = req.body.passcheck;
-	const dateCreated = new Date();
-	// code change
-
-	// check if username already exists
-	User.find({"username": username}, function(err, docs) {
-		if (docs.length) {
-			console.log("Username already exists.");
-			//  username  already exists
-		}
-	})
-
-	/*
-	if (password !== passcheck) {
-		return console.log("Passwords don't match");
-	}
-
-	*/
-	// Form check is with AJAX
-	// const verificationToken =generateToken(username)
-
-	async function getVerificationToken() {
-		try {
-			const verificationToken = await generateToken();
-			console.log("veriftok: ", verificationToken);
-
-			let newUser = new User({
-				email,
-				verifiedStatus: false,
-				verificationToken,
-				username,
-				password,
-				dateCreated
-			});
-			console.log("Stored user in variable.")
-			const link = `${req.protocol}://${req.get('host')}/accounts/verify/${verificationToken}`;
-
-			bcrypt.genSalt(10, function(err, salt) {
-				console.log("Inside bcrypt function.")
-				bcrypt.hash(newUser.password, salt, function(err, hash) {
-					if(err) {
-						console.log(err);
-					}
-					console.log("Hashing password.")
-					newUser.password = hash;
-					console.log("About to create user.")
-					newUser.save(function(err, user) {
-						console.log('Not stuck yet.')
-						if(err) {
-							console.log('Not stuck yet 2.')
-							console.log(err);
-							return;
-						} else {
-							console.log('Not stuck yet 3.')
-							console.log('You are now registered and can log in', verificationToken);
-							mail.sendVerificationMail(email, link);
-							req.login(user, function (err) {
-		                		if ( ! err ){
-		                    		res.redirect('/successful-registration');
-		                		} else {
-		                    		//handle error
-		                		}
-		            		});
-						}
-					});
-				});
-			});
-		} catch(err) {
-			console.log(err);
-		}
-	}
-	getVerificationToken();
-});
 
 //token verification
 router.get('/verify/:verificationToken', function(req, res, next) {
@@ -276,8 +137,81 @@ router.get('/forgotPass', function(req, res, next) {
   if (req.isAuthenticated()) {
     res.redirect('/');
   } else {
-    res.render('forgotPass');
+    res.render('pass__forgot');
   }
 });
+
+// Reigster page
+router.post('/sendResetPass', async function(req, res, next) {
+	try {
+		console.log(req.body.email);
+		const token = await accountUtil.generateToken();
+		console.log("veriftok: ", token);
+
+		const user = await User.findOne({
+			email: req.body.email
+		});
+
+		user.resetToken = token;
+
+		await user.save();
+
+		const link = `${req.protocol}://${req.get('host')}/accounts/reset/${token}`;
+		console.log(link);
+		mail.sendResetMail(req.body.email, link);
+		res.status(200).json({
+			message: 'Password reset has been sent to your mail'
+		})
+	} catch(err) {
+		console.log(err);
+		res.status(500).json({
+			message: 'An error occurred, please try later'
+		});
+	}
+});
+
+router.get('/reset/:token', async function(req, res) {
+	if (req.isAuthenticated()) {
+	    res.redirect('/');
+	 } else {
+	 	const user = await User.findOne({
+			resetToken: req.params.token
+		});
+
+    	res.render('pass__reset', {
+    		valid: !!user
+    	});
+	 }
+})
+
+
+router.post('/reset/', async function({ body: { token, password } }, res) {
+	try {
+		const user = await User.findOne({
+			resetToken: token
+		});
+
+		if (!user) {
+			return res.status(400).json({
+				message: 'Invalid token'
+			});
+		}
+
+		user.password = await accountUtil.hashPassword(password)
+		user.resetToken = null;
+
+		await user.save();
+		res.status(200).json({
+			message: 'Password reset was successful, please login'
+		});
+	} catch(error) {
+		console.log(error);
+		res.status(500).json({
+			message: 'An error occurred'
+		});
+	}
+ 	
+
+})
 
 module.exports = router;

@@ -42,6 +42,7 @@
 	font-size: 25px;
 	margin-left: 5px;
 	margin-bottom: 5px;
+	margin: 5px 0 5px 5px
 	font-weight: 600;
 }
 
@@ -80,10 +81,15 @@
     border-radius: 3px;
 }
 
+.register-button:disabled {
+	cursor: not-allowed;
+    background-color: #ac96d2 !important;
+}
+
 .form-groups {
 /*	border: 1px solid #eee;*/
 	border-radius: 3px;
-	box-shadow: 6px 6px 0px 0px #e6e6e6;
+/*	box-shadow: 6px 6px 0px 0px #e6e6e6;*/
 	border-bottom: none;
 	border-right: none;
 	margin-bottom: 10px;
@@ -91,8 +97,8 @@
 
 .form-group {
 	/*padding: 10px;*/
-	border-bottom: 1px solid #f7f7f7;
-	background-color: white;
+/*	border-bottom: 1px solid #f7f7f7;*/
+/*	background-color: white;*/
 	position: relative;
 }
 
@@ -100,19 +106,28 @@
 	border-bottom: none;
 }
 
-.registration-input {
+
+.input__registration {
+	width: 90%;
+	color: #333;
 	font-size: 18px !important;
 	padding: 15px !important;
+/*	padding: 10px! important;*/
+	border-radius: 3px !important;
+	background-color: #fff;
+	box-shadow: 4px 5px 0px 0px #e6e6e6;
 }
 
-.registration-input-focus {
+.input__registration-focus {
 	transform: scale(1.02);
 /*	background-color: #f5f5f5 !important;*/
 	border: 1px solid #ececec;
 	border-left: 3px solid #673ab7;
 }
 
-
+.input__registration:focus::placeholder {
+	color: transparent;
+}
 
 .first-input {
 	border-top-left-radius: 3px;
@@ -125,7 +140,10 @@
 }
 
 .login-button,
-.signup-button {
+.signup-button,
+.forgotPass-button,
+.button__resetPass,
+.button__generic {
 	height: 100%;
 	background-color: transparent !important;
 	color: #555 !important;
@@ -137,7 +155,10 @@
 	cursor: pointer;
 }
 
-.login-button {
+.login-button,
+.forgotPass-button,
+.button__resetPass,
+.button__generic {
 	color: #ffffff !important;
 }
 
@@ -153,11 +174,11 @@
 }
 
 .signin-form,
-.form__forgotPass {
+.form__forgotPass,
+.form__resetPass {
   margin: auto;
   width: 600px;
   text-align: center;
-  height: 200px;
 }
 
 /* fields that differ, write in separate classes rather than overwriting, less chance of messing up things later*/
@@ -166,11 +187,13 @@
 	margin-top: 200px;
 }
 
-.form__forgotPass {
+.form__forgotPass,
+.form__resetPass {
 	margin-top: 150px;
 }
 
-.login-input {
+.login-input,
+.input__general {
 	width: 200px;
 	border-radius: 3px;
 	border: 1px solid #eee;
@@ -186,11 +209,15 @@
 	font-size: 18px !important;
 }
 
-.login-input:focus {
+.login-input:focus,
+.input__general:focus {
 	border-left: 3px solid #673ab7;
 }
 
-.login-button {
+.login-button,
+.forgotPass-button,
+.button__resetPass,
+.button__generic {
 	width: 325px !important;
 	font-size: 18px !important;
 	transition: .2s ease-in-out !important;
@@ -201,12 +228,24 @@
 	box-shadow: 3px 3px 0px 0px #673ab785;
 }
 
-.login-button:hover {
+.login-button:hover,
+.forgotPass-button:hover,
+.button__resetPass:hover,
+.button__generic:hover {
 	background-color: #152229 !important;
 	box-shadow: 3px 3px 0px 0px #19191985;
 }
 
-.login-title {
+.button__generic {
+	display: block;
+	margin: 0 auto !important;
+	height: auto;
+	width: 330px !important;
+}
+
+.login-title,
+.form__title,
+.title__generic {
 	font-size: 45px;
 	text-align: left;
 	width: 325px;
@@ -225,6 +264,12 @@ form.signin-form .submit {
 
 .account-manager {
 	background-color: #1d323c;
+	width: 100%;
+	min-height: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: flex-end;
+	flex-grow: 1;
 }
 
 .forgotPass {
@@ -421,7 +466,8 @@ form.signin-form .submit {
 	color: #eee;
 }
 
-.subtitle__forgotPass {
+.subtitle__forgotPass,
+.subtitle__resetPass {
 	width: 325px;
 	margin: 0 auto;
 	text-align: left;
@@ -476,16 +522,14 @@ form.signin-form .submit {
 
 
 .inputTitleContainer {
-	display: none;
-	padding: 6px 6px 0px 6px;
-    font-size: 10px;
-    text-transform: uppercase;
+/*	display: none;*/
+	padding: 4px 2px 4px 1px;
+	font-size: 17px;
     font-weight: bold;
-    color: dimgrey;
-}
+    color: #b7b7b7;
 
-.registration-input:focus::placeholder {
-	color: transparent;
+/*    background-color: white;*/
+    width: 88%;
 }
 
 .serverErrorContainer {
@@ -515,3 +559,19 @@ form.signin-form .submit {
 	color: red;
 	background-color: #1d323c;
 }
+
+.successMessage {
+	margin: 30px auto;
+    font-size: 15px;
+    max-width: 300px;
+    color: #e4e4e4;
+    background-color: #009688;
+    box-sizing: border-box;
+    font-weight: 600;
+    padding: 8px;
+    border-radius: 3px;
+    font-family: 'GothamRounded';
+    display: none;
+}
+
+

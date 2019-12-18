@@ -1,0 +1,51 @@
+doctype html
+html
+	head
+		title Curata
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		link(rel='stylesheet' href='/css/reset.css')
+		link(rel='stylesheet', href='/css/unreset.css')
+		link(rel='stylesheet' href='/css/main.css')
+		link(rel='stylesheet' href='/css/registration.css')
+		link(rel='stylesheet' href='/css/navigation.css')
+		link(rel='stylesheet' href='/css/MultiForm.css')
+		link(rel='stylesheet' href='/css/spectrum.css')
+		link(rel='stylesheet' href='/css/browse.css')
+		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css')
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js')
+		script(src='https://cdn.ckeditor.com/ckeditor5/11.2.0/decoupled-document/ckeditor.js')
+		script(src='https://momentjs.com/downloads/moment.min.js')
+		link(rel='stylesheet' href='/css/ckeditor.css')
+		link(rel='stylesheet' href='/css/responsive.css')
+
+	body
+		- var coreURL = 'dashboard';
+		//- .top-bar
+		.nav-container
+			.title-container
+				a.logoTitleWhite__generic(href='/') Curata
+		block heading
+		if valid
+			.container
+				.account-manager 
+					form.form__resetPass(method='POST')
+						.form__title Reset password
+						.subtitle__resetPass Enter your new password. 
+						input.input__general(name='password' type='password' placeholder='New password' autocomplete="off") 
+						input.input__general(name='passcheck' type='password' placeholder='Confirm password' autocomplete="off") 
+						.submit
+							input.button__resetPass(type='submit' value='Submit')
+
+		else
+			.container
+				.account-manager
+					.form__resetPass
+						.title__generic Invalid token
+						.subtitle__resetPass Your password reset link is no longer valid.
+						a.button__generic(href="/accounts/forgotPass") Still want to reset your password?
+			block scripts
+		script(src='/js/pass__reset.js')
+
+
+

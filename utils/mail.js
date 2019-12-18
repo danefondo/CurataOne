@@ -20,6 +20,21 @@ module.exports = {
 		mailgun.messages().send(data, function (error, body) {
 		  console.log(body);
 		});
+	},
+
+
+	sendResetMail(email, link) {
+		console.log(link, 'mail js file');
+		const data = {
+		  from: 'Curatedone <noreply@curateone.com>',
+		  to: email,
+		  subject: 'Password reset to Curataone',
+		  html: '',
+		  text: `Reset your password on Curataone, click on this link ${link}`
+		};
+		mailgun.messages().send(data, function (error, body) {
+		  console.log(body);
+		});
 	}
 
 	// sendPasswordResetMail(email, link) {

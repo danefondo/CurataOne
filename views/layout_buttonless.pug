@@ -93,15 +93,15 @@ html
 						form(method='POST', action='/accounts/register')
 							.form-groups
 								.form-group
-									input.registration-input.first-input(name='firstname' type='text' placeholder='Your first name' autocomplete="falsess")
+									input.input__registration.first-input(name='firstname' type='text' placeholder='Your first name' autocomplete="falsess")
 								.form-group
-									input.registration-input(name='lastname' type='text' placeholder='Your last name' autocomplete="falsess")
+									input.input__registration(name='lastname' type='text' placeholder='Your last name' autocomplete="falsess")
 								.form-group
-									input.registration-input(name='username' type='text' placeholder='Username, identifier' autocomplete="off")
+									input.input__registration(name='username' type='text' placeholder='Username, identifier' autocomplete="off")
 								.form-group
-									input.registration-input(name='password' type='password' placeholder='Enter a password for authentication' autocomplete="off")
+									input.input__registration(name='password' type='password' placeholder='Enter a password for authentication' autocomplete="off")
 								.form-group.last-form-group
-									input.registration-input.last-input(name='passcheck' type='password' placeholder='Confirm your password' autocomplete="off")
+									input.input__registration.last-input(name='passcheck' type='password' placeholder='Confirm your password' autocomplete="off")
 							.submit
 								input(type='submit' value='Create account' class='register-button')
 		else 
