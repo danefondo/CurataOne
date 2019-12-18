@@ -96,6 +96,10 @@ app.get('*', function(req, res, next){
 
 /*====== ROUTES ======*/
 
+// app.get("*", (req, res) => {
+//   res.redirect(`https://${req.headers.host}${req.url}`);
+// });
+
 // Home route
 app.get('/', function(req, res) {
   if (req.isAuthenticated()) {
@@ -177,6 +181,10 @@ function ensureAuthenticated(req, res, next){
 let port = process.env.PORT;
 if (port == null || port == "") {
 	port = 3000;
+
+// app.get("*", (req, res) => {
+//   res.redirect(`https://${req.headers.host}${req.url}`);
+// });
   // port = 27018;
 }
 
@@ -184,10 +192,6 @@ if (port == null || port == "") {
 /*====== Start server  ======*/
 app.listen(port, function(){
   console.log('Server started on port ' + port);
-});
-
-app.get("*", (req, res) => {
-  res.redirect(`https://${req.headers.host}${req.url}`);
 });
 
 
