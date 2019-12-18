@@ -93,18 +93,6 @@ app.get('*', function(req, res, next){
 
 
 
-app.use((req, res, next) => {
-  console.log("IN REDIRECT");
-  if(req.protocol === 'http') {
-      res.redirect(301, `https://${req.headers.host}${req.url}`);
-      console.log("AFTER REDIRECT");
-  }
-  next();
-});
-console.log("AFTER GET");
-
-
-
 /*====== ROUTES ======*/
 
 // app.get("*", (req, res) => {
@@ -127,6 +115,16 @@ app.get('/my-curations', function(req, res) {
 app.get('/successful-registration', function(req, res) {
 	res.render('RegisterSuccess');
 });
+
+app.use((req, res, next) => {
+  console.log("IN REDIRECT");
+  if(req.protocol === 'http') {
+      res.redirect(301, `https://${req.headers.host}${req.url}`);
+      console.log("AFTER REDIRECT");
+  }
+  next();
+});
+console.log("AFTER GET");
 
 
 
