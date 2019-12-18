@@ -70,15 +70,15 @@ app.use(bodyParser.json());
 // Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
-  console.log("IN REDIRECT");
-  if(req.protocol === 'http') {
-      res.redirect(`https://${req.headers.host}${req.url}`);
-      console.log("AFTER REDIRECT");
-  }
-  next();
-});
-console.log("AFTER GET");
+// app.use((req, res, next) => {
+//   console.log("IN REDIRECT");
+//   if(req.protocol === 'http') {
+//       res.redirect(`https://${req.headers.host}${req.url}`);
+//       console.log("AFTER REDIRECT");
+//   }
+//   next();
+// });
+// console.log("AFTER GET");
 
 
 /*====== AUTHENTICATION ======*/
