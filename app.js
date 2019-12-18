@@ -172,14 +172,6 @@ function ensureAuthenticated(req, res, next){
   }
 }
 
-app.use((req, res, next) => {
-  if (req.protocol === 'http') {
-    res.redirect(`https://${req.headers.host}${req.url}`);
-  }
-  next();
-})
-
-
 
 /*====== Server setup  ======*/
 let port = process.env.PORT;
@@ -192,6 +184,10 @@ if (port == null || port == "") {
 /*====== Start server  ======*/
 app.listen(port, function(){
   console.log('Server started on port ' + port);
+});
+
+app.get("*", (req, res) => {
+  res.redirect(`https://${req.headers.host}${req.url}`);
 });
 
 
