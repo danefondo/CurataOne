@@ -85,11 +85,11 @@ $(document).ready(function () {
 		$('.showPassContainer').on('click', function() {
 			let input = $(this).siblings('input');
 			if (input.attr('type') === 'text') {
-				$(this).children('.showPass').attr('src', '/images/white-eye.png');
+				$(this).children('.showPass').attr('src', '/images/light-eye-unbox.png');
 				return input.attr('type', 'password');
 			}
 			input.attr('type', 'text');
-			$(this).children('.showPass').attr('src', '/images/white-eye-read.png');
+			$(this).children('.showPass').attr('src', '/images/light-eye-check.png');
 
 		})
 	}
@@ -325,6 +325,7 @@ $(document).ready(function () {
 			},
 			error: function(err) {
 				$('.inputErrorText').empty();
+
 				err.responseJSON.errors.forEach(eachError => {
 					$(`input[name="${eachError.param}"]`).siblings('.inputErrorContainer').children('.inputErrorText').show().text(eachError.msg);
 				});
@@ -332,15 +333,6 @@ $(document).ready(function () {
 				$('.register-button').attr('value', 'Create account');
 				// display error message
 			}
-		})
-	}
-
-	function initLogin() {
-		$('.login-button').on('click', function(){
-
-			$.ajax({
-
-			})
 		})
 	}
 

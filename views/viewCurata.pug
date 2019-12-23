@@ -35,7 +35,7 @@ block heading
 				if (curata.admins.length > 0)
 					each admin in curata.admins
 						if (admin == user.id)
-							a.edit__liveSpace(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id) Edit
+							a.edit__liveSpace(href= '/' + coreURL + '/curatas/' + curata.id) Edit
 			//- p.navlink__liveCurata.recognitionBar__liveCurata.inline #2 Curata this month
 			if user
 				.navlink__liveCurata.upvoteSpace__liveCurata.inline 
@@ -95,13 +95,13 @@ block content
 								.list__liveCurata(id= list.id)
 									each entry in list.entries
 										if (entry.entryState == "Published")
-											.entry__liveCurata(id= entry.id href='/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
-												if (entry.entryLink)
-													a.entryTitle__liveCurata(href= entry.entryLink target="_blank") Link
+											.entry__liveCurata(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
+												//- if (entry.entryLink)
+												//- 	a.entryTitle__liveCurata(href= entry.entryLink target="_blank") Link
 												if (entry.entryTitle)
-														a.entryTitle__liveCurata(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
+														a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
 												else
-														a.entryTitle__liveCurata(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled category
+														a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled category
 												if (entry.entryImageURL)
 													.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
 						//- else

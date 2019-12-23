@@ -2,7 +2,6 @@
 
  	let deletionModal = $('.emptyModal');
  	let userId = $('.userId').attr('id');
-	let username = $('.userId').attr('data-username');
  	const coreURL = 'dashboard';
 
 	function initPasswordConfirmation__accountSettings() {

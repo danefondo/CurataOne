@@ -24,6 +24,7 @@ const accountController = {
 		try {
 			let fail = await accountController.checkIfUserWithValueExists(field, value);
 
+			field = field[0].toUpperCase() + field.substring(1)
 			if (fail) {
 				message = `${field} already taken.`;
 			} else {
@@ -42,7 +43,6 @@ const accountController = {
 	},
 
 	async register(req, res) {
-		console.log('here')
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			console.log('errors')
@@ -55,7 +55,7 @@ const accountController = {
 		const dateCreated = new Date();
 		// code change
 
-		const emailExists = await accountController.checkIfUserWithValueExists('email', email);
+		/*const emailExists = await accountController.checkIfUserWithValueExists('email', email);
 
 
 		if (emailExists) {
@@ -64,7 +64,7 @@ const accountController = {
 					param: 'email', msg: "Email already exists"
 				}]
 			});
-		}
+		}*/
 
 
 		try {

@@ -16,13 +16,13 @@ block content
 			.allCuratas
 				.curataPageTitle All my Spaces
 				if (user.defaultCurataId == none || user.defaultCurataId == undefined || !user.defaultCurataId)
-					a.addNewCurata.alteredNewCurata.blackBackground(href='/' + coreURL + '/' + user.username + '/curatas/curate') 
+					a.addNewCurata.alteredNewCurata.blackBackground(href='/' + coreURL + '/curatas/curate') 
 						.addNewCurataText + New Space
 					.noDefaultCurata
 						p.noDefaultCurataText You have no default Space.
 						p.noDefaultCurataTextSmall If you want the dashboard button to take you to a specific Curata, rather than all of your Curatas, then set your desired Curata as default.
 				else
-					a.addNewCurata.alteredNewCurata(href='/' + coreURL + '/' + user.username + '/curatas/curate')
+					a.addNewCurata.alteredNewCurata(href='/' + coreURL + '/curatas/curate')
 						.addNewCurataText + New Space
 				.searchFilter
 					input#searchFilter(type='text', placeholder='Search for a Space...')
@@ -42,24 +42,24 @@ block content
 					each curata in curatas
 						li.singleCurata
 							.singleCurataBlock
-								a.singleCurataLink(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id)
+								a.singleCurataLink(href='/' + coreURL + '/curatas/' + curata.id)
 								.curata-drop-down
 									.curataDropdown.curata-drop-down__button.unsortable
 										span.component-more ...
 									.curata-drop-down__menu-box.unsortable
 										ul.curata-drop-down__menu
 											li.curata-drop-down__item
-												a.settingsLink(target= '_blank' href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+												a.settingsLink(target= '_blank' href='/' + coreURL + '/curatas/' + curata.id + '/settings') Settings
 											li.curata-drop-down__item
-												a.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
-							a.singleCurataContent(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id)
+												a.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
+							a.singleCurataContent(href='/' + coreURL + '/curatas/' + curata.id)
 								//- if (curata.collaborators && curata.collaborators.length) 
 								//- 	.collabIndicator.collabTooltip
 								//- 		.collabTooltipText 
 								//- 			a.viewCollaborators.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/collaborators') View collaborators
 								.dateCreated(data-date= curata.dateCreated) #{moment(curata.dateCreated).format('MMMM Do YYYY')}
 								.curataLink #{curata.curataName}
-								.curataOwner(data-username= user.username) #{curata.ownerName}
+								.curataOwner(data-userid= user.id) #{curata.ownerName}
 							//- .addressContainer
 							//- 	if (curata.curataCustomDomain && curata.curataCustomDomain.length)
 							//- 		.customDomain(href= 'http://' + curata.curataCustomDomain)
@@ -73,5 +73,5 @@ block content
 				.noCuratas
 					.noCuratasText You have no Spaces.
 					.noCuratasTextSmall Why not create one?
-					a.addNewCurata(href='/' + coreURL + '/' + user.username + '/curatas/curate')
+					a.addNewCurata(href='/' + coreURL + '/curatas/curate')
 						.addNewCurataText + New Space

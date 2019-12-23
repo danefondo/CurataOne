@@ -14,6 +14,7 @@ block content
 			.cancelListCreating x
 			.sectionArea
 				.listChoicesTitle__space Choose list
+				.list__switchList__space Switch List
 				ul.listChoices__space
 					if (curata.curataList && curata.curataList.length)
 						each list in curata.curataList
@@ -83,13 +84,13 @@ block content
 									.list__liveCurata(id= list.id)
 										each entry in list.entries
 											if (entry.entryState == "Published")
-												.entry__liveCurata(id= entry.id href='/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
-													if (entry.entryLink)
-														a.entryTitle__liveCurata(href= entry.entryLink target="_blank") Link
+												.entry__liveCurata(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
+													//- if (entry.entryLink)
+													//- 	a.entryTitle__liveCurata(href= entry.entryLink target="_blank") Link
 													if (entry.entryTitle)
-															a.entryTitle__liveCurata(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
+															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
 													else
-															a.entryTitle__liveCurata(href= '/browse/users/' + username + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled category
+															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled category
 													if (entry.entryImageURL)
 														.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
 							//- else

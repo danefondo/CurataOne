@@ -4,11 +4,10 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
+const enforce = require('express-sslify');
 const passport = require('passport');
 const config = require('./config/database');
 
-const http = require('http');
-const enforce = require('express-sslify');
 // Curata -- modularized content
 
 
@@ -42,22 +41,13 @@ db.on('error', function(err) {
 const app = express();
 app.locals.moment = require('moment');
 
-app.use(enforce.HTTPS({ trustProtoHeader: true }));
+if (process.env.NODE_ENV === 'production') {
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
+}
 
 // Bring in models
 let User = require('./models/user');
-let Curata = require('./models/curata');
-let curataList = require('./models/curataList');
-let Template = require('./models/template');
-let Entry = require('./models/entry');
-let entryComponent = require('./models/entryComponent');
-let ExpiredUser = require('./models/expiredAccount');
-let Image = require('./models/image');
-let Component = require('./models/component');
-let linklistItem = require('./models/linklistItem');
-let ListItem = require('./models/listItem');
-let Note = require('./models/note');
-let Task = require('./models/task');
+
 
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -69,16 +59,6 @@ app.use(bodyParser.json());
 
 // Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
-
-// app.use((req, res, next) => {
-//   console.log("IN REDIRECT");
-//   if(req.protocol === 'http') {
-//       res.redirect(`https://${req.headers.host}${req.url}`);
-//       console.log("AFTER REDIRECT");
-//   }
-//   next();
-// });
-// console.log("AFTER GET");
 
 
 /*====== AUTHENTICATION ======*/
@@ -110,9 +90,6 @@ app.get('*', function(req, res, next){
 
 /*====== ROUTES ======*/
 
-// app.get("*", (req, res) => {
-//   res.redirect(`https://${req.headers.host}${req.url}`);
-// });
 
 // Home route
 app.get('/', function(req, res) {
@@ -130,39 +107,6 @@ app.get('/my-curations', function(req, res) {
 app.get('/successful-registration', function(req, res) {
 	res.render('RegisterSuccess');
 });
-
-
-
-// app.get('/dashboard/curate/templates/:id', ensureAuthenticated, function(req, res) {
-
-// 	// except now the problem is that this will create a new entry EACH TIME it is pulled, whereas it should only happen ONCE
-// 		// next step is setting up questions
-// 	Template.findById(req.params.id, function (err, template) {
-		
-// 		if (err) {
-// 			console.log(err);
-// 			return;
-// 		}
-
-// 		if (template.components.length) {
-
-// 			template.components.sort(function(a, b) {
-// 				return a.componentOrder - b.componentOrder;
-// 			});
-
-// 			for (var i = 0; i < template.components.length; i++) {
-// 				let type = template.components[i].componentType;
-// 				console.log("Component type: ", type);
-
-// 			};
-// 		}
-
-// 		res.render('CurateNew', {
-// 			template: template
-// 		})
-// 	})
-// })
-
 
 
 /*====== ROUTE FILES ======*/
@@ -199,12 +143,14 @@ if (port == null || port == "") {
 }
 
 
+
+
 /*====== Start server  ======*/
 app.listen(port, function(){
   console.log('Server started on port ' + port);
 });
 
-http.createServer(app).listen(app.get('port'), function() {
+/*http.createServer(app).listen(app.get('port'), function() {
     console.log('Express server listening on port ' + app.get('port'));
-});
+});*/
 

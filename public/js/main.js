@@ -129,28 +129,6 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 		$('.cancelListCreating').on('click', function() {
 			creationModal.hide();
 		})
-
-		// $('.createNewTemplate').on('click', function() {
-
-		// 	let curataId = $('.currentCurataSwitch').attr('id');
-		// 	window.location.href = '/' + coreURL + '/' + username +'/curatas/' + curataId + '/templates/newTemplate';
-
-		// 	// $.ajax({
-		// 	// 	data: {
-		// 	// 		curataId: curataId
-		// 	// 	},
-		// 	// 	type: 'POST',
-		// 	// 	url: '/' + coreURL + '/' + username +'/curatas/' + curataId + '/templates/newTemplate',
-		// 	// 	success: function(response) {
-		// 	// 		console.log("Yoho! Successfully created new template!");
-		// 	// 		window.location.href = response.redirectTo;
-		// 	// 	},
-		// 	// 	error: function(err) {
-		// 	// 		console.log("Arrghh! Failed to create template!");
-		// 	// 	}
-		// 	// });
-
-		// })
 	}
 	initAddNewList();
 
@@ -3123,7 +3101,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 						creationTime: creationTime
 					},
 					type: 'POST',
-					url: '/' + coreURL + '/' + username +'/curatas/' + curataId + '/lists/' + listId + '/createNewEntry',
+					url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/createNewEntry',
 					success: function(response) {
 						console.log("Yoho! Successfully created new entry!");
 						window.location.href = response.redirectTo;
@@ -3153,7 +3131,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 					creationTime: creationTime
 				},
 				type: 'POST',
-				url: '/' + coreURL + '/' + username +'/curatas/' + curataId + '/lists/' + listId + '/createNewEntry',
+				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/createNewEntry',
 				success: function(response) {
 					console.log("Yoho! Successfully created new entry!");
 					window.location.href = response.redirectTo;
@@ -3180,7 +3158,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 					creationTime: creationTime
 				},
 				type: 'POST',
-				url: '/' + coreURL + '/' + username +'/curatas/' + curataId + '/lists/' + listId + '/createNewEntry',
+				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/createNewEntry',
 				success: function(response) {
 					console.log("Yoho! Successfully created new entry!");
 					window.location.href = response.redirectTo;
@@ -4459,7 +4437,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 			  url: '/' + coreURL + '/createNewList',
 			  success: function(item){
 			    console.log("List created: ", item);
-			    window.location.href = '/' + coreURL + '/' + username + '/curatas/' + curataId;
+			    window.location.href = '/' + coreURL + '/curatas/' + curataId;
 			    // Display success message?
 			  },
 			  error: function(err){

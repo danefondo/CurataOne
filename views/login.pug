@@ -79,13 +79,15 @@ html
 		if !user
 			.container
 				.account-manager 
-					form.signin-form(method='POST', action='/accounts/login')
+					form.signin-form(method='POST')
+						.inputErrorContainer
+							.inputErrorText
 						.login-title Log in
 						input.login-input(name='username' type='text' placeholder='Username or email' autocomplete="off") 
 						input.login-input(name='password' type='password' placeholder='Password' autocomplete="off")
 						a.forgotPass(href='/accounts/forgotPass') Forgot your password?
 						.submit
-							input(type='submit' value='Log in' class='login-button')
+							input.login-button(type='submit' value='Log in')
 							a.signUpBackup__loginPage(href='/accounts/registerForm') Or create account
 						.successMessage Password has been successfully changed. Log in.
 

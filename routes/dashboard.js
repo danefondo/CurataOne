@@ -525,13 +525,12 @@ Currently they are all entries inside a Curata essentially
 
 
 // Take to Curate page
-router.get('/:username/curatas/curate', ensureAuthenticated, function(req, res) {
+router.get('/curatas/curate', ensureAuthenticated, function(req, res) {
 	res.render('curate');
 })
 
-router.get('/:username/curatas/:curataId', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId', ensureAuthenticated, function(req, res) {
 
-	let username = req.params.username;
 	let curataId = req.params.curataId;
 
 	Curata.find({"owner.owner_id": req.user._id}, function (err, curatas) {
@@ -552,8 +551,7 @@ router.get('/:username/curatas/:curataId', ensureAuthenticated, function(req, re
 				res.render('space__edit', {
 					curatas: curatas,
 					curata: curata,
-					lists: lists,
-					username: username
+					lists: lists
 				})
 				// for each list
 			})
@@ -1695,7 +1693,7 @@ router.post('/RevertEntryToDraft', function(req, res) {
 router.post('/PublishEntry', function(req, res) {
 
 	let entryId = req.body.entryId;
-	let username = req.user.username
+	let userId = req.user._id;
 
 	Entry.findById(entryId, function(err, entry) {
 		if (err) {
@@ -1713,7 +1711,7 @@ router.post('/PublishEntry', function(req, res) {
 			let listId = entry.curataListId;
 			res.json({
 				entry: entry,
-				redirectTo: '/browse/users/' + username + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId
+				redirectTo: '/browse/users/' + userId + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId
 			});
 		});
 	})
@@ -1722,7 +1720,7 @@ router.post('/PublishEntry', function(req, res) {
 router.post('/TrashEntry', function(req, res) {
 
 	let entryId = req.body.entryId;
-	let username = req.user.username
+	let userId = req.user._id;
 
 	Entry.findById(entryId, function(err, entry) {
 		if (err) {
@@ -1741,7 +1739,7 @@ router.post('/TrashEntry', function(req, res) {
 			let listId = entry.curataListId;
 			res.json({
 				entry: entry,
-				redirectTo: '/dashboard/' + username + '/curatas/' + curataId
+				redirectTo: '/dashboard/curatas/' + curataId
 			});
 		});
 
@@ -1751,7 +1749,7 @@ router.post('/TrashEntry', function(req, res) {
 router.post('/DraftEntry', function(req, res) {
 
 	let entryId = req.body.entryId;
-	let username = req.user.username
+	let userId = req.user._id;
 
 	Entry.findById(entryId, function(err, entry) {
 		if (err) {
@@ -1778,7 +1776,7 @@ router.post('/DraftEntry', function(req, res) {
 router.post('/UntrashEntry', function(req, res) {
 
 	let entryId = req.body.entryId;
-	let username = req.user.username
+	let userId = req.user._id;
 
 	Entry.findById(entryId, function(err, entry) {
 		if (err) {
@@ -1802,7 +1800,7 @@ router.post('/UntrashEntry', function(req, res) {
 	})
 })
 
-router.post('/:username/curatas/:curataId/lists/:listId/createNewEntry', ensureAuthenticated, function(req, res) {
+router.post('/curatas/:curataId/lists/:listId/createNewEntry', ensureAuthenticated, function(req, res) {
 
 	let userId = req.user._id;
 	let firstName = req.user.firstname;
@@ -1841,10 +1839,10 @@ router.post('/:username/curatas/:curataId/lists/:listId/createNewEntry', ensureA
 				}
 
 				let entryId = entry._id;
-				let username = req.user.username;
+				let userId = req.user._id;
 				res.json({
 					entry: entry,
-					redirectTo: '/dashboard/' + username + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'
+					redirectTo: '/dashboard/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'
 				});
 			});
 		});
@@ -1891,10 +1889,10 @@ router.post('/curataLists/CreateNewEntry', ensureAuthenticated, function(req, re
 				}
 
 				let entryId = entry._id;
-				let username = req.user.username;
+				let userId = req.user._id;
 				res.json({
 					entry: entry,
-					redirectTo: '/dashboard/' + username + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'
+					redirectTo: '/dashboard/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'
 				});
 			});
 		});
@@ -1902,7 +1900,7 @@ router.post('/curataLists/CreateNewEntry', ensureAuthenticated, function(req, re
 
 });
 
-router.get('/:username/curatas/:curataId/lists/:listId/entries/:id/editing', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/lists/:listId/entries/:id/editing', ensureAuthenticated, function(req, res) {
 
 	// get id for template
 	let entryId = req.params.id;
@@ -2771,7 +2769,7 @@ router.delete('/DeleteEntry', function(req, res) {
 
 });
 
-router.get('/:username/curatas/:curataId/lists/:listId/entries/:entryId/template/:templateId', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/lists/:listId/entries/:entryId/template/:templateId', ensureAuthenticated, function(req, res) {
 
 	// get id for template
 	let templateId = req.params.templateId;
@@ -2963,7 +2961,7 @@ router.get('/drafts/:id', function(req, res) {
 	});
 })
 
-router.get('/:username/curatas/:curataId/lists/:listId/entries/:entryId', function(req, res) {
+router.get('/curatas/:curataId/lists/:listId/entries/:entryId', function(req, res) {
 
 	// get id for template
 	let entryId = req.params.entryId;
@@ -3137,15 +3135,15 @@ router.get('/:username/curatas/:curataId/lists/:listId/entries/:entryId', functi
 // })
 
 // Get all Curatas by user (later by joint users)
-router.get('/:username/curatas', ensureAuthenticated, function(req, res) {
+router.get('/curatas', ensureAuthenticated, function(req, res) {
 
 	// Ensure only owner has access, else render error message
-	if (req.user.username !== req.params.username) {
+	/*if (req.user._id !== req.params.userId) {
 
 		res.render('curatas', {
 			error: "error"
 		})
-	}
+	}*/
 
 	let userId =  req.user._id;
 
@@ -3175,10 +3173,9 @@ router.get('/:username/curatas', ensureAuthenticated, function(req, res) {
 })
 
 // Get the contents of a specific, single Curata of a user  (all the lists)
-router.get('/:username/curatas/:curataId/entries', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/entries', ensureAuthenticated, function(req, res) {
 
 	// get id for template
-	let username = req.params.username;
 	let curataId = req.params.curataId;
 
 		// next step is setting up questions
@@ -3268,10 +3265,9 @@ router.get('/:username/curatas/:curataId/entries', ensureAuthenticated, function
 
 
 // Get all the content of a specific Curata list (all the entries of a list)
-router.get('/:username/curatas/:curataId/lists/:listId', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/lists/:listId', ensureAuthenticated, function(req, res) {
 
 	// get id for template
-	let username = req.params.username;
 	let curataId = req.params.curataId;
 	let listId = req.params.listId;
 
@@ -3342,10 +3338,9 @@ router.get('/:username/curatas/:curataId/lists/:listId', ensureAuthenticated, fu
 })
 
 // Get all the entries of all lists of a Curata
-router.get('/:username/curatas/:curataId/templates', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/templates', ensureAuthenticated, function(req, res) {
 
 	// get id for template
-	let username = req.params.username;
 	let curataId = req.params.curataId;
 	let listId = req.params.listId;
 
@@ -3651,9 +3646,8 @@ router.post('/createNewTemplateWithComponent', function(req, res) {
 })
 
 
-router.get('/:username/curatas/:curataId/templates/newTemplateWithList', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/templates/newTemplateWithList', ensureAuthenticated, function(req, res) {
 
-	let username = req.params.username;
 	let curataId = req.params.curataId;
 
 
@@ -3663,7 +3657,7 @@ router.get('/:username/curatas/:curataId/templates/newTemplateWithList', ensureA
 })
 
 // Get all the entries of all lists of a Curata
-router.get('/:username/curatas/:curataId/collaborators', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/collaborators', ensureAuthenticated, function(req, res) {
 
 	let curataId = req.params.curataId;
 
@@ -3695,7 +3689,7 @@ router.get('/:username/curatas/:curataId/collaborators', ensureAuthenticated, fu
 	});
 })
 
-router.get('/:username/curatas/:curataId/settings', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/settings', ensureAuthenticated, function(req, res) {
 
 	let curataId = req.params.curataId;
 
@@ -3727,7 +3721,7 @@ router.get('/:username/curatas/:curataId/settings', ensureAuthenticated, functio
 	});
 })
 
-router.get('/:username/settings', ensureAuthenticated, function(req, res) {
+router.get('/settings', ensureAuthenticated, function(req, res) {
 
 	res.render('user__accountSettings');
 
@@ -3735,7 +3729,7 @@ router.get('/:username/settings', ensureAuthenticated, function(req, res) {
 
 
 // Get all the entries of all lists of a Curata
-router.get('/:username/curatas/:curataId/files', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/files', ensureAuthenticated, function(req, res) {
 
 	let curataId = req.params.curataId;
 
@@ -3777,7 +3771,7 @@ router.get('/:username/curatas/:curataId/files', ensureAuthenticated, function(r
 })
 
 // Get all the entries of all lists of a Curata
-router.get('/:username/curatas/:curataId/appearance', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/appearance', ensureAuthenticated, function(req, res) {
 
 	let curataId = req.params.curataId;
 
@@ -3810,7 +3804,7 @@ router.get('/:username/curatas/:curataId/appearance', ensureAuthenticated, funct
 })
 
 
-router.get('/:username/curatas/:curataId/lists/:listId/entries/:entryId/template/:templateId', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/lists/:listId/entries/:entryId/template/:templateId', ensureAuthenticated, function(req, res) {
 
 	// get id for template
 	let templateId = req.params.templateId;
@@ -3869,9 +3863,8 @@ router.get('/:username/curatas/:curataId/lists/:listId/entries/:entryId/template
 	})
 })
 
-router.get('/:username/curatas/:curataId/lists/newListFromTemplate/:templateId', ensureAuthenticated, function(req, res) {
+router.get('/curatas/:curataId/lists/newListFromTemplate/:templateId', ensureAuthenticated, function(req, res) {
 
-	let username = req.params.username;
 	let curataId = req.params.curataId;
 	let templateId = req.params.templateId;
 	let template;
@@ -3951,7 +3944,7 @@ router.delete('/deleteList', ensureAuthenticated, function(req, res) {
 
 	let listId = req.body.listId;
 	let curataId = req.body.curataId;
-	let username = req.user.username;
+	let userId = req.user._id;
 
 	if (!listId) {
 		return console.log("No list id.");
@@ -4004,7 +3997,7 @@ router.delete('/deleteList', ensureAuthenticated, function(req, res) {
 									console.log("Curata list entries successfully removed.");
 
 									res.json({
-										redirectTo: '/dashboard/' + username + '/curatas/' + curataId
+										redirectTo: '/dashboard/curatas/' + curataId
 									});
 								}
 							});
@@ -4146,7 +4139,6 @@ router.delete('/deleteAccount', ensureAuthenticated, function(req, res) {
 	let userId = req.user._id;
 	let firstname = req.user.firstname;
 	let lastname = req.user.lastname;
-	let username = req.user.username;
 	let email = req.user.email;
 	let password = req.user.password;
 
@@ -4227,10 +4219,6 @@ router.delete('/deleteAccount', ensureAuthenticated, function(req, res) {
 
 														if (req.user.lastname) {
 															expired.lastname = req.user.lastname;
-														}
-
-														if (req.user.username) {
-															expired.username = req.user.username;
 														}
 
 														if (req.user.email) {

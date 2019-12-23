@@ -17,9 +17,9 @@ router.get('/', function(req, res) {
 })
 
 // Get Curata
-router.get('/users/:username/curatas/:curataId', function(req, res) {
+router.get('/users/:userId/curatas/:curataId', function(req, res) {
 
-	let username = req.params.username;
+	let userId = req.params.userId;
 	let curataId = req.params.curataId;
 
 	Curata.findById(curataId).populate('curataList').exec(function(err, curata) {
@@ -35,7 +35,7 @@ router.get('/users/:username/curatas/:curataId', function(req, res) {
 			res.render('viewCurata', {
 				curata: curata,
 				lists: lists,
-				username: username
+				userId: userId
 			})
 			// for each list
 		})
@@ -171,9 +171,9 @@ router.get('/users/:username/curatas/:curataId', function(req, res) {
 });
 
 // Get Curata lists
-router.get('/users/:username/curatas/:curataId/lists/', function(req, res) {
+router.get('/users/:userId/curatas/:curataId/lists/', function(req, res) {
 	
-	let username = req.params.username;
+	let userId = req.params.userId;
 	let curataId = req.params.curataId;
 
 	Curata.findById(curataId, function(err, curata) {
@@ -189,7 +189,7 @@ router.get('/users/:username/curatas/:curataId/lists/', function(req, res) {
 			res.render('viewCurata', {
 				curata: curata,
 				lists: lists,
-				username: username
+				userId: userId
 			})
 			// for each list
 		})
@@ -197,9 +197,9 @@ router.get('/users/:username/curatas/:curataId/lists/', function(req, res) {
 });
 
 // Get Curata list
-router.get('/users/:username/curatas/:curataId/lists/:curataListId', function(req, res) {
+router.get('/users/:userId/curatas/:curataId/lists/:curataListId', function(req, res) {
 
-	let username = req.params.username;
+	let userId = req.params.userId;
 	let curataId = req.params.curataId;
 	let listId = req.params.curataListId;
 
@@ -222,7 +222,7 @@ router.get('/users/:username/curatas/:curataId/lists/:curataListId', function(re
 			res.render('viewCurata', {
 				curata: curata,
 				list: list,
-				username: username,
+				userId: userId,
 				entry: entry
 			})
 		})
@@ -231,9 +231,9 @@ router.get('/users/:username/curatas/:curataId/lists/:curataListId', function(re
 });
 
 // Get Curata list entries
-router.get('/users/:username/curatas/:curataId/lists/:curataListId/entries', function(req, res) {
+router.get('/users/:userId/curatas/:curataId/lists/:curataListId/entries', function(req, res) {
 
-	let username = req.params.username;
+	let userId = req.params.userId;
 	let curataId = req.params.curataId;
 	let listId = req.params.curataListId;
 
@@ -256,7 +256,7 @@ router.get('/users/:username/curatas/:curataId/lists/:curataListId/entries', fun
 			res.render('viewCurata', {
 				curata: curata,
 				list: list,
-				username: username,
+				userId: userId,
 				entry: entry
 			})
 		})
@@ -264,9 +264,9 @@ router.get('/users/:username/curatas/:curataId/lists/:curataListId/entries', fun
 });
 
 // Get Curata list entries entry
-router.get('/users/:username/curatas/:curataId/lists/:curataListId/entries/:entryId', function(req, res) {
+router.get('/users/:userId/curatas/:curataId/lists/:curataListId/entries/:entryId', function(req, res) {
 
-	let username = req.params.username;
+	let userId = req.params.userId;
 	let curataId = req.params.curataId;
 	let listId = req.params.curataListId;
 	let entryId = req.params.entryId;
@@ -295,7 +295,7 @@ router.get('/users/:username/curatas/:curataId/lists/:curataListId/entries/:entr
 				res.render('entry__view', {
 					curata: curata,
 					list: list,
-					username: username,
+					userId: userId,
 					entry: entry
 				})
 			})
@@ -420,17 +420,12 @@ router.get('/users', function(req, res) {
 });
 
 // Get Curata list entries entry
-router.get('/users/:username', function(req, res) {
+router.get('/users/:userId', function(req, res) {
 
 });
 
 // Get Curata list entries entry
-router.get('/users/:username/curatas', function(req, res) {
-
-});
-
-// Get Curata list entries entry
-router.get('/users/:username/', function(req, res) {
+router.get('/users/:userId/curatas', function(req, res) {
 
 });
 

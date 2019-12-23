@@ -35,11 +35,11 @@ html
 				.navlinks-container
 					// show menu items based on what the user has (used) and their settings
 					if (user.defaultCurataId && user.defaultCurataId !== "N/A")
-						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas/' + user.defaultCurataId) Dashboard
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/curatas/' + user.defaultCurataId) Dashboard
 					else 
-						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas') Dashboard
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/curatas') Dashboard
 					//- a.topNavigationLink__topBar(href='/browse') Browse
-					a.topNavigationLink__topBar(href= '/' + coreURL + '/' + user.username + '/curatas') My Spaces
+					a.topNavigationLink__topBar(href= '/' + coreURL + '/curatas') My Spaces
 				.logout-container
 					.DropdownX
 						.Dropdown-profile
@@ -47,8 +47,7 @@ html
 							.Photo
 								+profileIcon
 							//- img.Photo(src='https://img.icons8.com/pastel-glyph/64/ffffff/gender-neutral-user.png')
-							.userId(id= user.id, data-username= user.username) 
-							//- span.Name.userId(id= user.id, data-username= user.username) #{user.firstname}
+							.userId(id= user.id) 
 							//- span.MenuIcon
 							//- 	span.MenuIcon-line
 							//- 	span.MenuIcon-line
@@ -56,7 +55,7 @@ html
 						nav.Dropdown-nav.SettingsNav
 							ul.Dropdown-group
 								li
-									a.entypo-newspaper.NavLinkX(href= '/' + coreURL + '/' + user.username + '/curatas') My spaces
+									a.entypo-newspaper.NavLinkX(href= '/' + coreURL + '/curatas') My spaces
 									a.entypo-plus.OptionLink(href='#')
 								//- li
 								//- 	a.entypo-newspaper.NavLinkX(href='#') Profile
@@ -64,7 +63,7 @@ html
 								//- 	a.entypo-docs.NavLinkX.Upgrade(href='#') Upgrade
 								//- 	a.entypo-plus.OptionLink(href='#')
 								li
-									a.entypo-archive.NavLinkX(href='/' + coreURL + '/' + user.username + '/settings') Account settings
+									a.entypo-archive.NavLinkX(href='/' + coreURL + '/settings') Account settings
 									a.entypo-plus.OptionLink(href='#')
 								li
 									a.entypo-logout.NavLinkX(href='/accounts/logout') Logout

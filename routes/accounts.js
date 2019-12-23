@@ -54,10 +54,17 @@ router.get('/verify/:verificationToken', function(req, res, next) {
 
 // Login
 router.post('/login', function(req, res, next){
-  passport.authenticate('local', {
-    successRedirect:'/',
-    failureRedirect:'/'
-    // failureFlash: true
+  passport.authenticate('local', function(err, user, info) {
+  	if (err) { return next(err) }
+  	if (!user) { 
+  		return res.status(401).send({ error: "Your username and/or password is incorrect." });
+  		// return res.json({ error: "Your username and/or password is incorrect."});
+  	}
+  	req.logIn(user, function(err) {
+  		if (err) { return next(err) }
+  		return res.status(200).send({ redirectURL: '/'});
+  		// return res.redirect('/');
+  	});
   })(req, res, next);
 });
 

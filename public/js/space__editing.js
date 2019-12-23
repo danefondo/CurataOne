@@ -45,28 +45,6 @@
 		$('.cancelListCreating').on('click', function() {
 			creationModal.hide();
 		})
-
-		// $('.createNewTemplate').on('click', function() {
-
-		// 	let curataId = $('.currentCurataSwitch').attr('id');
-		// 	window.location.href = '/' + coreURL + '/' + username +'/curatas/' + curataId + '/templates/newTemplate';
-
-		// 	// $.ajax({
-		// 	// 	data: {
-		// 	// 		curataId: curataId
-		// 	// 	},
-		// 	// 	type: 'POST',
-		// 	// 	url: '/' + coreURL + '/' + username +'/curatas/' + curataId + '/templates/newTemplate',
-		// 	// 	success: function(response) {
-		// 	// 		console.log("Yoho! Successfully created new template!");
-		// 	// 		window.location.href = response.redirectTo;
-		// 	// 	},
-		// 	// 	error: function(err) {
-		// 	// 		console.log("Arrghh! Failed to create template!");
-		// 	// 	}
-		// 	// });
-
-		// })
 	}
 	initAddNewList();
 
@@ -84,7 +62,7 @@
 					curataId: curataId
 				},
 				type: 'POST',
-				url: '/' + coreURL + '/' + username +'/curatas/' + curataId + '/lists/' + listId + '/createNewEntry',
+				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/createNewEntry',
 				success: function(response) {
 					console.log("Yoho! Successfully created new entry!");
 					window.location.href = response.redirectTo;

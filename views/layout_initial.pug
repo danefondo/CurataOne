@@ -29,11 +29,11 @@ html
 				.navlinks-container
 					// show menu items based on what the user has (used) and their settings
 					if (user.defaultCurataId && user.defaultCurataId !== "N/A")
-						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas/' + user.defaultCurataId) Dashboard
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/curatas/' + user.defaultCurataId) Dashboard
 					else 
-						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas') Dashboard
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/curatas') Dashboard
 					//- a.topNavigationLink__topBar(href='/browse') Browse
-					a.topNavigationLink__topBar(href= '/' + coreURL + '/' + user.username + '/curatas') My Spaces
+					a.topNavigationLink__topBar(href= '/' + coreURL + '/' + '/curatas') My Spaces
 				.logout-container
 					//- #create.drop-down
 					//- 	#create-button.dropDown.drop-down__button.unsortable
