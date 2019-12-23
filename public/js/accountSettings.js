@@ -201,15 +201,15 @@
 
 
 	function initClearInputs__accountSettings() {
-		$('*[data-fieldtype="username"]').off('keyup');
-		$('*[data-fieldtype="username"]').on('keyup', function(event) {
-			$(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
-		})
+		// $('*[data-fieldtype="username"]').off('keyup');
+		// $('*[data-fieldtype="username"]').on('keyup', function(event) {
+		// 	$(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
+		// })
 
-		$('*[data-fieldtype="firstName"], *[data-fieldtype="lastName"]').off('keypress');
-		$('*[data-fieldtype="firstName"], *[data-fieldtype="lastName"]').on('keypress', function(event) {
-			$(this).val($(this).val().replace(/[a-zA-Z \á-\ÿ]+/g, ''));
-		})
+		// $('*[data-fieldtype="firstName"], *[data-fieldtype="lastName"]').off('keypress');
+		// $('*[data-fieldtype="firstName"], *[data-fieldtype="lastName"]').on('keypress', function(event) {
+		// 	$(this).val($(this).val().replace(/[a-zA-Z \á-\ÿ]+/g, ''));
+		// })
 
 		$('*[data-fieldtype="username"]').off('keypress');
 		$('*[data-fieldtype="username"]').on('keypress', function(event) {
@@ -219,11 +219,11 @@
 			}
 		})
 
-		$('*[data-fieldtype="username"], *[data-fieldtype="firstName"], *[data-fieldtype="lastName"]'
-			).on('keypress', function(event) {
-		    if(event.which === 32) 
-		        return false;
-		});
+		// $('*[data-fieldtype="username"], *[data-fieldtype="firstName"], *[data-fieldtype="lastName"]'
+		// 	).on('keypress', function(event) {
+		//     if(event.which === 32) 
+		//         return false;
+		// });
 	}
 	initClearInputs__accountSettings();
 

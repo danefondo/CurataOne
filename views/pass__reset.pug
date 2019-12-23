@@ -30,10 +30,12 @@ html
 			.container
 				.account-manager 
 					form.form__resetPass(method='POST')
+						.inputErrorContainer
+							.inputErrorText
 						.form__title Reset password
 						.subtitle__resetPass Enter your new password. 
-						input.input__general(name='password' type='password' placeholder='New password' autocomplete="off") 
-						input.input__general(name='passcheck' type='password' placeholder='Confirm password' autocomplete="off") 
+						input.input__general(name='password' type='password' placeholder='New password' autocomplete="off")
+						input.input__general(name='passcheck' type='password' placeholder='Confirm password' autocomplete="off")
 						.submit
 							input.button__resetPass(type='submit' value='Submit')
 

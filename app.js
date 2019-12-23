@@ -120,6 +120,10 @@ app.use('/accounts', accounts);
 app.use('/browse', browse);
 app.use('/public', public);
 app.use('/dashboard', dashboard);
+
+app.get('*', function(req, res) {
+  res.render('404');
+});
 //comment
 
 

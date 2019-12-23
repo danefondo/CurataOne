@@ -43,18 +43,18 @@ block content
 					each space in curatas
 						if (space.id !== curata.id)
 							li.drop-down__item3.drop-down-extra-styling
-								a.curata-link(href='/' + coreURL + '/' + user.username + '/curatas/' + space.id) #{space.curataName}
-		a.curataName(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+								a.curata-link(href='/' + coreURL + '/curatas/' + space.id) #{space.curataName}
+		a.curataName(href= '/' + coreURL + '/curatas/' + curata.id) #{curata.curataName}
 		.goToAllCuratas
-			a.allCuratasLink(href='/' + coreURL + '/' + user.username + '/curatas') View all my Spaces
+			a.allCuratasLink(href='/' + coreURL + '/curatas') View all my Spaces
 		a.viewCurataLive(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
 		//- if curata exists & selected, display 
 		ul.sideNavButtons
 			li.sideNavLinkContainer
-				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id) Space
-				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/entries') Entries
-				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/appearance') Appearance
-				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+				a.sidelink.size18.block(href='/' + coreURL + '/curatas/' + curata.id) Space
+				a.sidelink.size18.block(href='/' + coreURL + '/curatas/' + curata.id + '/entries') Entries
+				a.sidelink.size18.block(href='/' + coreURL + '/curatas/' + curata.id + '/appearance') Appearance
+				a.sidelink.size18.block(href='/' + coreURL + '/curatas/' + curata.id + '/settings') Settings
 	.sections__liveSpace
 		.helperNavigation
 			.navlinksContainer__liveCurata

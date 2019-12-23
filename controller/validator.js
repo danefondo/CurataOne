@@ -29,5 +29,17 @@ module.exports = {
             }
         }),
 
+	],
+
+	reset: [
+		 check('password').isLength({ min: 8 })
+		 	.withMessage('Password must be at least 8 chars long'),
+		 check('passcheck').custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error("Passwords don't match");
+            } else {
+                return value;
+            }
+        }),
 	]
 }

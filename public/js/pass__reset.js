@@ -12,13 +12,13 @@ $(document).ready(function () {
 			event.preventDefault();
 			let password = $('input[name="password"]').val();
 			let passcheck = $('input[name="passcheck"]').val();
-			if (password !== passcheck) {
-				return alert('Passwords do not match');
-			}
+			$('.button__resetPass').attr('disabled', 'disabled');
+			$('.button__resetPass').attr('value', 'Processing...');
 			$.ajax({
 				type: 'POST',
 				data: {
 					password,
+					passcheck,
 					token: getToken()
 				},
 				url: '/accounts/reset',
@@ -26,7 +26,11 @@ $(document).ready(function () {
 					window.location.replace('/accounts/loginForm?reset');
 				},
 				error: function(err) {
-					console.log("err: ", err);
+					$('.inputErrorText').empty();
+					//err.responseJSON.errors
+					$('.inputErrorText').show().text(err.responseJSON.err);
+					$('.button__resetPass').removeAttr('disabled');
+					$('.button__resetPass').attr('value', 'Submit');
 					// display error message
 				}
 			})

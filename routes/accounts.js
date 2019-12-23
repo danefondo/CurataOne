@@ -192,33 +192,6 @@ router.get('/reset/:token', async function(req, res) {
 })
 
 
-router.post('/reset/', async function({ body: { token, password } }, res) {
-	try {
-		const user = await User.findOne({
-			resetToken: token
-		});
-
-		if (!user) {
-			return res.status(400).json({
-				message: 'Invalid token'
-			});
-		}
-
-		user.password = await accountUtil.hashPassword(password)
-		user.resetToken = null;
-
-		await user.save();
-		res.status(200).json({
-			message: 'Password reset was successful, please login'
-		});
-	} catch(error) {
-		console.log(error);
-		res.status(500).json({
-			message: 'An error occurred'
-		});
-	}
- 	
-
-})
+router.post('/reset/', validator.reset, accountController.resetPassword)
 
 module.exports = router;

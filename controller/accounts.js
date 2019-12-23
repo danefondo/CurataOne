@@ -55,17 +55,6 @@ const accountController = {
 		const dateCreated = new Date();
 		// code change
 
-		/*const emailExists = await accountController.checkIfUserWithValueExists('email', email);
-
-
-		if (emailExists) {
-			return res.status(400).json({
-				errors: [{
-					param: 'email', msg: "Email already exists"
-				}]
-			});
-		}*/
-
 
 		try {
 			const verificationToken = await accountUtil.generateToken();
@@ -102,6 +91,47 @@ const accountController = {
 		} catch(err) {
 			console.log(err);
 		}
+	},
+
+	async resetPassword(req, res) {
+		const { body: { token, password } } = req;
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			console.log('errors')
+		    return res.status(422).json({ err: errors.array()[0].msg });
+		}
+		try {
+			const user = await User.findOne({
+				resetToken: token
+			});
+
+			if (!user) {
+				/*
+				return res.status(400).json({
+				errors: [{
+					param: 'email', msg: "Email already exists"
+				}]
+			});
+				*/
+				return res.status(400).json({
+					err: 'Invalid password reset link'
+				});
+			}
+
+			user.password = await accountUtil.hashPassword(password)
+			user.resetToken = null;
+
+			await user.save();
+			res.status(200).json({
+				message: 'Password reset was successful, please login'
+			});
+		} catch(error) {
+			console.log(error);
+			res.status(500).json({
+				message: 'An error occurred'
+			});
+		}
+
 	}
 };
 
