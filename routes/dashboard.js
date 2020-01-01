@@ -548,7 +548,7 @@ router.get('/curatas/:curataId', ensureAuthenticated, function(req, res) {
 					return console.log("Could not get lists.", err)
 				}
 
-				res.render('space__edit', {
+				res.render('dashboard__space', {
 					curatas: curatas,
 					curata: curata,
 					lists: lists
@@ -1700,7 +1700,9 @@ router.post('/PublishEntry', function(req, res) {
 			return console.log("Could not find entry: ", err);
 		}
 
-		entry.entryState = "Published";
+		if (entry.entryState == "Draft") {
+			entry.entryState = "Published";
+		}
 
 		entry.save(function(err){
 			if (err) { 
@@ -1798,6 +1800,150 @@ router.post('/UntrashEntry', function(req, res) {
 			});
 		});
 	})
+})
+
+
+router.post('/curatas/:curataId/lists/:listId/newDraft', ensureAuthenticated, function(req, res) {
+
+	let userId = req.user._id;
+	// let firstName = req.user.firstname;
+	// let lastName = req.user.lastname;
+	let creationTime = req.body.creationTime;
+	let curataId = req.body.curataId;
+	let listId = req.body.listId;
+
+	let entryTitle = req.body.entryTitle;
+	let entryDescription = req.body.entryDescription;
+	let entryLink = req.body.entryLink;
+	let imageKey = req.body.imageKey;
+	let imageURL = req.body.imageURL;
+
+	// next step is setting up questions
+
+	let entry = new Entry();
+	entry.entryState = "Draft";
+	// entry.linkedTemplateId = template._id;
+	entry.curataListId = listId;
+	entry.curataId = curataId;
+	entry.dateCreated = creationTime;
+	entry.creator.creator_id = userId;
+	// entry.creator.firstName = firstName;
+	// entry.creator.lastName = lastName;
+	// entry.owner.firstName = firstName;
+	// entry.owner.lastName = lastName
+	entry.owner.owner_id = userId;
+	entry.contributors.push(userId);
+	entry.entryTitle = entryTitle;
+	entry.entryDescription = entryDescription;
+	entry.entryLink = entryLink;
+	entry.entryImageKey = imageKey;
+	entry.entryImageURL = imageURL;
+
+	entry.save(function(err){
+		if (err) { 
+			return console.log("Entry saving error: ", err);
+		}
+
+		curataList.findById(listId, function(err, cList) {
+			cList.entries.push(entry._id);
+
+			cList.save(function(err) {
+				if (err) {
+					return console.log("curataList save failed: ", err);
+				}
+
+				let entryId = entry._id;
+				let userId = req.user._id;
+				res.json({
+					entry: entry,
+					entryId: entryId
+				});
+			});
+		});
+	});
+})
+
+router.post('/curatas/:curataId/lists/:listId/:entryId/publish', ensureAuthenticated, function(req, res) {
+
+	let entryId = req.params.entryId;
+
+	Entry.findById(entryId, function(err, entry) {
+		if (err) {
+			return console.log("Could not find entry: ", err);
+		}
+
+		if (entry.entryState == "Draft") {
+			entry.entryState = "Published";
+		}
+
+		entry.save(function(err){
+			if (err) { 
+				return console.log("Entry save failed: ", err);
+			}
+			
+			res.json({
+				entry: entry
+			});
+		});
+	})
+})
+
+router.post('/curatas/:curataId/lists/:listId/newEntry', ensureAuthenticated, function(req, res) {
+
+	let userId = req.user._id;
+	// let firstName = req.user.firstname;
+	// let lastName = req.user.lastname;
+	let creationTime = req.body.creationTime;
+	let curataId = req.body.curataId;
+	let listId = req.body.listId;
+
+	let entryTitle = req.body.entryTitle;
+	let entryDescription = req.body.entryDescription;
+	let entryLink = req.body.entryLink;
+	// let entryImage = "";
+
+	// next step is setting up questions
+
+	let entry = new Entry();
+	entry.entryState = "Published";
+	// entry.linkedTemplateId = template._id;
+	entry.curataListId = listId;
+	entry.curataId = curataId;
+	entry.dateCreated = creationTime;
+	entry.creator.creator_id = userId;
+	// entry.creator.firstName = firstName;
+	// entry.creator.lastName = lastName;
+	// entry.owner.firstName = firstName;
+	// entry.owner.lastName = lastName
+	entry.owner.owner_id = userId;
+	entry.contributors.push(userId);
+	entry.entryTitle = entryTitle;
+	entry.entryDescription = entryDescription;
+	entry.entryLink = entryLink;
+
+	entry.save(function(err){
+		if (err) { 
+			return console.log("Entry saving error: ", err);
+		}
+
+		curataList.findById(listId, function(err, cList) {
+			cList.entries.push(entry._id);
+
+			cList.save(function(err) {
+				if (err) {
+					return console.log("curataList save failed: ", err);
+				}
+
+				let entryId = entry._id;
+				let userId = req.user._id;
+				res.json({
+					entry: entry,
+					entryId: entryId
+				});
+			});
+		});
+	});
+	
 })
 
 router.post('/curatas/:curataId/lists/:listId/createNewEntry', ensureAuthenticated, function(req, res) {

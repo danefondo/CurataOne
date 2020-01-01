@@ -23,7 +23,7 @@ block heading
 	- var coreURL = 'dashboard';
 	.helperNavigation
 		.topnav-container
-			a.goBack.navlink(href= '/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) &larr;
+			a.goBack.navlink(href= '/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) &larr;
 			.entryMetaTitle Editing entry
 			.statusMessage.inline
 			if (entry.entryState == "Trashed")
@@ -37,7 +37,7 @@ block heading
 					if (entry.entryState == "Draft") 
 						.publishEntry.inline Publish
 					if (entry.entryState == "Published")
-						a.viewLive(target= "_blank" href= '/browse/users/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id) View live
+						a.viewLive(target= "_blank" href= '/browse/users/' + user.id + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id) View live
 			else
 				.floatUntrash
 					.untrashEntry.buttonGrey.inline
@@ -66,7 +66,7 @@ block content
 					.entrySettingsBlock
 						.makeDraft Revert to draft
 				//- .entrySettingsBlock
-				//- 	a.editTemplate.whiteButton(href= '/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/template/' + entry.linkedTemplateId) Edit template
+				//- 	a.editTemplate.whiteButton(href= '/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/template/' + entry.linkedTemplateId) Edit template
 			.entrySettingsDelete
 				.entrySettingsBlock
 					if (entry.entryState !== "Trashed")

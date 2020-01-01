@@ -31,9 +31,9 @@ html
 				.navlinks-container
 					// show menu items based on what the user has (used) and their settings
 					if (user.defaultCurataId && user.defaultCurataId !== "N/A")
-						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas/' + user.defaultCurataId) Dashboard
+						a.dashboardBtn.topNavigationLink__topBar(href='/' + coreURL + '/curatas/' + user.defaultCurataId) Dashboard
 					else 
-						a.topNavigationLink__topBar(href='/' + coreURL + '/' + user.username + '/curatas') Dashboard
+						a.topNavigationLink__topBar(href='/' + coreURL + '/curatas') Dashboard
 					a.topNavigationLink__topBar(href='/browse') Browse
 					a.topNavigationLink__topBar(href='/library') Library
 				.logout-container
@@ -48,7 +48,7 @@ html
 									a.entypo-docs.NavLinkX(href='#') New list
 								li
 									a.entypo-docs.NavLinkX(href='#') New Curata
-					a.navlink(href='/' + coreURL + '/' + user.username + '/curatas') My Curatas
+					a.navlink(href='/' + coreURL + '/curatas') My Curatas
 					.DropdownX
 						.Dropdown-profile
 							//- img.Photo(src='//s3-us-west-2.amazonaws.com/s.cdpn.io/33381/profile/profile-80.jpg?1')
@@ -63,7 +63,7 @@ html
 						nav.Dropdown-nav.SettingsNav
 							ul.Dropdown-group
 								li
-									a.entypo-newspaper.NavLinkX(href= '/' + coreURL + '/' + user.username + '/curatas') View all my Curatas
+									a.entypo-newspaper.NavLinkX(href= '/' + coreURL + '/curatas') View all my Curatas
 									a.entypo-plus.OptionLink(href='#')
 								li
 									a.entypo-newspaper.NavLinkX(href='#') Profile

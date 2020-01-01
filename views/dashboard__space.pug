@@ -1,4 +1,4 @@
-extends layout_public
+extends layout__dashboard
 
 include entryDesigns/entryOne
 include images/filledArrow
@@ -8,24 +8,81 @@ block heading
 	- var coreURL = 'dashboard';
 block content
 	- var coreURL = 'dashboard';
+	//- .emptyModal
+	//- 	.modalBackground
+	//- 	.createEntryModal__space
+	//- 		.cancelListCreating x
+	//- 		.sectionArea
+	//- 			.listChoicesTitle__space Choose list
+	//- 			.list__switchList__space Switch List
+	//- 			ul.listChoices__space
+	//- 				if (curata.curataList && curata.curataList.length)
+	//- 					each list in curata.curataList
+	//- 						.listChoicesContainer__space(data-id= list.id)
+	//- 							.listChoice__space
+	//- 								.listChoiceLink__space
+	//- 									if (list.listName && list.listName.length)
+	//- 										.listName__space #{list.listName}
+	//- 									else
+	//- 										.listName__space Untitled list
+	//- 									.addEntry__space + add new entry
 	.emptyModal
 		.modalBackground
 		.createEntryModal__space
-			.cancelListCreating x
+			.createEntryModalActions__space
+				.entryFull__space.createEntryModalActionButton__space Full page editor
+				.entrySwitch__space.createEntryModalActionButton__space Switch list
+				.entryClear__space.createEntryModalActionButton__space Clear
+				.entrySaveAsDraft__space.createEntryModalActionButton__space Save draft
+				.cancelListCreating x
 			.sectionArea
-				.listChoicesTitle__space Choose list
-				.list__switchList__space Switch List
-				ul.listChoices__space
-					if (curata.curataList && curata.curataList.length)
-						each list in curata.curataList
-							.listChoicesContainer__space(data-id= list.id)
-								.listChoice__space
-									.listChoiceLink__space
-										if (list.listName && list.listName.length)
-											.listName__space #{list.listName}
-										else
-											.listName__space Untitled list
-										.addEntry__space + add new entry
+				.entryContainerTitle__space New entry
+				.modalEntryId
+				.entryContainer__space
+					.entryDetails
+						.entryComponentTitle Category
+						.entryDetailsGroup.entryDetailsGroupSpecial.flex
+							select
+								option(value="" data-display-text="Select category: ") None
+								each list in curata.curataList
+									if (list.listName && list.listName.length)
+										option(value=list.id) #{list.listName}
+									else
+										option(value=list.id) Untitled list
+							.entryNewCategory__space + Category
+							.entryCreateCategoryBlock__space
+								input.entryNewCategoryText__space(placeholder="Write your category")
+								.entryNewCategoryCreate__space Create
+								.entryNewCategoryCancel__space X
+						.entryComponentTitle Title
+						.entryDetailsGroup
+							input.EntryTitle(placeholder= "Your title")
+						.entryComponentTitle Summary
+						.entryDetailsGroup
+							.mainEditor
+								textarea.postDescription(maxlength="100" placeholder="Write a short summary of less than 100 characters.")
+						.entryComponentTitle Link
+						.entryDetailsGroup
+							.linkContainer
+								input.entryLink(placeholder="http://example.com")
+								a.entryLinkPreview.hidden(href="#" target="_blank")
+									+externalLink
+						.entryComponentTitle Image
+						.entryDetailsGroup
+							.mainImage(id= "imageArea_")
+								.file-upload.imageBlock(data-type="mainImage")
+									form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
+										input#file-input.file-upload-input(type='file', name='image', accept='image/jpg')
+										.drag-text
+											button.file-upload-btn(type='button') Add Image
+											h3 Or just drag and drop a file
+									.file-upload-content
+										img.file-upload-image(src='#', alt='your image')
+										.image-title-wrap
+											button.remove-image(type='button')
+												| Remove 
+												span.image-title Uploaded Image
+				.createEntry__space Create entry
 	//- if public, show | if not, display message
 	.curataId(id= curata.id)
 	if user
@@ -47,7 +104,7 @@ block content
 		a.curataName(href= '/' + coreURL + '/curatas/' + curata.id) #{curata.curataName}
 		.goToAllCuratas
 			a.allCuratasLink(href='/' + coreURL + '/curatas') View all my Spaces
-		a.viewCurataLive(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+		a.viewCurataLive(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 		//- if curata exists & selected, display 
 		ul.sideNavButtons
 			li.sideNavLinkContainer
@@ -90,7 +147,7 @@ block content
 													if (entry.entryTitle)
 															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
 													else
-															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled category
+															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled entry
 													if (entry.entryImageURL)
 														.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
 							//- else
@@ -104,3 +161,4 @@ block content
 
 block scripts
 	script(src='/js/space__editing.js')
+	script(src='/js/customSelect.js')

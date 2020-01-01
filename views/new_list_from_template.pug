@@ -4,7 +4,7 @@ block heading
 	- var coreURL = 'dashboard';
 	.helperNavigation
 		.navlinks-container
-			a.navlink(href='/' + coreURL + '/' + user.username + '/curatas/' + curataId) &larr; Back to lists
+			a.navlink(href='/' + coreURL + '/curatas/' + curataId) &larr; Back to lists
 			//- a.navlink Cancel
 			p.messageUpdate.inline
 
@@ -25,7 +25,7 @@ block content
 		.createModal.templateArchives.z-index1200
 			.cancelListCreating x
 			.big-content-wrapper.wrapperWidth
-				//- a.createNewTemplate(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/templates/newTemplateWithList')
+				//- a.createNewTemplate(href= '/' + coreURL + '/curatas/' + curata.id + '/templates/newTemplateWithList')
 					.createNewTemplateText + Create new template
 				.msg-title Archived components of your template by component type
 				//- For each componentType, create one div with that componentType name

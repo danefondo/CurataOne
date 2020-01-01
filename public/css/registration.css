@@ -118,10 +118,7 @@
 	box-shadow: 4px 5px 0px 0px #e6e6e6;
 }
 
-.input__registration-focus {
-	transform: scale(1.02);
-/*	background-color: #f5f5f5 !important;*/
-	border: 1px solid #ececec;
+.input__registration:focus {
 	border-left: 3px solid #673ab7;
 }
 

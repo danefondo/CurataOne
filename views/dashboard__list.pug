@@ -45,9 +45,9 @@ block content
 			.entrySettingsBlock
 				// links to owners / creators' profiles
 				.smallText__listSettings Created by: 
-					a.name__listSettings(href= '/profiles/' + user.username) #{list.creator.firstName} #{list.creator.lastName}
+					a.name__listSettings(href= '/profiles/' + user.id) #{list.creator.firstName} #{list.creator.lastName}
 				.smallText__listSettings Owner: 
-					a.name__listSettings(href= '/profiles/' + user.username) #{list.owner.firstName} #{list.owner.lastName}
+					a.name__listSettings(href= '/profiles/' + user.id) #{list.owner.firstName} #{list.owner.lastName}
 		.entrySettingsDelete
 			.entrySettingsBlock
 					.permaDeleteList.buttonGrey.inline
@@ -66,18 +66,18 @@ block content
 					each space in curatas
 						if (space.id !== curata.id)
 							li.drop-down__item3.drop-down-extra-styling
-								a.curata-link(href='/' + coreURL + '/' + user.username + '/curatas/' + space.id) #{space.curataName}
-		a.curataName(href= '/' + coreURL + '/' + user.username + '/curatas/' + curata.id) #{curata.curataName}
+								a.curata-link(href='/' + coreURL + '/curatas/' + space.id) #{space.curataName}
+		a.curataName(href= '/' + coreURL + '/curatas/' + curata.id) #{curata.curataName}
 		.goToAllCuratas
-			a.allCuratasLink(href='/' + coreURL + '/' + user.username + '/curatas') View all my Spaces
+			a.allCuratasLink(href='/' + coreURL + '/curatas') View all my Spaces
 		//- if curata exists & selected, display 
-		a.viewCurataLive(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+		a.viewCurataLive(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 		ul.sideNavButtons
 			li.sideNavLinkContainer
-				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id) Space
-				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/entries') Entries
+				a.sidelink.size18.block(href='/' + coreURL + '/curatas/' + curata.id) Space
+				a.sidelink.size18.block(href='/' + coreURL + '/curatas/' + curata.id + '/entries') Entries
 				a.sidelink.size18.block Appearance
-				a.sidelink.size18.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/settings') Settings
+				a.sidelink.size18.block(href='/' + coreURL + '/curatas/' + curata.id + '/settings') Settings
 	.entriesContainer.sideNavMargin(id= list.id data-curataId= list.curataId)
 		.entriesTitleArea
 			if (list.listName)
@@ -117,7 +117,7 @@ block content
 							each entry in list.entries
 								if (entry.entryTitle)
 									li.singleList(data-id= entry.id)
-										a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+										a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
 										if (entry.entryState == "Draft")
 											.draftIndicator
 												p Draft
@@ -132,9 +132,9 @@ block content
 													if (entry.entryState !== "Trashed")
 														if (entry.entryState == "Published")
 															li.entry-drop-down__item
-																a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 														li.entry-drop-down__item
-															a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+															a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 														if (entry.entryState == "Published")
 															li.entry-drop-down__item
 																a.dropLink.instaDraftEntry Make draft
@@ -142,7 +142,7 @@ block content
 															a.dropLink.instaTrashEntry Trash
 													else
 														li.entry-drop-down__item
-															a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+															a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
 														li.entry-drop-down__item
 															a.dropLink.instaUntrashEntry Untrash
 														li.entry-drop-down__item
@@ -155,7 +155,7 @@ block content
 												.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
 								else
 									li.singleList(data-id= entry.id)
-										a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
+										a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
 										if (entry.entryState == "Draft")
 											.draftIndicator
 												p Draft
@@ -170,9 +170,9 @@ block content
 													if (entry.entryState !== "Trashed")
 														if (entry.entryState == "Published")
 															li.entry-drop-down__item
-																a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 														li.entry-drop-down__item
-															a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+															a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 														if (entry.entryState == "Published")
 															li.entry-drop-down__item
 																a.dropLink.instaDraftEntry Make draft
@@ -180,7 +180,7 @@ block content
 															a.dropLink.instaTrashEntry Trash
 													else
 														li.entry-drop-down__item
-															a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+															a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
 														li.entry-drop-down__item
 															a.dropLink.instaUntrashEntry Untrash
 														li.entry-drop-down__item
@@ -208,7 +208,7 @@ block content
 										if (entry.entryState == "Published")
 											if (entry.entryTitle)
 												li.singleList(data-id= entry.id)
-													a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+													a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
 													.entry-drop-down
 														.entryDropdown.entry-drop-down__button.unsortable
 															span.component-more ...
@@ -217,9 +217,9 @@ block content
 																if (entry.entryState !== "Trashed")
 																	if (entry.entryState == "Published")
 																		li.entry-drop-down__item
-																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		a.dropLink.viewEntry(href='/' + coreURL +  '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 																	if (entry.entryState == "Published")
 																		li.entry-drop-down__item
 																			a.dropLink.instaDraftEntry Make draft
@@ -227,7 +227,7 @@ block content
 																		a.dropLink.instaTrashEntry Trash
 																else
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
 																	li.entry-drop-down__item
 																		a.dropLink.instaUntrashEntry Untrash
 																	li.entry-drop-down__item
@@ -240,7 +240,7 @@ block content
 															.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
 											else
 												li.singleList(data-id= entry.id)
-													a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
+													a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
 													.entry-drop-down
 														.entryDropdown.entry-drop-down__button.unsortable
 															span.component-more ...
@@ -249,9 +249,9 @@ block content
 																if (entry.entryState !== "Trashed")
 																	if (entry.entryState == "Published")
 																		li.entry-drop-down__item
-																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 																	if (entry.entryState == "Published")
 																		li.entry-drop-down__item
 																			a.dropLink.instaDraftEntry Make draft
@@ -259,7 +259,7 @@ block content
 																		a.dropLink.instaTrashEntry Trash
 																else
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
 																	li.entry-drop-down__item
 																		a.dropLink.instaUntrashEntry Untrash
 																	li.entry-drop-down__item
@@ -289,7 +289,7 @@ block content
 										if (entry.entryState == "Draft")
 											if (entry.entryTitle)
 												li.singleList(data-id= entry.id)
-													a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+													a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
 													.draftIndicator
 														p Draft
 													.entry-drop-down
@@ -300,14 +300,14 @@ block content
 																if (entry.entryState !== "Trashed")
 																	if (entry.entryState == "Published")
 																		li.entry-drop-down__item
-																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 																	li.entry-drop-down__item
 																		a.dropLink.instaTrashEntry Trash
 																else
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
 																	li.entry-drop-down__item
 																		a.dropLink.instaUntrashEntry Untrash
 																	li.entry-drop-down__item
@@ -320,7 +320,7 @@ block content
 															.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
 											else
 												li.singleList(data-id= entry.id)
-													a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
+													a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
 													.draftIndicator
 														p Draft
 													.entry-drop-down
@@ -331,14 +331,14 @@ block content
 																if (entry.entryState !== "Trashed")
 																	if (entry.entryState == "Published")
 																		li.entry-drop-down__item
-																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 																	li.entry-drop-down__item
 																		a.dropLink.instaTrashEntry Trash
 																else
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
 																	li.entry-drop-down__item
 																		a.dropLink.instaUntrashEntry Untrash
 																	li.entry-drop-down__item
@@ -368,7 +368,7 @@ block content
 										if (entry.entryState == "Trashed")
 											if (entry.entryTitle)
 												li.singleList(data-id= entry.id)
-													a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
+													a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
 													.trashedIndicator
 														p Trashed
 													.entry-drop-down
@@ -379,14 +379,14 @@ block content
 																if (entry.entryState !== "Trashed")
 																	if (entry.entryState == "Published")
 																		li.entry-drop-down__item
-																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 																	li.entry-drop-down__item
 																		a.dropLink.instaTrashEntry Trash
 																else
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
 																	li.entry-drop-down__item
 																		a.dropLink.instaUntrashEntry Untrash
 																	li.entry-drop-down__item
@@ -399,7 +399,7 @@ block content
 															.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
 											else
 												li.singleList(data-id= entry.id)
-													a.ribbonList(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
+													a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
 													.trashedIndicator
 														p Trashed
 													.entry-drop-down
@@ -410,14 +410,14 @@ block content
 																if (entry.entryState !== "Trashed")
 																	if (entry.entryState == "Published")
 																		li.entry-drop-down__item
-																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.username + '/curatas/' + curata.id) View live
+																			a.dropLink.liveLink(target="_blank" href='/browse/users/' + user.id + '/curatas/' + curata.id) View live
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 																	li.entry-drop-down__item
 																		a.dropLink.instaTrashEntry Trash
 																else
 																	li.entry-drop-down__item
-																		a.dropLink.viewEntry(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
+																		a.dropLink.viewEntry(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') View
 																	li.entry-drop-down__item
 																		a.dropLink.instaUntrashEntry Untrash
 																	li.entry-drop-down__item

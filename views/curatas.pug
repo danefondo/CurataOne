@@ -56,7 +56,7 @@ block content
 								//- if (curata.collaborators && curata.collaborators.length) 
 								//- 	.collabIndicator.collabTooltip
 								//- 		.collabTooltipText 
-								//- 			a.viewCollaborators.block(href='/' + coreURL + '/' + user.username + '/curatas/' + curata.id + '/collaborators') View collaborators
+								//- 			a.viewCollaborators.block(href='/' + coreURL + '/curatas/' + curata.id + '/collaborators') View collaborators
 								.dateCreated(data-date= curata.dateCreated) #{moment(curata.dateCreated).format('MMMM Do YYYY')}
 								.curataLink #{curata.curataName}
 								.curataOwner(data-userid= user.id) #{curata.ownerName}

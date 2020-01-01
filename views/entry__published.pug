@@ -22,7 +22,7 @@ block content
 			p Entry not yet published.
 		else if (entry.entryState == "Published")
 			if (user)
-				a.editTemplate(href='/' + coreURL + '/' + user.username + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
+				a.editTemplate(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Edit
 			if (entry.entryTitle) 
 				.entryTitle__published #{entry.entryTitle}
 			else
