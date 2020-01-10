@@ -4,6 +4,7 @@ let Schema = mongoose.Schema;
 const User = require('./user.js');
 const curataList = require('./curataList.js');
 const Template = require('./template.js');
+const entryCategory = require('./category.js');
 
 // User Schema
 const CurataSchema = new mongoose.Schema({
@@ -16,6 +17,8 @@ const CurataSchema = new mongoose.Schema({
 	curataCustomDomain: String,
 	templates: [{type: Schema.Types.ObjectId, ref: 'Template'}],
 	curataList: [{type: Schema.Types.ObjectId, ref: 'curataList'}],
+	defaultListId: String,
+	categories: [{type: Schema.Types.ObjectId, ref: 'entryCategory'}],
 	curataFiles: {
 		images: [{type: Schema.Types.ObjectId, ref: 'image'}]
 	},

@@ -18,6 +18,7 @@ let curataList = require('../models/curataList');
 let Template = require('../models/template');
 let Component = require('../models/component');
 let Entry = require('../models/entry');
+let entryCategory = require('../models/category');
 let entryComponent = require('../models/entryComponent');
 let listItem = require('../models/listItem');
 let curataImage = require('../models/image');
@@ -538,7 +539,7 @@ router.get('/curatas/:curataId', ensureAuthenticated, function(req, res) {
 			return console.log("Could not get curatas: ", err);
 		}
 
-		Curata.findById(curataId).populate('curataList').exec(function(err, curata) {
+		Curata.findById(curataId).populate('curataList').populate('categories').exec(function(err, curata) {
 			if (err) {
 				return console.log("Could not get Curata. ", err);
 			}
@@ -547,6 +548,10 @@ router.get('/curatas/:curataId', ensureAuthenticated, function(req, res) {
 				if (err) {
 					return console.log("Could not get lists.", err)
 				}
+
+				curata.categories.sort(function(a, b) {
+					return a.entryCategoryName.localeCompare(b.entryCategoryName);
+				});
 
 				res.render('dashboard__space', {
 					curatas: curatas,
@@ -1049,7 +1054,7 @@ router.post('/UpdateCurataAddress', function(req, res) {
 
 
 
-router.post('/UpdateEntryTitle', function(req, res) {
+router.post('/updateEntryTitle', function(req, res) {
 	
 	let entryTitle = req.body.entryTitle;
 	let entryId = req.body.entryId;
@@ -1802,6 +1807,120 @@ router.post('/UntrashEntry', function(req, res) {
 	})
 })
 
+router.post('/curatas/:curataId/lists/:listId/entries/newDraft', ensureAuthenticated, function(req, res) {
+
+	let userId = req.user._id;
+	let dateCreated = req.body.dateCreated;
+	let curataId = req.body.curataId;
+	let listId = req.body.listId;
+
+	let entryTitle = req.body.entryTitle;
+	let entryDescription = req.body.entryDescription;
+	let entryLink = req.body.entryLink;
+
+	if (!listId) {
+		if (curataId) {
+			Curata.findById(curataId, function(err, curata) {
+				listId = curata.defaultListId || curata.curataList[0];
+			})
+		} else {
+			console.log("No Curata Id available.");
+		}
+	}
+
+	let entry = new Entry();
+	entry.entryState = "Draft";
+	entry.curataListId = listId;
+	entry.curataId = curataId;
+	entry.dateCreated = dateCreated;
+	entry.creator.creator_id = userId;
+	entry.owner.owner_id = userId;
+	entry.contributors.push(userId);
+	entry.entryTitle = entryTitle;
+	entry.entryDescription = entryDescription;
+	entry.entryLink = entryLink;
+
+	if (req.body.imageKey && req.body.imageURL) {
+		let imageKey = req.body.imageKey;
+		let imageURL = req.body.imageURL;
+		entry.entryImageKey = imageKey;
+		entry.entryImageURL = imageURL;
+	}
+
+	entry.save(function(err){
+		if (err) { 
+			return console.log("Entry saving error: ", err);
+		}
+
+		curataList.findById(listId, function(err, list) {
+			list.entries.push(entry._id);
+
+			list.save(function(err) {
+				if (err) {
+					return console.log("curataList save failed: ", err);
+				}
+
+				let entryId = entry._id;
+				let userId = req.user._id;
+				res.json({
+					entry: entry,
+					entryId: entryId
+				});
+			});
+		});
+	});
+})
+
+router.post('/curatas/:curataId/lists/:listId/entries/:entryId/updateEntry', ensureAuthenticated, function(req, res) {
+
+	let userId = req.user._id;
+	let entryId = req.body.entryId;
+	let dateCreated = req.body.dateCreated;
+	let curataId = req.body.curataId;
+	let listId = req.body.listId;
+	let entryTitle = req.body.entryTitle;
+	let entryDescription = req.body.entryDescription;
+	let entryLink = req.body.entryLink;
+
+	if (!listId) {
+		if (curataId) {
+			Curata.findById(curataId, function(err, curata) {
+				listId = curata.defaultListId || curata.curataList[0];
+			})
+		} else {
+			console.log("No Curata Id available.");
+		}
+	}
+
+	Entry.findById(entryId, function(err, entry) {
+		entry.curataListId = listId;
+		entry.curataId = curataId;
+		entry.dateCreated = dateCreated;
+		entry.entryTitle = entryTitle;
+		entry.entryDescription = entryDescription;
+		entry.entryLink = entryLink;
+
+		if (req.body.imageKey && req.body.imageURL) {
+			let imageKey = req.body.imageKey;
+			let imageURL = req.body.imageURL;
+			entry.entryImageKey = imageKey;
+			entry.entryImageURL = imageURL;
+		}
+
+		entry.save(function(err){
+			if (err) { 
+				return console.log("Entry saving error: ", err);
+			}
+
+			res.json({
+				entry: entry,
+				entryId: entryId
+			});
+		});
+
+	})
+})
+
 
 router.post('/curatas/:curataId/lists/:listId/newDraft', ensureAuthenticated, function(req, res) {
 
@@ -1863,7 +1982,7 @@ router.post('/curatas/:curataId/lists/:listId/newDraft', ensureAuthenticated, fu
 	});
 })
 
-router.post('/curatas/:curataId/lists/:listId/:entryId/publish', ensureAuthenticated, function(req, res) {
+router.post('/curatas/:curataId/lists/:listId/entries/:entryId/publish', ensureAuthenticated, function(req, res) {
 
 	let entryId = req.params.entryId;
 
@@ -3627,6 +3746,48 @@ router.post('/updateNewList', ensureAuthenticated, function(req, res) {
 		)	
 	}
 })
+
+router.post('/curatas/:curataId/lists/:listId/createCategory', ensureAuthenticated, function(req, res) {
+
+	let cat = req.body.category;
+	cat = cat[0].toUpperCase() + cat.slice(1);
+	cat = cat.replace(/^\s+|\s+$/g, "");
+
+	let category = new entryCategory();
+	category.entryCategoryName = cat;
+	category.listId = req.body.listId;
+	category.curataId = req.body.curataId;
+	category.dateCreated = req.body.dateCreated;
+	category.creator.creator_id = req.user._id;
+	category.admins.push(req.user._id);
+
+	category.save(function(err) {
+		if (err) {
+			return console.log(err);
+		}
+
+		Curata.findById(req.body.curataId, function(err, curata) {
+			if (err) {
+				return console.log("Could not find curata: ", err);
+			}
+
+			let categoryId = category._id;
+
+			curata.categories.push(categoryId);
+
+			curata.save(function(err) {
+				if (err) {
+					return console.log(err);
+				}
+
+				res.json({
+					category: category,
+					categoryId: categoryId
+				});
+			});
+		})
+	});
+});
 
 router.post('/createNewList', ensureAuthenticated, function(req, res) {
 

@@ -1829,7 +1829,8 @@ h2.CheckOthers {
 .passwordConfirmation__accountSettings,
 .passwordCurrent__accountSettings,
 .newListDescription--dashboard__entries,
-.newListTitle--dashboard__entries {
+.newListTitle--dashboard__entries,
+.entryTitle__space {
   background: transparent;
   border-radius: 3px;
   box-shadow: none;
@@ -1867,10 +1868,21 @@ h2.CheckOthers {
 .passwordConfirmation__accountSettings:focus,
 .passwordCurrent__accountSettings:focus,
 .newListDescription--dashboard__entries:focus,
-.newListTitle--dashboard__entries:focus {
+.newListTitle--dashboard__entries:focus,
+.entryTitle__space:focus {
   background: #fff;
   border: none;
 /*  box-shadow: inset 0 0 0 2px #4725a9;*/
+}
+
+.entryTitle__space {
+  margin-left: 0px;
+  padding-left: 5px;
+/*  font-size: 35px;*/
+  font-size: 20px;
+  font-weight: 400;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .ListTitle,
@@ -4327,6 +4339,35 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   color: #333;
 }
 
+.entryCurrentListContainer__space {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.entryCurrentList__space {
+  padding: 7px 10px 7px 0px;
+/*  font-size: 15px;*/
+  font-size: 13px;
+  border-radius: 3px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #9E9E9E;
+  margin-top: 40px;
+  margin-bottom: 12px;
+}
+
+.entryCurrentListSelector__space {
+  background-color: white;
+  padding-left: 10px;
+  border: 1px dotted #bbb;
+  color: #555;
+  cursor: pointer;
+  transition: .2s ease-in-out;
+}
+
+.entryCurrentListSelector__space:hover { 
+  background-color: #f3f3f3;
+}
 
 .listChoicesTitle__space  {
   font-size: 35px;
@@ -4441,8 +4482,12 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   padding: 10px;
   margin-left: 4px;
   margin-right: 4px;
-  background-color: #efefef;
-  color: #555;
+/*  background-color: #efefef;*/
+  background-color: white;
+/*  color: #555;*/
+  color: #888;
+  border-radius: 3px;
+  border: 1px solid #eee;
   font-weight: bold;
   cursor: pointer;
   transition: .2s ease-in-out;
@@ -4450,4 +4495,10 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 .createEntryModalActionButton__space:hover { 
   background-color: #e2e2e2;
+  color: #555;
+}
+
+.entryShowHideMoreOptions__space {
+  border: 1px solid transparent;
+  background-color: transparent;
 }

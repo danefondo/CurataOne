@@ -1,7 +1,7 @@
 function create_custom_dropdowns() {
   $('select').each(function(i, select) {
     if (!$(this).next().hasClass('dropdown')) {
-      $(this).after('<div class="dropdown ' + ($(this).attr('class') || '') + '" tabindex="0"><span class="current"></span><div class="list"><ul></ul></div></div>');
+      $(this).after('<div class="dropdown ' + ($(this).attr('class') || '') + '" tabindex="0"><span class="current"></span><div class="list"><ul class="optionList"></ul></div></div>');
       var dropdown = $(this).next();
       var options = $(select).find('option');
       var selected = $(this).find('option:selected');
@@ -9,6 +9,7 @@ function create_custom_dropdowns() {
       options.each(function(j, o) {
         var display = $(o).data('display-text') || '';
         dropdown.find('ul').append('<li class="option ' + ($(o).is(':selected') ? 'selected' : '') + '" data-value="' + $(o).val() + '" data-display-text="' + display + '">' + $(o).text() + '</li>');
+        dropdown.find('.selected').addClass('doNotSortMe');
       });
     }
   });
@@ -43,7 +44,7 @@ $(document).on('click', '.dropdown .option', function(event) {
   var text = $(this).data('display-text') || $(this).text();
   let id = $(this).attr('data-value');
   $(this).closest('.dropdown').find('.current').text(text);
-  $(this).closest('.dropdown').find('.current').attr("listId", id);
+  $(this).closest('.dropdown').find('.current').attr("categoryId", id);
   $(this).closest('.dropdown').prev('select').val($(this).data('value')).trigger('change');
 });
 

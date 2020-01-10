@@ -104,10 +104,6 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	  }
 	})(jQuery)
 
-	$(".DropdownX").on("click", function(){
-	  $(this).toggleClass('is-expanded');
-	});
-
 	function initPreviewButton() {
 
 		$('.closeWindowBtn').off('click');
@@ -1170,32 +1166,6 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 		});
 	}
 	initUntrashEntry();
-
-	function initMakeDefaultCurata() {
-		$('.makeDefault').off('click');
-		$('.makeDefault').on('click', function() {
-			let btn = this
-			let curataId = $('.currentCurataSwitch').attr('id');
-
-	    	$.ajax({
-	    		data: {
-	    			curataId: curataId
-	    		},
-	    		type:'POST',
-	    		url: '/' + coreURL + '/makeDefaultCurata',
-	    		success: function(response) {
-	    			$(btn).removeClass('makeDefault').addClass('defaultCurata');
-	    			$(btn).text('Default Curata');
-	    			$('.dashboardBtn').attr('href', '/' + coreURL + '/' + userId + '/curatas/' + curataId);
-	    		},
-	    		error: function(err) {
-	    			console.log("Failed to make Curata default: ", err);
-	    			// Display error not being able to publish
-	    		}
-	    	});
-		})
-	}
-	initMakeDefaultCurata();
 
 	function initRevertToDraft() {
 		$('.makeDraft').off('click');
@@ -2495,7 +2465,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	initTitleListening(elementTitleInput, elementTitleURL, typePOST, 'componentTitle');
 
 	let entryTitleInput = $('.EntryTitle');
-	let entryTitleURL = '/' + coreURL + '/UpdateEntryTitle';
+	let entryTitleURL = '/' + coreURL + '/updateEntryTitle';
 	initTitleListening(entryTitleInput, entryTitleURL, typePOST, 'entryTitle');
 
 	let curataName = $('.curataSettingsTitle');
@@ -2695,7 +2665,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	// 		    entryId: entryId
 	// 		  },
 	// 		  type: 'POST',
-	// 		  url: '/' + coreURL + '/UpdateEntryTitle',
+	// 		  url: '/' + coreURL + '/updateEntryTitle',
 	// 		  success: function(Item){
 	// 		    console.log("Entry title successfully updated.")
 	// 		    // Display success message?
@@ -4607,15 +4577,6 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 
 		});
 	}
-
-	function initCurataDropdown() {
-		// reapply upon creating new component
-		$('.currentCurataSwitch').off('click');
-		$('.currentCurataSwitch').on('click', function(){
-		    $('.curataSwitcher').toggleClass('drop-down--active');
-		});
-	}
-	initCurataDropdown();
 
 	/* REVERSE ORDER */
 	function initCurataReverseSort() {
