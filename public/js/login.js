@@ -38,7 +38,6 @@ $(document).ready(function () {
 					$('.inputErrorText').show().text(err.responseJSON.error);
 					$('.login-button').removeAttr('disabled');
 					$('.login-button').attr('value', 'Login');
-					// display error message
 				}
 			})
 		})

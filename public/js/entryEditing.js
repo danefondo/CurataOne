@@ -132,6 +132,7 @@
     		success: function(response) {
     			console.log("Deleted image from database.");
     			image.removeAttr('data-image-key');
+    			image.removeAttr('data-image-url');
 				$('.file-upload-input').replaceWith($('.file-upload-input').clone());
 				$('.file-upload-content').hide();
 				$('.image-upload-wrap').show();
@@ -161,7 +162,9 @@
 			contentType: 'application/json',
 			success: function(data) {
 				let imageKey = uploadData.fileName;
+				let imageURL = uploadData.fileURL;
 				imageBlock.attr('data-image-key', imageKey);
+				imageBlock.attr('data-image-url', imageURL);
 			},
 			error: function(err) {
 				console.log("Could not save file reference.", err);

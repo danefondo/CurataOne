@@ -14,11 +14,15 @@ $(document).ready(function () {
 				url: '/accounts/sendResetPass',
 				success: function(response) {
 					console.log("resp. ", response);
+					$('.successMessage').text(response.message);
 					$('.successMessage').css("display", "block");
+					$('.inputErrorText').hide()
 				},
 				error: function(err) {
 					console.log("err: ", err);
-					// display error message
+					$('.inputErrorText').empty();
+					// $('.inputErrorText').show().text(err.responseJSON.error);
+					$('.inputErrorText').show().text(err.responseJSON.message);
 				}
 
 			})

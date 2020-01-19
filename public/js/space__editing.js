@@ -4,6 +4,7 @@
  	let userId = $('.userId').attr('id');
 	let username = $('.userId').attr('data-username');
  	const coreURL = 'dashboard';
+ 	let creatingEntry = false;
 
 	let curataId = $('.curataId').attr('id');
 
@@ -32,6 +33,12 @@
 		})
 	}
 	initDropdownClosing();
+
+	function initFullPageEditorLink() {
+
+	}
+
+
 
 	function initMakeDefaultCurata() {
 		$('.makeDefault').off('click');
@@ -90,6 +97,7 @@
 			let clickObject = $(this);
 			// $(this).closest('.entryDetailsGroup').removeClass('flex');
 			$('.dropdown').css("float", "none");
+			$('.dropdown').css("width", "100%");
 			// $('.entryNewCategory__space').css("display", "none");
 			// $('.entryCreateCategoryBlock__space').css("display", "block");
 			hideShowCategoryCreator(clickObject);
@@ -105,6 +113,7 @@
 			let clickObject = $(this);
 			// $(this).closest('.entryDetailsGroup').addClass('flex');
 			$('.dropdown').css("float", "left");
+			$('.dropdown').css("width", "55%");
 			// $('.entryNewCategory__space').css("display", "inline-block");
 			// $('.entryCreateCategoryBlock__space').css("display", "none");
 			$('.entryNewCategoryText__space').val('');
@@ -160,6 +169,7 @@
 					hideShowCategoryCreator(clickObject);
 					$('.entryNewCategoryText__space').val('');
 					$('.dropdown').css("float", "left");
+					$('.dropdown').css("width", "55%");
 
 					let listOption = $('<li>', {'class': 'option selected', 'data-value': categoryId})
 					listOption.text(category);
@@ -173,7 +183,7 @@
 					// set newly created category as default
 
 					$('.dropdown').find('.current').text(category);
-					$('.dropdown').find('.current').attr("listId", categoryId);
+					$('.dropdown').find('.current').attr("data-categoryId", categoryId);
 
 					$('.dropdown').prev('select').val(category).trigger('change');
 
@@ -232,6 +242,52 @@
 	}
 	initAddNewList();
 
+	function initClearEntry() {
+		$('.entryClear__space').off('click');
+		$('.entryClear__space').on('click', function() {
+			clearEntryCreation();
+		})
+	}
+	initClearEntry();
+
+	function clearEntryCreation() {
+		$('.entryInput__space').off('input');
+		$('.createEntryModal__space').find('input, textarea').val('');
+		$('.modalEntryId').removeAttr('id');
+		$('.selected').removeClass('selected');
+		$('.doNotSortMe').addClass('selected');
+		let noneSelection = $('.noneSelection__space').attr('data-display-text');
+		$('.dropdown').find('.current').text(noneSelection);
+		$('.dropdown').find('.current').removeAttr('data-categoryId');
+		let noCategory = $('.noneSelection__space').val();
+		$('.selector__space').val(noCategory).trigger('change');
+		let image = $('.imageBlock');
+		image.removeAttr('data-image-key');
+		image.removeAttr('data-image-url');
+		$('.file-upload-input').replaceWith($('.file-upload-input').clone());
+		$('.file-upload-content').hide();
+		$('.image-upload-wrap').show();
+		enableImageUpload();
+		initInputListening();
+	}
+
+	function initSaveOrCreateDraft() {
+		$('.entrySaveAsDraft__space').off('click');
+		$('.entrySaveAsDraft__space').on('click', function() {
+			let entryCheck = checkIfEntryExists();
+			if (entryCheck) {
+				updateDraft();
+				$('.emptyModal').hide();
+				clearEntryCreation();
+			} else {
+				createNewDraft();
+				$('.emptyModal').hide();
+				clearEntryCreation();
+			}
+		});
+	}
+	initSaveOrCreateDraft();
+
 	function initCreateEntry() {
 		$('.createEntry__space').off('click');
 		$('.createEntry__space').on('click', function() {
@@ -247,29 +303,32 @@
 					type: 'POST',
 					url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/publish',
 					success: function(response) {
-						console.log("Yoho! Successfully created new entry!");
-						// window.location.href = response.redirectTo;
+						console.log("Yoho! Successfully published entry!");
 						let newEntry = $('<div>', {'class': 'entry__liveCurata', 'id': entryId});
 						let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'})
 						entryTitleBlock.text(response.entry.entryTitle);
-						let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
-						entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
-						entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
-						entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
 						newEntry.append(entryTitleBlock);
-						newEntry.append(entryImageBlock);
+						if (response.entry.entryImageKey && response.entry.entryImageURL) {
+							let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
+							entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
+							entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
+							entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
+							newEntry.append(entryImageBlock);
+						}
 						console.log("listid: ", listId);
 						$('#' + listId).append(newEntry);
 						deletionModal.hide();
-						$('.createEntryModal__space').find('input, textarea').val('');
-						$('.modalEntryId').removeAttr('id');
+						clearEntryCreation();
 					},
 					error: function(err) {
 						console.log("Arrghh! Failed to publish entry!");
 					}
 				})				
+			} else if (creatingEntry == true) {
+				return console.log("Previous entry or draft creation is still in progress.");
 			} else {
 				// if entry already exists but is draft, just send call to publish and then return to add dynamically
+				creatingEntry = true;
 				let data = {}
 				let creationTime = new Date();
 
@@ -279,16 +338,21 @@
 				let entryDescription = entryCreator.find('.postDescription').val();
 				let entryLink = entryCreator.find('.entryLink').val();
 
-				let imageBlock = entryCreator.find('.imageBlock');
-				let imageKey = imageBlock.attr('data-image-key');
-				let imageURL = imageBlock.attr('data-image-url');
+				let imageExists = checkIfImageExists();
+
+				// check on backend if any such variable is in data or not
+				if (imageExists) {
+					let imageBlock = entryCreator.find('.imageBlock');
+					let imageKey = imageBlock.attr('data-image-key');
+					let imageURL = imageBlock.attr('data-image-url');
+					data.imageKey = imageKey;
+					data.imageURL = imageURL;
+				} 
 
 				data.entryCategory = entryCategory;
 				data.entryTitle = entryTitle;
 				data.entryDescription = entryDescription;
 				data.entryLink = entryLink;
-				data.imageKey = imageKey;
-				data.imageURL = imageURL;
 				data.creationTime = creationTime;
 				data.curataId = curataId;
 
@@ -300,27 +364,29 @@
 					url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/newEntry',
 					success: function(response) {
 						console.log("Yoho! Successfully created new entry!");
-						// window.location.href = response.redirectTo;
-						let newEntry = $('<div>', {'class': 'entry__liveCurata', 'id': entryId});
+						let newEntry = $('<div>', {'class': 'entry__liveCurata', 'id': response.entryId});
 						let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'})
-						entryTitleBlock.text(response.entry.entryTitle);
-						let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
-						entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
-						entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
-						entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
+						entryTitleBlock.text(response.entry.entryTitle || "Untitled entry");
 						newEntry.append(entryTitleBlock);
-						newEntry.append(entryImageBlock);
+						if (response.entry.entryImageKey && response.entry.entryImageURL) {
+							let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
+							entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
+							entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
+							entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
+							newEntry.append(entryImageBlock);
+						}
 						console.log("listid: ", listId);
 						$('#' + listId).append(newEntry);
 						deletionModal.hide();
-						$('.createEntryModal__space').find('input, textarea').val('');
-						$('.modalEntryId').removeAttr('id');
+						clearEntryCreation();
+						creatingEntry = false;
 						// find appropriate list by id
 						// create divs w/content
 						// append div to list
 					},
 					error: function(err) {
 						console.log("Arrghh! Failed to create entry!");
+						creatingEntry = false;
 					}
 				})
 			}
@@ -353,6 +419,7 @@
 	}
 
 	function createNewDraft() {
+		creatingEntry = true;
 		let data = {}
 		let entryCreator = $('.createEntryModal__space');
 
@@ -361,7 +428,7 @@
 		let listId = $('.entryCurrentListSelector__space').attr('data-listId');
 		let currentCategoryObject = entryCreator.find('.current');
 		let entryCategory = currentCategoryObject.text();
-		let entryCategoryId = currentCategoryObject.attr('data-value');
+		let entryCategoryId = currentCategoryObject.attr('data-categoryid');
 		let entryTitle = entryCreator.find('.entryTitle__space').val();
 		let entryDescription = entryCreator.find('.postDescription').val();
 		let entryLink = entryCreator.find('.entryLink').val();
@@ -391,16 +458,58 @@
 			type: 'POST',
 			url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/newDraft',
 			success: function(response) {
+				console.log('another response', response);
 				console.log("Yoho! Successfully created draft!");
 				let fullPageLink = $('<a>', {'class': 'createEntryModalActionButton__space entryFull__space block hide' , 'href': '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + response.entryId + '/editing'})
 				fullPageLink.text("Full page editor")
+				let clearEntry = $('.entryClear__space');
+				if (clearEntry.is(":visible")) {
+					$('.createEntryModalActionButton__space').toggle();
+				}
 				$('.entryFull__space').replaceWith(fullPageLink);
-				hideShowMoreOptions();
 				$('.modalEntryId').attr('id', response.entryId);
+				let draftDeleter = $('<div>', {'class': 'directDeleteDraft__space createEntryModalActionButton__space hide'});
+				draftDeleter.text("Delete draft");
+				$('.entryOptionsContainer__space').append(draftDeleter);
+				hideShowMoreOptions();
+				initDraftDeleting();
+				creatingEntry = false;
 			},
 			error: function(err) {
 				console.log("Arrghh! Failed to create draft!");
+				creatingEntry = false;
 			}
+		})
+	}
+
+	function initDraftDeleting() {
+		$('.directDeleteDraft__space').off('click');
+		$('.directDeleteDraft__space').on('click', function() {
+			
+			let clickObject = $(this);
+			let data = {};
+			let entryId = $('.modalEntryId').attr('id');
+			let listId = $('.entryCurrentListSelector__space').attr('data-listId');
+
+			data.entryId = entryId;
+			data.listId = listId;
+
+			$.ajax({
+				data: data,
+				type: 'DELETE',
+				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/deleteEntry',
+				success: function(response) {
+					console.log("Yoho! Updated entry!");
+					console.log(response.message);
+					clearEntryCreation();
+					clickObject.remove();
+				},
+				error: function(err) {
+					console.log("Arrghh! Failed to create draft!");
+					console.log(err.errors[0]);
+				}
+			})
+
 		})
 	}
 
@@ -414,7 +523,7 @@
 		let listId = $('.entryCurrentListSelector__space').attr('data-listId');
 		let currentCategoryObject = entryCreator.find('.current');
 		let entryCategory = currentCategoryObject.text();
-		let entryCategoryId = currentCategoryObject.attr('data-value');
+		let entryCategoryId = currentCategoryObject.attr('data-categoryid');
 		let entryTitle = entryCreator.find('.entryTitle__space').val();
 		let entryDescription = entryCreator.find('.postDescription').val();
 		let entryLink = entryCreator.find('.entryLink').val();
@@ -463,6 +572,8 @@
 		if (entryExists) {
 		    clearTimeout(typingTimer);
 	        typingTimer = setTimeout(updateDraft, doneTypingInterval);
+		} else if (creatingEntry == true) {
+			return console.log("Previous entry or draft creation is still in progress.");
 		} else {
 			createNewDraft();
 		}
@@ -470,14 +581,14 @@
 
 	// #1
 	function initInputListening() {
-		$('.entryInput__space').off('input change');
-		$('.entryInput__space').on('input change', function() {
+		$('.entryInput__space').off('input');
+		$('.entryInput__space').on('input', function() {
 			createOrUpdateDraft();
 		})
 
-	    $('.dropdown').prev('select').on('change', function() {
-	    	createOrUpdateDraft();
-	    });
+	    // $('.selector__space').on('change', function() {
+	    // 	createOrUpdateDraft();
+	    // });
 
 	    // image input listening??
 	}
@@ -583,9 +694,9 @@
 		$('.remove-image').on('click', function() {
 			let obj = this;
 			removeUpload(obj);
-			// fix this shit
 		})
 	}
+	enableImageDelete();
 
 	function disableImageDelete() {
 		$('.remove-image').off('click');
@@ -618,7 +729,7 @@
 	}
 
 	function removeUpload(obj) {
-
+		console.log("Hello.");
 		let entryId = $('.modalEntryId').attr('id');
 		if (typeof entryId == typeof undefined || entryId == false) {
 			return alert("Entry does not exist yet or entry id is not available.");
@@ -643,6 +754,7 @@
     		success: function(response) {
     			console.log("Deleted image from database.");
     			image.removeAttr('data-image-key');
+    			image.removeAttr('data-image-url');
 				$('.file-upload-input').replaceWith($('.file-upload-input').clone());
 				$('.file-upload-content').hide();
 				$('.image-upload-wrap').show();
@@ -701,7 +813,7 @@
 			let listId = $('.entryCurrentListSelector__space').attr('data-listId');
 			let currentCategoryObject = entryCreator.find('.current');
 			let entryCategory = currentCategoryObject.text();
-			let entryCategoryId = currentCategoryObject.attr('data-value');
+			let entryCategoryId = currentCategoryObject.attr('data-categoryid');
 			let entryTitle = entryCreator.find('.entryTitle__space').val();
 			let entryDescription = entryCreator.find('.postDescription').val();
 			let entryLink = entryCreator.find('.entryLink').val();
@@ -725,6 +837,7 @@
 				type: 'POST',
 				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/newDraft',
 				success: function(response) {
+					console.log("firstdata", response);
 					console.log("Yoho! Successfully created draft!");
 					$('.modalEntryId').attr('id', response.entryId);
 					entryId = response.entryId;
@@ -742,6 +855,7 @@
 						processData: false,
 						contentType: 'application/json',
 						success: function(data) {
+							console.log("seconddata", data);
 							console.log("Successfully uploaded image.");
 							$('.createEntry__space').text("Create entry");
 							$('.createEntry__space').css("background-color", "#673ab7");

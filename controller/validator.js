@@ -27,8 +27,12 @@ module.exports = {
             } else {
                 return value;
             }
-        }),
+        })
 
+	],
+
+	forgotPass: [
+		 check('email').isEmail().withMessage('Email empty or in incorrect format')
 	],
 
 	reset: [
@@ -40,6 +44,19 @@ module.exports = {
             } else {
                 return value;
             }
-        }),
-	]
+        })
+	],
+
+	imageValidate: [
+		 check('fileName').not().isEmpty()
+		 	.withMessage('File name is required'),
+		 check('fileURL').not().isEmpty()
+		 	.withMessage('File url is required'),
+		 check('dateUpdated').not().isEmpty()
+		 	.withMessage('Date is required'),
+		 check('entryId').not().isEmpty()
+		 	.withMessage('Entry ID is missing'),
+		 check('curataId').not().isEmpty()
+		 	.withMessage('Curata ID is missing')
+	],
 }

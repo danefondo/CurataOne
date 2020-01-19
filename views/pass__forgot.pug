@@ -78,6 +78,8 @@ html
 			.container
 				.account-manager 
 					form.form__forgotPass(method='POST')
+						.inputErrorContainer
+							.inputErrorText
 						.login-title Forgot your password?
 						.subtitle__forgotPass Enter the email address you used to create your account. We will send you a link to reset your password. You may need to check your spam folder.
 						input.login-input(name='email' type='text' placeholder='Email address' autocomplete="off") 

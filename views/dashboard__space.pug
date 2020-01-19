@@ -70,7 +70,7 @@ block content
 	//- 							//- 		option(value=list.id) Untitled list
 	//- 						.entryNewCategory__space + Category
 	//- 						.entryCreateCategoryBlock__space
-	//- 							input.entryNewCategoryText__space.entryInput__space(placeholder="Write your category")
+	//- 							input.entryNewCategoryText__space(placeholder="Write your category")
 	//- 							.entryNewCategoryCreate__space Create
 	//- 							.entryNewCategoryCancel__space X
 	//- 					.entryComponentTitle Entry title
@@ -79,7 +79,7 @@ block content
 	//- 					.entryComponentTitle Summary
 	//- 					.entryDetailsGroup
 	//- 						.mainEditor
-	//- 							input.postDescription.entryInput__space(type="text" maxlength="100" placeholder="Write a short summary of less than 100 characters.")
+	//- 							textarea.postDescription.entryInput__space(maxlength="100" placeholder="Write a short summary of less than 100 characters.")
 	//- 					.entryComponentTitle Link
 	//- 					.entryDetailsGroup
 	//- 						.linkContainer
@@ -107,24 +107,24 @@ block content
 		.modalBackground
 		.createEntryModal__space
 			.createEntryModalActions__space
-				.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
-				.entryFull__space.createEntryModalActionButton__space.hide Full page editor
-				//- a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Full page editor
-				.entryClear__space.createEntryModalActionButton__space.hide Clear
-				.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
-				.cancelListCreating x
-			.sectionArea
+				.entryOptionsContainer__space
+					.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
+					.entryFull__space.createEntryModalActionButton__space.hide Full page editor
+					.entryClear__space.createEntryModalActionButton__space.hide Clear
+					.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
 				.entryCurrentListContainer__space
 					.entryCurrentList__space.inline In list:
 					.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
-				.entryContainerTitle__space(style="margin-top:0px;") New entry
+				.cancelListCreating x
+			.sectionArea
+				//- .entryContainerTitle__space(style="margin:30px auto 20px auto; color: #ccc;") New entry
 				.modalEntryId
 				.entryContainer__space
 					.entryDetails
 						.entryComponentTitle Category
 						.entryDetailsGroup.entryDetailsGroupSpecial.flex
-							select
-								option(value="" data-display-text="Select category: ") None
+							select.selector__space
+								option.noneSelection__space(value="" data-display-text="Select category: ") None
 								each category in curata.categories
 									if (category.entryCategoryName && category.entryCategoryName.length)
 										option(value=category.id) #{category.entryCategoryName}
@@ -135,9 +135,9 @@ block content
 								//- 		option(value=list.id) #{list.listName}
 								//- 	else
 								//- 		option(value=list.id) Untitled list
-							.entryNewCategory__space + Category
+							.entryNewCategory__space +
 							.entryCreateCategoryBlock__space
-								input.entryNewCategoryText__space.entryInput__space(placeholder="Write your category")
+								input.entryNewCategoryText__space(placeholder="Write your category")
 								.entryNewCategoryCreate__space Create
 								.entryNewCategoryCancel__space X
 						.entryComponentTitle Entry title
@@ -158,7 +158,7 @@ block content
 							.mainImage(id= "imageArea_")
 								.file-upload.imageBlock(data-type="mainImage")
 									form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
-										input#file-input.file-upload-input.entryInput__space(type='file', name='image', accept='image/jpg')
+										input#file-input.file-upload-input(type='file', name='image', accept='image/jpg')
 										.drag-text
 											button.file-upload-btn(type='button') Add Image
 											h3 Or just drag and drop a file
@@ -168,8 +168,9 @@ block content
 											button.remove-image(type='button')
 												| Remove 
 												span.image-title Uploaded Image
-				.entrySaveAsDraft__space Save as draft & exit
-				.createEntry__space Create entry
+				.entryActions__space
+					.entrySaveAsDraft__space Save as draft & exit
+					.createEntry__space Create entry
 	//- if public, show | if not, display message
 	.curataId(id= curata.id)
 	if user

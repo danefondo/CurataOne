@@ -15,10 +15,13 @@ select {
   cursor: pointer;
   display: block;
   float: left;
-  font-size: 14px;
+/*  font-size: 14px;*/
+  font-size: 20px;
   font-weight: normal;
-  height: 42px;
-  line-height: 40px;
+/*  height: 42px;
+  line-height: 40px;*/
+  height: 55px;
+  line-height: 55px;
   outline: none;
   padding-left: 18px;
   padding-right: 30px;
@@ -30,8 +33,10 @@ select {
       -ms-user-select: none;
           user-select: none;
   white-space: nowrap;
-/*  width: 100%;*/
   width: -webkit-fill-available;
+  border-bottom: 3px solid #eee;
+  width: 55%;
+/*  width: 83%;*/
 }
 .dropdown:focus {
   background-color: #f1f1f1;
@@ -127,8 +132,10 @@ select {
 
 .dropdown .current {
   font-weight: bold;
-  color: #444;
-  font-size: 18px;
+/*  color: #444;*/
+  color: #555;
+/*  font-size: 18px;*/
+  font-size: 20px;
 }
 
 .by {

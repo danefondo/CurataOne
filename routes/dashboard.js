@@ -7,6 +7,7 @@ const path = require('path');
 const assert = require('assert');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const { validationResult } = require('express-validator');
 mongoose.Promise = Promise;
 
 const config = require('../config/aws');
@@ -24,6 +25,9 @@ let listItem = require('../models/listItem');
 let curataImage = require('../models/image');
 let User = require('../models/user');
 let ExpiredUser = require('../models/expiredAccount');
+const validator = require('../controller/validator')
+
+const dashboardController = require('../controller/dashboard');
 
 aws.config.update({
     accessKeyId: "AKIARKLMM5TMEHGOSNJC",
@@ -139,67 +143,141 @@ To then later GET the file from the front end:
 
 */
 
-router.post('/saveFileReference', function(req, res) {
+router.post('/saveFileReference', validator.imageValidate, async function(req, res) {
+	// when you have an uncaught exception your app will crash
+	// so you need to know js errors that throw exception
+	// most errors in js don't exception
+	// but the few ones that do can be easily fixed, e.g variable not declared
+	// most third party packages like mongoose handle errors perfectly and they don't usually
+	// make your app crash
+	// so anytime you're not sure about an error, just wrap it with a try catch block
+	// so that it doesn't crash the whole app
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		console.log('errors')
+	    return res.status(422).json({ errors: errors.array()[0] });
+	}
 	let imageKey = req.body.fileName;
 	let imageURL = req.body.fileURL;
 	let dateUpdated = req.body.dateUpdated;
 	let entryId = req.body.entryId;
 	let curataId = req.body.curataId;
 
-	if (curataId && curataId.length) {
-
-		Curata.findById(curataId, function(err, curata) {
-			if (err) {
-				return console.log("Could not find Curata: ", err);
-			}
-
-			let image = new curataImage();
-			image.entryId = entryId;
-			image.imageKey = imageKey;
-			image.imageURL = imageURL;
-			image.curataId = curataId;
-
-			image.save(function(err) {
-				if (err) {
-					return console.log(err);
-				}
-
-				curata.curataFiles.images.push(image._id);
-
-				curata.save(function(err) {
-					if (err) {
-						return console.log(err);
-					}
-
-					if (entryId && entryId.length) {
-						Entry.findById(entryId,
-							function(err, entry) {
-								if (err) { 
-									console.log(err) 
-								} else {
-									console.log('Entry: ', entry);
-									entry.lastUpdated = dateUpdated;
-									entry.entryImageKey = imageKey;
-									entry.entryImageURL = imageURL;
-									entry.save(function(err) {
-										if (err) console.log(err);
-
-										res.json({
-											imageKey: imageKey,
-											imageURL: imageURL
-										})
-									})
-								}
-							}
-						)
-					}
-				});
-
+	try {
+		const curata = await Curata.findById(curataId);
+		if (!curata) {
+			return res.status(404).json({
+				errors: "Space not found"
 			});
-		})
+		}
 
+		let image = new curataImage();
+		image.entryId = entryId;
+		image.imageKey = imageKey;
+		image.imageURL = imageURL;
+		image.curataId = curataId;
+
+		await image.save();
+		curata.curataFiles.images.push(image._id);
+
+		await curata.save();
+		const entry = await Entry.findById(entryId);
+		console.log('Entry: ', entry);
+		entry.lastUpdated = dateUpdated;
+		entry.entryImageKey = imageKey;
+		entry.entryImageURL = imageURL;
+		await entry.save();
+		res.json({
+			imageKey: imageKey,
+			imageURL: imageURL
+		})
+	} catch(error) {
+		console.log(error);
+		res.status(500).json({
+			errors: "An unknown error occurred"
+		});
 	}
+
 })
+
+// Delete entry
+router.delete('/curatas/:curataId/lists/:listId/entries/:entryId/deleteEntry', ensureAuthenticated, async function(req, res) {
+
+	let entryId = req.body.entryId;
+	let listId = req.body.listId;
+	let curataId = req.params.curataID;
+
+	try {
+		const entry = await Entry.findByIdAndDelete(entryId);
+		if (!entry) {
+			return res.status(404).json({
+				errors: "Entry not found"
+			});
+		}
+
+		// delete all items where id == component id
+		await entryComponent.deleteMany({ "entryId": entryId});
+		console.log("Entry components successfully deleted.");
+
+		let images = await curataImage.find({"entryId": entryId});
+		const imageKeys = [];
+		images.forEach(function(image) {
+			// Pull image reference from curataFiles
+			console.log("One imageId to remove: ", image);
+			Curata.findOneAndUpdate(
+				{ _id: curataId },
+				{ $pull: {"curataFiles.images": image._id} },
+				{ new: true },
+				function(err, removed) {
+					if (err) { console.log(err) }
+				}
+			);
+
+			imageKeys.push({
+				Key: '' + image.imageKey
+			})
+		});
+		if (imageKeys.length) {
+			s3.deleteObjects({
+			  Bucket: 'curata',
+			  Delete: {
+			  	Objects: imageKeys
+			  }
+			}, function (err, data) {
+				if (err) {
+					console.log("Error: ", err);
+				} else {
+					console.log("Successfully deleted image from AWS.");
+				}
+			})
+		}
+		
+
+		await curataImage.deleteMany({ "entryId": entryId});
+		console.log("Associated images successfully removed.");
+
+		curataList.findOneAndUpdate(
+			{ _id: listId },
+			{ $pull: {entries: entry._id} },
+			{ new: true },
+			function(err, removed) {
+				if (err) { console.log(err) }
+			});
+
+		res.json({
+			message: "Entry delete successful.",
+		});
+
+	} catch(error) {
+		console.log(error);
+		res.status(500).json({
+			errors: "An unknown error occurred"
+		});
+	}
+
+});
+
+
 
 router.get('/sign-s3', function(req, res) {
 	// const fileName = req.body.fileName;
@@ -530,54 +608,15 @@ router.get('/curatas/curate', ensureAuthenticated, function(req, res) {
 	res.render('curate');
 })
 
-router.get('/curatas/:curataId', ensureAuthenticated, function(req, res) {
-
-	let curataId = req.params.curataId;
-
-	Curata.find({"owner.owner_id": req.user._id}, function (err, curatas) {
-		if (err) {
-			return console.log("Could not get curatas: ", err);
-		}
-
-		Curata.findById(curataId).populate('curataList').populate('categories').exec(function(err, curata) {
-			if (err) {
-				return console.log("Could not get Curata. ", err);
-			}
-
-			curataList.find({"curataId": curataId}).populate('entries').exec(function(err, lists) {
-				if (err) {
-					return console.log("Could not get lists.", err)
-				}
-
-				curata.categories.sort(function(a, b) {
-					return a.entryCategoryName.localeCompare(b.entryCategoryName);
-				});
-
-				res.render('dashboard__space', {
-					curatas: curatas,
-					curata: curata,
-					lists: lists
-				})
-				// for each list
-			})
-		})
-
-	});
-});
+router.get('/curatas/:curataId', ensureAuthenticated, dashboardController.getCurata);
 
 // Create new curata with list and template
 router.post('/createNewCurata', ensureAuthenticated, function(req, res){
 
 	let curata = new Curata();
 	curata.creator.creator_id = req.user._id;
-	curata.creator.firstName = req.user.firstname;
-	curata.creator.lastName = req.user.lastname;
-	curata.owner.firstName = req.user.firstname;
-	curata.owner.lastName = req.user.lastname;
 	curata.owner.owner_id = req.user._id;
 
-	let fullName = req.user.firstname + ' ' + req.user.lastname;
-	curata.ownerName = fullName;
 	curata.curataName = req.body.curataName;
 	curata.curataDescription = req.body.curataDescription;
 	curata.curataAddress = req.body.curataAddress;
@@ -607,11 +646,7 @@ router.post('/createNewCurata', ensureAuthenticated, function(req, res){
 
 	let list = new curataList();
 	list.creator.creator_id = req.user._id;
-	list.creator.firstName = req.user.firstname;
-	list.creator.lastName = req.user.lastname;
 	list.owner.owner_id = req.user._id;
-	list.owner.firstName = req.user.firstname;
-	list.owner.lastName = req.user.lastname;
 	list.listName = req.body.curataName;
 	list.listDescription = req.body.curataDescription;
 	list.curataId = curata._id;
@@ -1925,8 +1960,6 @@ router.post('/curatas/:curataId/lists/:listId/entries/:entryId/updateEntry', ens
 router.post('/curatas/:curataId/lists/:listId/newDraft', ensureAuthenticated, function(req, res) {
 
 	let userId = req.user._id;
-	// let firstName = req.user.firstname;
-	// let lastName = req.user.lastname;
 	let creationTime = req.body.creationTime;
 	let curataId = req.body.curataId;
 	let listId = req.body.listId;
@@ -1934,8 +1967,6 @@ router.post('/curatas/:curataId/lists/:listId/newDraft', ensureAuthenticated, fu
 	let entryTitle = req.body.entryTitle;
 	let entryDescription = req.body.entryDescription;
 	let entryLink = req.body.entryLink;
-	let imageKey = req.body.imageKey;
-	let imageURL = req.body.imageURL;
 
 	// next step is setting up questions
 
@@ -1946,17 +1977,18 @@ router.post('/curatas/:curataId/lists/:listId/newDraft', ensureAuthenticated, fu
 	entry.curataId = curataId;
 	entry.dateCreated = creationTime;
 	entry.creator.creator_id = userId;
-	// entry.creator.firstName = firstName;
-	// entry.creator.lastName = lastName;
-	// entry.owner.firstName = firstName;
-	// entry.owner.lastName = lastName
 	entry.owner.owner_id = userId;
 	entry.contributors.push(userId);
 	entry.entryTitle = entryTitle;
 	entry.entryDescription = entryDescription;
 	entry.entryLink = entryLink;
-	entry.entryImageKey = imageKey;
-	entry.entryImageURL = imageURL;
+
+	if (req.body.imageKey && req.body.imageURL) {
+		let imageKey = req.body.imageKey;
+		let imageURL = req.body.imageURL;
+		entry.entryImageKey = imageKey;
+		entry.entryImageURL = imageURL;
+	}
 
 	entry.save(function(err){
 		if (err) { 
@@ -2010,8 +2042,6 @@ router.post('/curatas/:curataId/lists/:listId/entries/:entryId/publish', ensureA
 router.post('/curatas/:curataId/lists/:listId/newEntry', ensureAuthenticated, function(req, res) {
 
 	let userId = req.user._id;
-	// let firstName = req.user.firstname;
-	// let lastName = req.user.lastname;
 	let creationTime = req.body.creationTime;
 	let curataId = req.body.curataId;
 	let listId = req.body.listId;
@@ -2019,7 +2049,6 @@ router.post('/curatas/:curataId/lists/:listId/newEntry', ensureAuthenticated, fu
 	let entryTitle = req.body.entryTitle;
 	let entryDescription = req.body.entryDescription;
 	let entryLink = req.body.entryLink;
-	// let entryImage = "";
 
 	// next step is setting up questions
 
@@ -2030,15 +2059,18 @@ router.post('/curatas/:curataId/lists/:listId/newEntry', ensureAuthenticated, fu
 	entry.curataId = curataId;
 	entry.dateCreated = creationTime;
 	entry.creator.creator_id = userId;
-	// entry.creator.firstName = firstName;
-	// entry.creator.lastName = lastName;
-	// entry.owner.firstName = firstName;
-	// entry.owner.lastName = lastName
 	entry.owner.owner_id = userId;
 	entry.contributors.push(userId);
 	entry.entryTitle = entryTitle;
 	entry.entryDescription = entryDescription;
 	entry.entryLink = entryLink;
+
+	if (req.body.imageKey && req.body.imageURL) {
+		let imageKey = req.body.imageKey;
+		let imageURL = req.body.imageURL;
+		entry.entryImageKey = imageKey;
+		entry.entryImageURL = imageURL;
+	}
 
 	entry.save(function(err){
 		if (err) { 
@@ -2065,61 +2097,52 @@ router.post('/curatas/:curataId/lists/:listId/newEntry', ensureAuthenticated, fu
 	
 })
 
-router.post('/curatas/:curataId/lists/:listId/createNewEntry', ensureAuthenticated, function(req, res) {
+router.post('/curatas/:curataId/lists/:listId/createNewEntry', ensureAuthenticated, async function(req, res) {
 
 	let userId = req.user._id;
-	let firstName = req.user.firstname;
-	let lastName = req.user.lastname;
 	let creationTime = req.body.creationTime;
-	let curataId = req.body.curataId;
-	let listId = req.body.listId;
+	let curataId = req.params.curataId;
+	let listId = req.params.listId;
 
 	// next step is setting up questions
+	try {
+		let entry = new Entry();
+		entry.entryState = "Draft";
+		// entry.linkedTemplateId = template._id;
+		entry.curataListId = listId;
+		entry.curataId = curataId;
+		entry.dateCreated = creationTime;
+		entry.creator.creator_id = userId;
+		entry.owner.owner_id = userId;
+		entry.contributors.push(userId);
 
-	let entry = new Entry();
-	entry.entryState = "Draft";
-	// entry.linkedTemplateId = template._id;
-	entry.curataListId = listId;
-	entry.curataId = curataId;
-	entry.dateCreated = creationTime;
-	entry.creator.creator_id = userId;
-	entry.creator.firstName = firstName;
-	entry.creator.lastName = lastName;
-	entry.owner.firstName = firstName;
-	entry.owner.lastName = lastName
-	entry.owner.owner_id = userId;
-	entry.contributors.push(userId);
-
-	entry.save(function(err){
-		if (err) { 
-			return console.log("Entry saving error: ", err);
-		}
-
-		curataList.findById(listId, function(err, cList) {
-			cList.entries.push(entry._id);
-
-			cList.save(function(err) {
-				if (err) {
-					return console.log("curataList save failed: ", err);
-				}
-
-				let entryId = entry._id;
-				let userId = req.user._id;
-				res.json({
-					entry: entry,
-					redirectTo: '/dashboard/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'
-				});
+		await entry.save();
+		const list = await curataList.findById(listId);
+		if (!list) {
+			return res.status(404).json({
+				message: "List not found."
 			});
+		}
+		list.entries.push(entry._id);
+		await list.save();
+
+		let entryId = entry._id;
+		res.json({
+			entry: entry,
+			redirectTo: '/dashboard/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'
 		});
-	});
+	} catch(err) {
+		console.log('error', err);
+		res.status(500).json({
+			message: "Something went wrong."
+		});
+	}
 	
 })
 
 router.post('/curataLists/CreateNewEntry', ensureAuthenticated, function(req, res) {
 
 	let userId = req.user._id;
-	let firstName = req.user.firstname;
-	let lastName = req.user.lastname;
 	let creationTime = req.body.creationTime;
 	let curataId = req.body.curataId;
 	let listId = req.body.listId;
@@ -2133,10 +2156,6 @@ router.post('/curataLists/CreateNewEntry', ensureAuthenticated, function(req, re
 	entry.curataId = curataId;
 	entry.dateCreated = creationTime;
 	entry.creator.creator_id = userId;
-	entry.creator.firstName = firstName;
-	entry.creator.lastName = lastName;
-	entry.owner.firstName = firstName;
-	entry.owner.lastName = lastName
 	entry.owner.owner_id = userId;
 	entry.contributors.push(userId);
 
@@ -3799,11 +3818,7 @@ router.post('/createNewList', ensureAuthenticated, function(req, res) {
 
 	let list = new curataList();
 	list.creator.creator_id = userId;
-	list.creator.firstName = req.user.firstname;
-	list.creator.lastName = req.user.lastname;
 	list.owner.owner_id = userId;
-	list.owner.firstName = req.user.firstname;
-	list.owner.lastName = req.user.lastname;
 	if (listName) {
 		list.listName = listName;
 	}

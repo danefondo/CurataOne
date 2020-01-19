@@ -44,7 +44,7 @@ $(document).on('click', '.dropdown .option', function(event) {
   var text = $(this).data('display-text') || $(this).text();
   let id = $(this).attr('data-value');
   $(this).closest('.dropdown').find('.current').text(text);
-  $(this).closest('.dropdown').find('.current').attr("categoryId", id);
+  $(this).closest('.dropdown').find('.current').attr("data-categoryId", id);
   $(this).closest('.dropdown').prev('select').val($(this).data('value')).trigger('change');
 });
 

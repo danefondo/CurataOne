@@ -131,8 +131,42 @@ const accountController = {
 				message: 'An error occurred'
 			});
 		}
+	},
 
+	async sendResetPass(req, res) {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			console.log('errors')
+		    return res.status(422).json({ message: errors.array()[0].msg });
+		}
+
+		try {
+			console.log(req.body.email);
+			const token = await accountUtil.generateToken();
+			console.log("veriftok: ", token);
+
+			const user = await User.findOne({
+				email: req.body.email
+			});
+
+			user.resetToken = token;
+
+			await user.save();
+
+			const link = `${req.protocol}://${req.get('host')}/accounts/reset/${token}`;
+			console.log(link);
+			mail.sendResetMail(req.body.email, link);
+			res.status(200).json({
+				message: 'A password reset link has been sent to the email address you entered.'
+			})
+		} catch(err) {
+			console.log(err);
+			res.status(500).json({
+				message: 'An error occurred, please try again later.'
+			});
+		}
 	}
+
 };
 
 module.exports = accountController;

@@ -190,6 +190,11 @@
     box-shadow: 0px 5px 5px 1px #f3f3f3;
     background-color: #fff;
     border-radius: 4px;
+    transition: .2s ease-in-out;
+}
+
+.entry__liveCurata:hover {
+	transform: scale(1.02);
 }
 
 .entryTitle__liveCurata {

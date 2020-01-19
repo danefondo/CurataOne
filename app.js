@@ -19,7 +19,7 @@ const config = require('./config/database');
 
 // Production database
 mongoose.connect(config.db_uri);
-
+mongoose.set('useFindAndModify', false);
 
 // Get default connection
 let db = mongoose.connection;

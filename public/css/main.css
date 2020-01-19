@@ -2034,12 +2034,12 @@ h2.CheckOthers {
 
   border: 1px solid #eee;
   width: 94%;
+  border-bottom: 3px solid #eee;
 }
 
 .entryDetailsGroupSpecial {
   margin-left: 0;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0;
   margin-right: 0;
   background-color: transparent;
   border: none;
@@ -3084,7 +3084,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 /*  float: right;*/
   padding: 7px 11px;
   transition: .2s ease-in-out;
-  margin: auto 0px auto auto;
+  margin: auto 0px auto 0px;
   font-size: 18px;
 }
 
@@ -3810,7 +3810,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   font-weight: bold;
 /*  text-transform: capitalize;*/
   text-transform: uppercase;
-  color: #9E9E9E;
+  color: #bbb;
   margin-bottom: 0px;
 }
 
@@ -4235,6 +4235,11 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   background-color: #f9f9f9;
 }
 
+.entryActions__space {
+  width: 100%;
+  display: flex;
+}
+
 .entryCreateCategoryBlock__space {
   display: none;
   margin-top: 10px;
@@ -4242,12 +4247,12 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 .entryNewCategory__space {
   vertical-align: middle;
-  height: 42px;
+/*  height: 42px;*/
   text-align: center;
-  line-height: 42px;
+/*  line-height: 42px;*/
 /*  background-color: #333;*/
-  background-color: #080808;
-  padding: 0 10px 0 10px;
+/*  background-color: #080808;*/
+/*  padding: 0 10px 0 10px;*/
   border-radius: 3px;
   margin-left: 15px;
   font-weight: bold;
@@ -4257,10 +4262,22 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   width: 20%;
   display: inline-block;
   transition: .2s ease-in-out;
+
+  height: 51px;
+  line-height: 57px;
+  background-color: #f7f7f7;
+  border: 1px solid #eee;
+  border-bottom: 3px solid #eee;
+  font-size: 33px;
+  color: #737373;
+  width: 90px;
+  margin-bottom: auto;
+  margin-top: auto;
 }
 
 .entryNewCategory__space:hover {
-  background-color: #2f2f2f;
+  background-color: #efefef;
+  color: #717171;
 }
 
 .entryNewCategoryCreate__space {
@@ -4326,8 +4343,13 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   height: 100%;
   margin: 0 auto;
 /*  margin-top: 20px;*/
-  margin-top: 20px;
+  margin-top: 55px;
   width: 650px;
+}
+
+.entryOptionsContainer__space {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .entryContainerTitle__space {
@@ -4342,6 +4364,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 .entryCurrentListContainer__space {
   max-width: 650px;
   margin: 0 auto;
+  margin-right: 10px;
+  margin-top: 5px;
 }
 
 .entryCurrentList__space {
@@ -4352,8 +4376,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   font-weight: bold;
   text-transform: uppercase;
   color: #9E9E9E;
-  margin-top: 40px;
-  margin-bottom: 12px;
+/*  margin-top: 40px;
+  margin-bottom: 12px;*/
 }
 
 .entryCurrentListSelector__space {
@@ -4427,6 +4451,28 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     color: #333;
 }
 
+.entrySaveAsDraft__space {
+  border-radius: 4px;
+  font-size: 20px;
+  background-color: #af94e0;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  padding: 10px 15px;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  margin-right: 15px;
+  max-width: 200px;
+  display: inline-block;
+  border: 1px solid #eee;
+  margin-left: auto;
+}
+
+.entrySaveAsDraft__space:hover {
+  background-color: #553d82;
+}
+
 .createEntry__space {
     border-radius: 4px;
     text-transform: capitalize;
@@ -4440,7 +4486,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     cursor: pointer;
     position: relative;
     margin-right: 40px;
-    float: right;
+/*    float: right;*/
     max-width: 150px;
     display: inline-block;
     border: 1px solid #eee;
@@ -4448,7 +4494,6 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 .createEntry__space:hover {
   background-color: #7E57C2;
-  transform: scale(1.02); 
 }
 
 .addEntry__space {
@@ -4501,4 +4546,9 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 .entryShowHideMoreOptions__space {
   border: 1px solid transparent;
   background-color: transparent;
+  color: #aaa;
+}
+
+.directDeleteDraft__space {
+  margin-top: 10px;
 }
