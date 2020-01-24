@@ -615,7 +615,6 @@ router.get('/curatas/:curataId/lists/:listId/entries/:id/editing', ensureAuthent
 router.get('/curatas/:curataId/lists/:listId/entries/new', ensureAuthenticated, dashboardController.newCurata);
 
 
-
 // Create new curata with list and template
 router.post('/createNewCurata', ensureAuthenticated, function(req, res){
 
