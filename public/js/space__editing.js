@@ -367,6 +367,7 @@
 					$('.createEntryModalActionButton__space').toggle();
 				}
 				$('.entryFull__space').replaceWith(fullPageLink);
+				$('.TemplateHolder').attr('id', response.entryId);
 				$('.modalEntryId').attr('id', response.entryId);
 				let draftDeleter = $('<div>', {'class': 'directDeleteDraft__space createEntryModalActionButton__space hide'});
 				draftDeleter.text("Delete draft");
@@ -416,7 +417,7 @@
 
 	function updateDraft() {
 		let data = {}
-		let entryCreator = $('.createEntryModal__space');
+		let entryCreator = $('.entryContainer__space');
 		let modalId = $('.modalEntryId').attr('id');
 		let templateId = $('.TemplateHolder').attr('id');
 		let entryId = modalId || templateId;
@@ -460,7 +461,7 @@
 				console.log("Yoho! Updated entry!");
 			},
 			error: function(err) {
-				console.log("Arrghh! Failed to create draft!");
+				console.log("Arrghh! Failed to update draft!");
 			}
 		})
 	}
@@ -473,16 +474,19 @@
 		if (typingTimer) {
 			clearTimeout(typingTimer);
 		}
-        console.log("Checking if entry exists.");
-        let entryExists = checkIfEntryExists();
-		if (entryExists) {
-	        typingTimer = setTimeout(function() {
-				updateDraft();
-			}, doneTypingInterval);
-		} else if (creatingEntry == true) {
+		console.log("Checking if entry exists.");
+		if (creatingEntry == true) {
 			return console.log("Previous entry or draft creation is still in progress.");
 		} else {
-			createNewDraft();
+			typingTimer = setTimeout(function() {
+				let entryExists = checkIfEntryExists();
+				console.log('entry status', entryExists)
+				if (entryExists) {
+					updateDraft();
+				} else {
+					createNewDraft();
+				}
+			}, doneTypingInterval);
 		}
 	}
 
