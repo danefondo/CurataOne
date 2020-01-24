@@ -50,8 +50,11 @@ let User = require('./models/user');
 
 
 // Load View Engine
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', [path.join(__dirname, 'views'),
+  path.join(__dirname, '/views/entry__new')]);
 app.set('view engine', 'pug');
+
+app.locals.basedir = path.join(__dirname, 'views');
 
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));

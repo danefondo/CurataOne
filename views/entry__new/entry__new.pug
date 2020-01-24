@@ -1,0 +1,102 @@
+extends ../layout_no_top_bar
+
+include ../mixins/heading
+include ../mixins/image
+include ../mixins/textarea
+include ../mixins/gallery
+include ../mixins/quote
+include ../mixins/infoBox
+include ../mixins/exampleBox
+include ../mixins/expandable
+include ../mixins/questionAnswer
+include ../mixins/sectionBreak
+include ../mixins/list
+include ../mixins/checklist
+include ../mixins/link
+
+include ../mixins/entryForm
+
+include ../images/TrashIcon
+include ../images/SettingsIcon
+include ../images/externalLink
+
+//- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
+block heading
+	- var coreURL = 'dashboard';
+	.helperNavigation
+		.topnav-container
+			a.goBack.navlink(href= '/' + coreURL + '/curatas/' + curata.id) &larr;
+			.entryMetaTitle Editing entry
+			.statusMessage.inline
+			.floatRight
+				.settingsButton.inline
+					+SettingsIcon
+				//- a.showPreview.inline(href= '/' + coreURL + '/drafts/' + entry.id, target= '_blank') Preview
+				.publishEntry.inline Publish
+			//- .floatUntrash
+			//- 	.untrashEntry.buttonGrey.inline
+			//- 		+TrashIcon
+			//- 		span Untrash
+block content
+	- var coreURL = 'dashboard';
+	.curataId(id= curata.id)
+	.emptyModal
+		.modalBackground
+		.deleteModal
+			.content-wrapper
+				.msg-title Are you sure you want to move this entry to the trash?
+				.action-group
+					.cancelTrashEntry.button-outline CANCEL
+					.confirmTrashEntry.button-filled TRASH
+	//- if (entry.entryState !== "Trashed")
+	.settingsSideNav
+		.entrySettingsHeader
+			span Entry Settings
+			.closeEntrySettings.inline X
+		.entrySettingsContent
+			.entrySettingsBlock
+				//- .entryState(data-entryState= entry.entryState) Status: #{entry.entryState}
+			//- if (entry.entryState == "Published")
+			//- 	.entrySettingsBlock
+			//- 		.makeDraft Revert to draft
+			//- .entrySettingsBlock
+			//- 	a.editTemplate.whiteButton(href= '/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/template/' + entry.linkedTemplateId) Edit template
+		//- .entrySettingsDelete
+		//- 	.entrySettingsBlock
+		//- 		if (entry.entryState !== "Trashed")
+		//- 			.trashEntry.buttonGrey.inline
+		//- 				+TrashIcon
+		//- 				span Move to trash
+		//- 		else
+		//- 			.untrashEntry.buttonGrey.inline
+		//- 				+TrashIcon
+		//- 				span Untrash
+				//- Settings enables turning on/off whether description, image, link, other is displayed in the final outcome
+	//- if (!entry) scenario
+	.sectionArea.recalculatedWidth
+		.TemplateHolder
+			+entryForm(curata)
+block scripts
+	script(src='/js/space__editing.js')
+	script(src='/js/customSelect.js')
+
+
+
+//- You create a template and start curating
+	//- Inside the template
+
+//- At any particular time you are 'in' or 'inside' a specific list, inside a specific curata
+	//- Within which you can make quick entries
+	//- Within which you can quickly change between lists (and thus also entries)
+	//- Within which you can quickly change between curatas and it will give the last used list
+
+//- Library/Templates -- public and personal (private) templates by categories, names and even description for the purpose of the template
+
+//- Browse -- public lists and curatas by categories and other filters
+
+//- Creating an entry
+	//- There is a button for 'show preview'
+	//- It is possible to quickly edit style or design of list
+	//- It is possible to quickly edit the template itself and make this change come to effect with all templates and entries as well. As such, it must change the order number of each particular template.
+
+//- Things will change anyway. If that will happen anyway, I'd like to do it proactively. Albeit that is uncomfortable, scary. and possibly painful.

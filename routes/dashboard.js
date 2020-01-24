@@ -610,6 +610,12 @@ router.get('/curatas/curate', ensureAuthenticated, function(req, res) {
 
 router.get('/curatas/:curataId', ensureAuthenticated, dashboardController.getCurata);
 
+router.get('/curatas/:curataId/lists/:listId/entries/:id/editing', ensureAuthenticated, dashboardController.editCurata);
+
+router.get('/curatas/:curataId/lists/:listId/entries/new', ensureAuthenticated, dashboardController.newCurata);
+
+
+
 // Create new curata with list and template
 router.post('/createNewCurata', ensureAuthenticated, function(req, res){
 
@@ -652,7 +658,7 @@ router.post('/createNewCurata', ensureAuthenticated, function(req, res){
 	list.curataId = curata._id;
 
 	// let template = new Template();
-	// template.name = req.body.curataName;
+	// template.name = req.body.curataName; 
 	// template.curataListId = list._id;
 	// template.curataId = curata._id;
 	// template.creator = req.user._id;
@@ -2183,58 +2189,6 @@ router.post('/curataLists/CreateNewEntry', ensureAuthenticated, function(req, re
 	});
 
 });
-
-router.get('/curatas/:curataId/lists/:listId/entries/:id/editing', ensureAuthenticated, function(req, res) {
-
-	// get id for template
-	let entryId = req.params.id;
-	console.log("Inside entry, entryId: ", entryId);
-
-		// next step is setting up questions
-	Entry.findById(entryId).populate('entryComponents').exec(function (err, entry) {
-		
-		if (err) {
-			return console.log("1 Could not get entry: ", err);
-		}
-
-		if (!err && entry) {
-			console.log("Received entry: ", entry);
-
-			entry.entryComponents.sort(function(a, b) {
-				return a.componentOrder - b.componentOrder;
-			});
-
-			for (var i = 0; i < entry.entryComponents.length; i++) {
-				let component = entry.entryComponents[i];
-
-				if (component.componentList.length) {
-					console.log('Yes, yes, got a list here. Let us... sort it, now, arrgh');
-					component.componentList.sort(function(a, b) {
-						return a.itemOrder - b.itemOrder;
-					});
-				}
-			}
-
-			let templateId = entry.linkedTemplateId;
-
-			Template.findById(templateId, function(err, template) {
-				if (err) {
-					return console.log("Could not get template: ", err);
-				}
-
-				res.render('entry__editing', {
-					entry: entry,
-					template: template
-				})
-
-			})
-		} else {
-			console.log("Entry not found.");
-			res.redirect('/');
-		}
-
-	});
-})
 
 // Delete component from template
 router.delete('/deleteTemplateComponent', ensureAuthenticated, function(req, res) {

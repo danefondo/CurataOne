@@ -17,6 +17,7 @@ include mixins/link
 include images/TrashIcon
 include images/SettingsIcon
 include images/externalLink
+include mixins/entryForm
 
 //- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
 block heading
@@ -46,6 +47,7 @@ block heading
 block content
 	- var coreURL = 'dashboard';
 	.curataId(id= entry.curataId)
+	.listId(data-listId= entry.curataListId)
 	.emptyModal
 		.modalBackground
 		.deleteModal
@@ -82,67 +84,8 @@ block content
 	if (entry.entryState !== "Trashed")
 		.sectionArea.recalculatedWidth
 			.TemplateHolder(id= entry.id)
-				.entryDetails
-					.entryComponentTitle Title
-					.entryDetailsGroup
-						if (entry.entryTitle)
-							input.EntryTitle(placeholder= "Your title" value= entry.entryTitle)
-						else
-							input.EntryTitle(placeholder= "Your title")
-					.entryComponentTitle Summary
-					.entryDetailsGroup
-						.mainEditor
-							if (entry.entryText)
-								textarea.postDescription(maxlength="100" placeholder="Write a short summary of less than 100 characters.") !{entry.entryText}
-							else
-								textarea.postDescription(maxlength="100" placeholder="Write a short summary of less than 100 characters.")
-							//- .editorTools.unreset(id= "toolbar_" +entry.id)
-							//- if (entry.entryText)
-							//- 	.editorText.unreset(id= "editor_" +entry.id) !{entry.entryText}
-							//- else
-							//- 	.editorText.unreset(id= "editor_" +entry.id)
-							//- 		p Write something here...
-					.entryComponentTitle Link
-					.entryDetailsGroup
-						.linkContainer
-							if (entry.entryLink)
-								input.entryLink(placeholder="http://example.com" value= entry.entryLink) 
-								a.entryLinkPreview(href= entry.entryLink target="_blank")
-									+externalLink
-							else
-								input.entryLink(placeholder="http://example.com")
-								a.entryLinkPreview.hidden(href="#" target="_blank")
-									+externalLink
-					.entryComponentTitle Image
-					.entryDetailsGroup
-						.mainImage(id= "imageArea_" +entry.id)
-							if (entry.entryImageURL)
-								.file-upload.imageBlock(data-type="mainImage" data-image-key= entry.entryImageKey)
-									form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
-										input#file-input.file-upload-input(type='file', name='image', accept='image/jpg')
-										.drag-text
-											button.file-upload-btn(type='button') Add Image
-											h3 Or just drag and drop a file
-									.file-upload-content
-										img.file-upload-image(src=entry.entryImageURL, alt='your image')
-										.image-title-wrap
-											button.remove-image(type='button')
-												| Remove 
-												span.image-title Uploaded Image
-							else 
-								.file-upload.imageBlock(data-type="mainImage")
-									form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
-										input#file-input.file-upload-input(type='file', name='image', accept='image/jpg')
-										.drag-text
-											button.file-upload-btn(type='button') Add Image
-											h3 Or just drag and drop a file
-									.file-upload-content
-										img.file-upload-image(src='#', alt='your image')
-										.image-title-wrap
-											button.remove-image(type='button')
-												| Remove 
-												span.image-title Uploaded Image
-
+				+entryForm(curata, entry)
+				
 	else
 		.sectionArea
 			.TemplateHolder(id= entry.id)
@@ -189,7 +132,8 @@ block content
 
 
 block scripts
-	script(src='/js/entryEditing.js')
+	script(src='/js/space__editing.js')
+	script(src='/js/customSelect.js')
 
 //- Curata becomes a logo
 	//- Then next to it will be the current Currata you are in (or could be a sidebar thing and switch)

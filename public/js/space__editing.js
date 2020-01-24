@@ -7,6 +7,7 @@
  	let creatingEntry = false;
 
 	let curataId = $('.curataId').attr('id');
+	let entryId = $('.TemplateHolder').attr('id');
 
 	function initCurataDropdown() {
 		// reapply upon creating new component
@@ -92,35 +93,6 @@
 	}
 	initPreviewButton();
 
-	function initNewCategoryCreation() {
-		$('.entryNewCategory__space').on('click', function() {
-			let clickObject = $(this);
-			// $(this).closest('.entryDetailsGroup').removeClass('flex');
-			$('.dropdown').css("float", "none");
-			$('.dropdown').css("width", "100%");
-			// $('.entryNewCategory__space').css("display", "none");
-			// $('.entryCreateCategoryBlock__space').css("display", "block");
-			hideShowCategoryCreator(clickObject);
-			initCancelCategoryCreation();
-			initCreateNewCategory();
-		})
-	}
-	initNewCategoryCreation();
-
-	function initCancelCategoryCreation() {
-		$('.entryNewCategoryCancel__space').off('click');
-		$('.entryNewCategoryCancel__space').on('click', function() {
-			let clickObject = $(this);
-			// $(this).closest('.entryDetailsGroup').addClass('flex');
-			$('.dropdown').css("float", "left");
-			$('.dropdown').css("width", "55%");
-			// $('.entryNewCategory__space').css("display", "inline-block");
-			// $('.entryCreateCategoryBlock__space').css("display", "none");
-			$('.entryNewCategoryText__space').val('');
-			hideShowCategoryCreator(clickObject);
-		});
-	}
-
 	function hideShowMoreOptions() {
 		$('.entryShowHideMoreOptions__space').off('click');
 		$('.entryShowHideMoreOptions__space').on('click', function() {
@@ -128,81 +100,6 @@
 		})
 	}
 	hideShowMoreOptions();
-
-	function hideShowCategoryCreator(clickObject) {
-		clickObject.closest('.entryDetailsGroup').toggleClass('flex');
-		$('.entryNewCategory__space').toggle();
-		$('.entryCreateCategoryBlock__space').toggle();
-	}
-
-	function initCreateNewCategory() {
-		$('.entryNewCategoryCreate__space').off('click');
-		$('.entryNewCategoryCreate__space').on('click', function() {
-			let clickObject = $(this);
-
-			let category = $('.entryNewCategoryText__space').val();
-			category = category[0].toUpperCase() + category.slice(1);
-			category = category.replace(/^\s+|\s+$/g, "");
-
-			let listId = $('.entryCurrentListSelector__space').attr('data-listId');
-
-			clickObject.text('Creating...');
-
-
-			let data = {};
-			data.category = category;
-			data.listId = listId;
-			data.curataId = curataId;
-			data.dateCreated = new Date();
-
-			// create category in database
-			$.ajax({
-				data: data,
-				type: 'POST',
-				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/createCategory',
-				success: function(response) {
-					console.log("Yoho! Successfully created new category!");
-					let categoryId = response.categoryId;
-					category = response.category.entryCategoryName
-					// clear and hide category creator
-					clickObject.text('Create');
-					hideShowCategoryCreator(clickObject);
-					$('.entryNewCategoryText__space').val('');
-					$('.dropdown').css("float", "left");
-					$('.dropdown').css("width", "55%");
-
-					let listOption = $('<li>', {'class': 'option selected', 'data-value': categoryId})
-					listOption.text(category);
-
-					let categoryList = $('.dropdown').find('ul');
-					categoryList.append(listOption);
-
-					let dropdownList = $('.dropdown').find('.list');
-					dropdownList.find('.selected').removeClass('selected');
-
-					// set newly created category as default
-
-					$('.dropdown').find('.current').text(category);
-					$('.dropdown').find('.current').attr("data-categoryId", categoryId);
-
-					$('.dropdown').prev('select').val(category).trigger('change');
-
-					// sort alphabetically upon add, whilst keeping 'None' at start
-					let optionList = $('.optionList');
-					optionList.children().not('.doNotSortMe').detach().sort(function(a, b) {
-					    if (!$(a).hasClass('.doNotSortMe') && !$(b).hasClass('.doNotSortMe')) { 
-					        return $(a).text().localeCompare($(b).text());
-					    }
-					}).appendTo(optionList);
-
-				},
-				error: function(err) {
-					console.log("Arrghh! Failed to publish entry!");
-				}
-			})	
-
-		})
-	}
 
 	// to show contents
 		// click entry
@@ -395,7 +292,9 @@
 	initCreateEntry();
 
 	function checkIfEntryExists() {
-		let entryId = $('.modalEntryId').attr('id');
+		let modalId = $('.modalEntryId').attr('id');
+		let templateId = $('.TemplateHolder').attr('id');
+		let entryId = modalId || templateId;
 		let returnValue;
 
 		if (typeof entryId !== typeof undefined && entryId !== false) {
@@ -425,7 +324,8 @@
 
 		// what if no list? (e.g. person removes manually, doesn't load properly, but there should always be some list, e.g. then it takes from default list in database) -- just check on backend
 		let dateCreated = new Date();
-		let listId = $('.entryCurrentListSelector__space').attr('data-listId');
+		let listId = $('.entryCurrentListSelector__space').data('listid') || $('.listId').data('listid');
+		console.log(listId+'sdfadsf')
 		let currentCategoryObject = entryCreator.find('.current');
 		let entryCategory = currentCategoryObject.text();
 		let entryCategoryId = currentCategoryObject.attr('data-categoryid');
@@ -474,6 +374,7 @@
 				hideShowMoreOptions();
 				initDraftDeleting();
 				creatingEntry = false;
+				updateDraft();
 			},
 			error: function(err) {
 				console.log("Arrghh! Failed to create draft!");
@@ -516,11 +417,13 @@
 	function updateDraft() {
 		let data = {}
 		let entryCreator = $('.createEntryModal__space');
-		let entryId = $('.modalEntryId').attr('id');
+		let modalId = $('.modalEntryId').attr('id');
+		let templateId = $('.TemplateHolder').attr('id');
+		let entryId = modalId || templateId;
 
 		// what if no list? (e.g. person removes manually, doesn't load properly, but there should always be some list, e.g. then it takes from default list in database) -- just check on backend
 		let dateCreated = new Date();
-		let listId = $('.entryCurrentListSelector__space').attr('data-listId');
+		let listId = $('.entryCurrentListSelector__space').data('listid') || $('.listId').data('listid');
 		let currentCategoryObject = entryCreator.find('.current');
 		let entryCategory = currentCategoryObject.text();
 		let entryCategoryId = currentCategoryObject.attr('data-categoryid');
@@ -563,15 +466,19 @@
 	}
 
 	// #2
-	function createOrUpdateDraft() {
-		let typingTimer;                //timer identifier
-		let doneTypingInterval = 1500;  //time in ms (5 seconds)
+	let typingTimer;                //timer identifier
 
-        console.log("I changed! Haha!");
+	function createOrUpdateDraft() {
+		let doneTypingInterval = 2000;  //time in ms (5 seconds)
+		if (typingTimer) {
+			clearTimeout(typingTimer);
+		}
+        console.log("Checking if entry exists.");
         let entryExists = checkIfEntryExists();
 		if (entryExists) {
-		    clearTimeout(typingTimer);
-	        typingTimer = setTimeout(updateDraft, doneTypingInterval);
+	        typingTimer = setTimeout(function() {
+				updateDraft();
+			}, doneTypingInterval);
 		} else if (creatingEntry == true) {
 			return console.log("Previous entry or draft creation is still in progress.");
 		} else {
@@ -930,6 +837,103 @@
 			}
 		})
 	}
+
+
+
+
+	function initEntryLinkSave() {
+		$('.entryLink').off('input change');
+		$('.entryLink').on('input change', function() {
+
+			let link = $(this).val();
+			let container = $(this).closest('.linkContainer');
+			let linkPreview = container.find('.entryLinkPreview');
+			let parsedLink = (link.indexOf('://') === -1) ? 'http://' + link : link;
+			let dateUpdated = new Date();
+
+			let hiddenCheck = linkPreview.hasClass('hidden');
+			if (hiddenCheck) {
+				linkPreview.removeClass('hidden');
+			}
+
+			linkPreview.attr('href', parsedLink);
+			// linkPreview.text(parsedLink);
+
+			$.ajax({
+			  data: {
+			    entryLink: parsedLink,
+			    entryId: entryId,
+			    dateUpdated: dateUpdated
+			  },
+			  type: 'POST',
+			  url: '/' + coreURL + '/UpdateEntryLink',
+			  success: function(Item){
+			    console.log("Entry link successfully updated.")
+			    // Display success message?
+
+			  },
+			  error: function(err){
+			    console.log("Entry link update failed: ", err);
+			    // Display error message?
+			  }
+			});
+		})
+	}
+	initEntryLinkSave();
+
+	function initEntryLinkExit() {
+		$('.EntryLink').off('keyup');
+		$('.EntryLink').on('keyup', function(event) {
+			$(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
+		})
+
+		$('.EntryLink').off('keypress');
+		$('.EntryLink').on('keypress', function(event) {
+			if (event.keyCode === 13) {
+				event.preventDefault();
+				$(this).blur();
+			}
+		})
+
+		$('.EntryLink').on('keypress', function(event) {
+		    if(event.which === 32) 
+		        return false;
+		});
+	}
+	initEntryLinkExit();
+
+
+	function initDescriptionListening(descElement, ajaxURL, ajaxType, group) {
+		descElement.on('input selectionchange propertychange', function() {
+
+			let content = $(this).val();
+			let data = {};
+			const dateUpdated = new Date();
+
+			if (group == "entryDescription") {
+				data.entryText = content;
+				data.entryId = entryId;
+				data.dateUpdated = dateUpdated;
+			}
+
+			$.ajax({
+				data: data,
+				type: ajaxType,
+				url: '' + ajaxURL,
+				success: function(data) {
+					console.log("Update successful");
+				},
+				error: function(err) {
+					console.log("Update failed:", err);
+				}
+			})
+
+		})
+	}
+
+	let entryDescription = $('.postDescription')
+	let entryDescriptionURL = '/' + coreURL + '/UpdateEntryText'
+	initDescriptionListening(entryDescription, entryDescriptionURL, 'POST', 'entryDescription')
 
 
  });

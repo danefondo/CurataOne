@@ -3,6 +3,7 @@ extends layout__dashboard
 include entryDesigns/entryOne
 include images/filledArrow
 include images/externalLink
+include mixins/entryForm
 
 	//- function initCurataAlphabetSort() {
 	//- 	$(".sortAlpha").click(function() {
@@ -109,7 +110,7 @@ block content
 			.createEntryModalActions__space
 				.entryOptionsContainer__space
 					.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
-					.entryFull__space.createEntryModalActionButton__space.hide Full page editor
+					a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + curata.id + '/lists/' + curata.curataList[0].id + '/entries/new') Full page editor
 					.entryClear__space.createEntryModalActionButton__space.hide Clear
 					.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
 				.entryCurrentListContainer__space
@@ -119,55 +120,7 @@ block content
 			.sectionArea
 				//- .entryContainerTitle__space(style="margin:30px auto 20px auto; color: #ccc;") New entry
 				.modalEntryId
-				.entryContainer__space
-					.entryDetails
-						.entryComponentTitle Category
-						.entryDetailsGroup.entryDetailsGroupSpecial.flex
-							select.selector__space
-								option.noneSelection__space(value="" data-display-text="Select category: ") None
-								each category in curata.categories
-									if (category.entryCategoryName && category.entryCategoryName.length)
-										option(value=category.id) #{category.entryCategoryName}
-									else
-										option(value=category.id) Untitled category
-								//- each list in curata.curataList
-								//- 	if (list.listName && list.listName.length)
-								//- 		option(value=list.id) #{list.listName}
-								//- 	else
-								//- 		option(value=list.id) Untitled list
-							.entryNewCategory__space +
-							.entryCreateCategoryBlock__space
-								input.entryNewCategoryText__space(placeholder="Write your category")
-								.entryNewCategoryCreate__space Create
-								.entryNewCategoryCancel__space X
-						.entryComponentTitle Entry title
-						.entryDetailsGroup
-							input.entryTitle__space.entryInput__space(placeholder= "Entry title")
-						.entryComponentTitle Summary
-						.entryDetailsGroup
-							.mainEditor
-								textarea.postDescription.entryInput__space(maxlength="100" placeholder="Write a short summary of less than 100 characters.")
-						.entryComponentTitle Link
-						.entryDetailsGroup
-							.linkContainer
-								input.entryLink.entryInput__space(placeholder="http://example.com")
-								a.entryLinkPreview.hidden(href="#" target="_blank")
-									+externalLink
-						.entryComponentTitle Image
-						.entryDetailsGroup
-							.mainImage(id= "imageArea_")
-								.file-upload.imageBlock(data-type="mainImage")
-									form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
-										input#file-input.file-upload-input(type='file', name='image', accept='image/jpg')
-										.drag-text
-											button.file-upload-btn(type='button') Add Image
-											h3 Or just drag and drop a file
-									.file-upload-content
-										img.file-upload-image(src='#', alt='your image')
-										.image-title-wrap
-											button.remove-image(type='button')
-												| Remove 
-												span.image-title Uploaded Image
+				+entryForm(curata)
 				.entryActions__space
 					.entrySaveAsDraft__space Save as draft & exit
 					.createEntry__space Create entry
@@ -246,8 +199,6 @@ block content
 						//- 	.noEntries__liveCurata You have no entries
 				else 
 					.noLists__liveCurata Curata is empty.
-
-
 block scripts
 	script(src='/js/space__editing.js')
 	script(src='/js/customSelect.js')

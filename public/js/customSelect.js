@@ -1,3 +1,6 @@
+const coreURL = 'dashboard';
+let curataId = $('.curataId').attr('id');
+
 function create_custom_dropdowns() {
   $('select').each(function(i, select) {
     if (!$(this).next().hasClass('dropdown')) {
@@ -84,6 +87,112 @@ $(document).on('keydown', '.dropdown', function(event) {
     return false;
   }
 });
+
+
+function initCreateNewCategory() {
+  $('.entryNewCategoryCreate__space').off('click');
+  $('.entryNewCategoryCreate__space').on('click', function() {
+    let clickObject = $(this);
+
+    let category = $('.entryNewCategoryText__space').val();
+    category = category[0].toUpperCase() + category.slice(1);
+    category = category.replace(/^\s+|\s+$/g, "");
+
+    let listId = $('.entryCurrentListSelector__space').attr('data-listId');
+
+    clickObject.text('Creating...');
+
+
+    let data = {};
+    data.category = category;
+    data.listId = listId;
+    data.curataId = curataId;
+    data.dateCreated = new Date();
+
+    // create category in database
+    $.ajax({
+      data: data,
+      type: 'POST',
+      url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/createCategory',
+      success: function(response) {
+        console.log("Yoho! Successfully created new category!");
+        let categoryId = response.categoryId;
+        category = response.category.entryCategoryName
+        // clear and hide category creator
+        clickObject.text('Create');
+        hideShowCategoryCreator(clickObject);
+        $('.entryNewCategoryText__space').val('');
+        $('.dropdown').css("float", "left");
+        $('.dropdown').css("width", "55%");
+
+        let listOption = $('<li>', {'class': 'option selected', 'data-value': categoryId})
+        listOption.text(category);
+
+        let categoryList = $('.dropdown').find('ul');
+        categoryList.append(listOption);
+
+        let dropdownList = $('.dropdown').find('.list');
+        dropdownList.find('.selected').removeClass('selected');
+
+        // set newly created category as default
+
+        $('.dropdown').find('.current').text(category);
+        $('.dropdown').find('.current').attr("data-categoryId", categoryId);
+
+        $('.dropdown').prev('select').val(category).trigger('change');
+
+        // sort alphabetically upon add, whilst keeping 'None' at start
+        let optionList = $('.optionList');
+        optionList.children().not('.doNotSortMe').detach().sort(function(a, b) {
+            if (!$(a).hasClass('.doNotSortMe') && !$(b).hasClass('.doNotSortMe')) { 
+                return $(a).text().localeCompare($(b).text());
+            }
+        }).appendTo(optionList);
+
+      },
+      error: function(err) {
+        console.log("Arrghh! Failed to publish entry!");
+      }
+    })	
+
+  })
+}
+
+function hideShowCategoryCreator(clickObject) {
+  clickObject.closest('.entryDetailsGroup').toggleClass('flex');
+  $('.entryNewCategory__space').toggle();
+  $('.entryCreateCategoryBlock__space').toggle();
+}
+
+function initNewCategoryCreation() {
+  $('.entryNewCategory__space').on('click', function() {
+    let clickObject = $(this);
+    // $(this).closest('.entryDetailsGroup').removeClass('flex');
+    $('.dropdown').css("float", "none");
+    $('.dropdown').css("width", "100%");
+    // $('.entryNewCategory__space').css("display", "none");
+    // $('.entryCreateCategoryBlock__space').css("display", "block");
+    hideShowCategoryCreator(clickObject);
+    initCancelCategoryCreation();
+    initCreateNewCategory();
+  })
+}
+initNewCategoryCreation();
+
+function initCancelCategoryCreation() {
+  $('.entryNewCategoryCancel__space').off('click');
+  $('.entryNewCategoryCancel__space').on('click', function() {
+    let clickObject = $(this);
+    // $(this).closest('.entryDetailsGroup').addClass('flex');
+    $('.dropdown').css("float", "left");
+    $('.dropdown').css("width", "55%");
+    // $('.entryNewCategory__space').css("display", "inline-block");
+    // $('.entryCreateCategoryBlock__space').css("display", "none");
+    $('.entryNewCategoryText__space').val('');
+    hideShowCategoryCreator(clickObject);
+  });
+}
+
 
 $(document).ready(function() {
   create_custom_dropdowns();

@@ -3,220 +3,220 @@
  	let savingInProgress = false;
  	let enableDisableInProgress = false;
 
- 	let userId = $('.userId').attr('id');
-	let username = $('.userId').attr('data-username');
+ 	// let userId = $('.userId').attr('id');
+	// let username = $('.userId').attr('data-username');
 
-	let entryId = $('.TemplateHolder').attr('id');
-	let curataId = $('.curataId').attr('id');
+	// let entryId = $('.TemplateHolder').attr('id');
+	// let curataId = $('.curataId').attr('id');
 
-	let coreURL = 'dashboard';
+	// let coreURL = 'dashboard';
 
-	function checkIfMainImageExists() {
-		let imageCheck = $('.imageBlock').attr('data-image-key');
-		if (typeof imageCheck !== typeof undefined && imageCheck !== false) {
-			$('.image-upload-wrap').hide();
-			$('.file-upload-content').show();
-			enableImageDelete();
-		} else {
-			enableImageUpload();
-		}
-	}
-	checkIfMainImageExists();
+	// function checkIfMainImageExists() {
+	// 	let imageCheck = $('.imageBlock').attr('data-image-key');
+	// 	if (typeof imageCheck !== typeof undefined && imageCheck !== false) {
+	// 		$('.image-upload-wrap').hide();
+	// 		$('.file-upload-content').show();
+	// 		enableImageDelete();
+	// 	} else {
+	// 		enableImageUpload();
+	// 	}
+	// }
+	// checkIfMainImageExists();
 
-	function enableImageUpload() {
+	// function enableImageUpload() {
 
-		$('.image-upload-wrap').off('dragover');
-		$('.image-upload-wrap').on('dragover', function () {
-			$('.image-upload-wrap').addClass('image-dropping');
-		});
+	// 	$('.image-upload-wrap').off('dragover');
+	// 	$('.image-upload-wrap').on('dragover', function () {
+	// 		$('.image-upload-wrap').addClass('image-dropping');
+	// 	});
 
-		$('.image-upload-wrap').off('dragleave');
-		$('.image-upload-wrap').on('dragleave', function () {
-			$('.image-upload-wrap').removeClass('image-dropping');
-		});
+	// 	$('.image-upload-wrap').off('dragleave');
+	// 	$('.image-upload-wrap').on('dragleave', function () {
+	// 		$('.image-upload-wrap').removeClass('image-dropping');
+	// 	});
 
-		$('.file-upload-btn').off('click');
-		$('.file-upload-btn').on('click', function() {
-			$('.file-upload-input').trigger( 'click' );
-		})
+	// 	$('.file-upload-btn').off('click');
+	// 	$('.file-upload-btn').on('click', function() {
+	// 		$('.file-upload-input').trigger( 'click' );
+	// 	})
 
-		$('.file-upload-input').off('change');
-		$('.file-upload-input').on('change', function() {
+	// 	$('.file-upload-input').off('change');
+	// 	$('.file-upload-input').on('change', function() {
 
-			readURL(this);
-			// setup upload failed instead and set the image later and until then set uploading image
+	// 		readURL(this);
+	// 		// setup upload failed instead and set the image later and until then set uploading image
 
-			const files = $(this).files;
-			// const file = files[0];
+	// 		const files = $(this).files;
+	// 		// const file = files[0];
 
-			let file = $(this).prop('files')[0];
+	// 		let file = $(this).prop('files')[0];
 
-			const imageBlock = $(this).closest('.imageBlock');
-			const dateUpdated = new Date();
+	// 		const imageBlock = $(this).closest('.imageBlock');
+	// 		const dateUpdated = new Date();
 
-			let uploadData = {};
-			uploadData.imageBlock = imageBlock;
-			uploadData.dateUpdated = dateUpdated;
+	// 		let uploadData = {};
+	// 		uploadData.imageBlock = imageBlock;
+	// 		uploadData.dateUpdated = dateUpdated;
 
-			if (file === null) {
-				return alert('No file selected.');
-			}
+	// 		if (file === null) {
+	// 			return alert('No file selected.');
+	// 		}
 
-			getSignedRequest(file, uploadData);
+	// 		getSignedRequest(file, uploadData);
 
-		});
-	}
+	// 	});
+	// }
 
-	function disableImageUpload() {
-		$('.file-upload-btn').off('click');
-		$('.file-upload-input').off('change');
-		$('.image-upload-wrap').off('dragover');
-		$('.image-upload-wrap').off('dragleave');
-	}
+	// function disableImageUpload() {
+	// 	$('.file-upload-btn').off('click');
+	// 	$('.file-upload-input').off('change');
+	// 	$('.image-upload-wrap').off('dragover');
+	// 	$('.image-upload-wrap').off('dragleave');
+	// }
 
-	function enableImageDelete() {
-		$('.remove-image').off('click');
-		$('.remove-image').on('click', function() {
-			let obj = this;
-			removeUpload(obj);
-			// fix this shit
-		})
-	}
+	// function enableImageDelete() {
+	// 	$('.remove-image').off('click');
+	// 	$('.remove-image').on('click', function() {
+	// 		let obj = this;
+	// 		removeUpload(obj);
+	// 		// fix this shit
+	// 	})
+	// }
 
-	function disableImageDelete() {
-		$('.remove-image').off('click');
-	}
+	// function disableImageDelete() {
+	// 	$('.remove-image').off('click');
+	// }
 
-	function launchUploadingIcon() {
+	// function launchUploadingIcon() {
 
-	}
+	// }
 
-	function readURL(input) {
-	  if (input.files && input.files[0]) {
+	// function readURL(input) {
+	//   if (input.files && input.files[0]) {
 
-	    var reader = new FileReader();
+	//     var reader = new FileReader();
 
-	    reader.onload = function(e) {
-	      $('.image-upload-wrap').hide();
+	//     reader.onload = function(e) {
+	//       $('.image-upload-wrap').hide();
 
-	      $('.file-upload-image').attr('src', e.target.result);
-	      $('.file-upload-content').show();
+	//       $('.file-upload-image').attr('src', e.target.result);
+	//       $('.file-upload-content').show();
 
-	      $('.image-title').html(input.files[0].name);
-	    };
+	//       $('.image-title').html(input.files[0].name);
+	//     };
 
-	    reader.readAsDataURL(input.files[0]);
-	    return 
+	//     reader.readAsDataURL(input.files[0]);
+	//     return 
 
-	  } else {
-	    removeUpload(input);
-	  }
-	}
+	//   } else {
+	//     removeUpload(input);
+	//   }
+	// }
 
-	function removeUpload(obj) {
+	// function removeUpload(obj) {
 
-		let image = $(obj).closest('.imageBlock')
-		let imageKey = image.attr('data-image-key');
-		let isMainImage = "true";
-		let dateUpdated = new Date();
+	// 	let image = $(obj).closest('.imageBlock')
+	// 	let imageKey = image.attr('data-image-key');
+	// 	let isMainImage = "true";
+	// 	let dateUpdated = new Date();
 
-    	$.ajax({
-    		data: {
-    			imageKey: imageKey,
-    			entryId: entryId,
-    			isMainImage: isMainImage,
-    			dateUpdated: dateUpdated
-    		},
-    		type:'DELETE',
-    		url: '/' + coreURL + '/DeleteImage',
-    		success: function(response) {
-    			console.log("Deleted image from database.");
-    			image.removeAttr('data-image-key');
-    			image.removeAttr('data-image-url');
-				$('.file-upload-input').replaceWith($('.file-upload-input').clone());
-				$('.file-upload-content').hide();
-				$('.image-upload-wrap').show();
-    			enableImageUpload();
-    		},
-    		error: function(err) {
-    			console.log("Failed to delete image from database: ", err);
-    			enableImageUpload();
-    			// Display error not being able to delete note
-    		}
-    	});
-	}
+    // 	$.ajax({
+    // 		data: {
+    // 			imageKey: imageKey,
+    // 			entryId: entryId,
+    // 			isMainImage: isMainImage,
+    // 			dateUpdated: dateUpdated
+    // 		},
+    // 		type:'DELETE',
+    // 		url: '/' + coreURL + '/DeleteImage',
+    // 		success: function(response) {
+    // 			console.log("Deleted image from database.");
+    // 			image.removeAttr('data-image-key');
+    // 			image.removeAttr('data-image-url');
+	// 			$('.file-upload-input').replaceWith($('.file-upload-input').clone());
+	// 			$('.file-upload-content').hide();
+	// 			$('.image-upload-wrap').show();
+    // 			enableImageUpload();
+    // 		},
+    // 		error: function(err) {
+    // 			console.log("Failed to delete image from database: ", err);
+    // 			enableImageUpload();
+    // 			// Display error not being able to delete note
+    // 		}
+    // 	});
+	// }
 
-	function saveFileReference(uploadData) {
+	// function saveFileReference(uploadData) {
 
-		uploadData.entryId = entryId;
-		uploadData.curataId = curataId;
+	// 	uploadData.entryId = entryId;
+	// 	uploadData.curataId = curataId;
 
-		let imageBlock = uploadData.imageBlock;
-		delete uploadData.imageBlock;
+	// 	let imageBlock = uploadData.imageBlock;
+	// 	delete uploadData.imageBlock;
 
-		$.ajax({
-			url: '/' + coreURL + '/saveFileReference',
-			type: 'POST',
-			data: JSON.stringify(uploadData),
-			processData: false,
-			contentType: 'application/json',
-			success: function(data) {
-				let imageKey = uploadData.fileName;
-				let imageURL = uploadData.fileURL;
-				imageBlock.attr('data-image-key', imageKey);
-				imageBlock.attr('data-image-url', imageURL);
-			},
-			error: function(err) {
-				console.log("Could not save file reference.", err);
-			}
-		})
-	}
+	// 	$.ajax({
+	// 		url: '/' + coreURL + '/saveFileReference',
+	// 		type: 'POST',
+	// 		data: JSON.stringify(uploadData),
+	// 		processData: false,
+	// 		contentType: 'application/json',
+	// 		success: function(data) {
+	// 			let imageKey = uploadData.fileName;
+	// 			let imageURL = uploadData.fileURL;
+	// 			imageBlock.attr('data-image-key', imageKey);
+	// 			imageBlock.attr('data-image-url', imageURL);
+	// 		},
+	// 		error: function(err) {
+	// 			console.log("Could not save file reference.", err);
+	// 		}
+	// 	})
+	// }
 
-	function uploadFile(file, signedRequest, url, uploadData) {
+	// function uploadFile(file, signedRequest, url, uploadData) {
 
-		$.ajax({
-			url: signedRequest,
-			type: 'PUT',
-			processData: false,
-			contentType: false,
-			data: file,
-			success: function(data) {
-				saveFileReference(uploadData);
-			},
-			error: function(err) {
-				console.log("Could not upload file", err);
-			}
-		})
-	}
+	// 	$.ajax({
+	// 		url: signedRequest,
+	// 		type: 'PUT',
+	// 		processData: false,
+	// 		contentType: false,
+	// 		data: file,
+	// 		success: function(data) {
+	// 			saveFileReference(uploadData);
+	// 		},
+	// 		error: function(err) {
+	// 			console.log("Could not upload file", err);
+	// 		}
+	// 	})
+	// }
 
-	function getSignedRequest(file, uploadData) {
-		// const fileName = file.name + '-' + Date.now().toString();
-		// to not need to parse strings or remove spaces, etc:
-		const fileName = Date.now().toString();
-		const fileType = file.type;
+	// function getSignedRequest(file, uploadData) {
+	// 	// const fileName = file.name + '-' + Date.now().toString();
+	// 	// to not need to parse strings or remove spaces, etc:
+	// 	const fileName = Date.now().toString();
+	// 	const fileType = file.type;
 
-		$.ajax({
-			url: '/' + coreURL + `/sign-s3?file-name=${fileName}&file-type=${file.type}`,
-			type: 'GET',
-			data: {
-				fileName: fileName,
-				fileType: fileType
-			},
-			processData: false,
-			contentType: false,
-			success: function(data) {
-				const response = data.returnData;
-				const signedRequest = response.signedRequest;
-				const responseURL = response.url;
-				uploadData.fileName = data.fileName;
-				uploadData.fileURL = response.url;
-				uploadFile(file, signedRequest, responseURL, uploadData);
-			},
-			error: function(err) {
-				console.log("Could not get signed URL.", err);
-			}
-		})
-	}
+	// 	$.ajax({
+	// 		url: '/' + coreURL + `/sign-s3?file-name=${fileName}&file-type=${file.type}`,
+	// 		type: 'GET',
+	// 		data: {
+	// 			fileName: fileName,
+	// 			fileType: fileType
+	// 		},
+	// 		processData: false,
+	// 		contentType: false,
+	// 		success: function(data) {
+	// 			const response = data.returnData;
+	// 			const signedRequest = response.signedRequest;
+	// 			const responseURL = response.url;
+	// 			uploadData.fileName = data.fileName;
+	// 			uploadData.fileURL = response.url;
+	// 			uploadFile(file, signedRequest, responseURL, uploadData);
+	// 		},
+	// 		error: function(err) {
+	// 			console.log("Could not get signed URL.", err);
+	// 		}
+	// 	})
+	// }
 
 	function initEntryLinkSave() {
 		$('.entryLink').off('input change');
