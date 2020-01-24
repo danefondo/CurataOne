@@ -1911,55 +1911,7 @@ router.post('/curatas/:curataId/lists/:listId/entries/newDraft', ensureAuthentic
 	});
 })
 
-router.post('/curatas/:curataId/lists/:listId/entries/:entryId/updateEntry', ensureAuthenticated, function(req, res) {
-
-	let userId = req.user._id;
-	let entryId = req.body.entryId;
-	let dateCreated = req.body.dateCreated;
-	let curataId = req.body.curataId;
-	let listId = req.body.listId;
-	let entryTitle = req.body.entryTitle;
-	let entryDescription = req.body.entryDescription;
-	let entryLink = req.body.entryLink;
-
-	if (!listId) {
-		if (curataId) {
-			Curata.findById(curataId, function(err, curata) {
-				listId = curata.defaultListId || curata.curataList[0];
-			})
-		} else {
-			console.log("No Curata Id available.");
-		}
-	}
-
-	Entry.findById(entryId, function(err, entry) {
-		entry.curataListId = listId;
-		entry.curataId = curataId;
-		entry.dateCreated = dateCreated;
-		entry.entryTitle = entryTitle;
-		entry.entryDescription = entryDescription;
-		entry.entryLink = entryLink;
-
-		if (req.body.imageKey && req.body.imageURL) {
-			let imageKey = req.body.imageKey;
-			let imageURL = req.body.imageURL;
-			entry.entryImageKey = imageKey;
-			entry.entryImageURL = imageURL;
-		}
-
-		entry.save(function(err){
-			if (err) { 
-				return console.log("Entry saving error: ", err);
-			}
-
-			res.json({
-				entry: entry,
-				entryId: entryId
-			});
-		});
-
-	})
-})
+router.post('/curatas/:curataId/lists/:listId/entries/:entryId/updateEntry', ensureAuthenticated, dashboardController.updateEntry);
 
 
 router.post('/curatas/:curataId/lists/:listId/newDraft', ensureAuthenticated, function(req, res) {

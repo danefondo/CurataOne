@@ -55,6 +55,9 @@ block content
 			.closeEntrySettings.inline X
 		.entrySettingsContent
 			.entrySettingsBlock
+				.entryCurrentListContainer__space
+					.entryCurrentList__space.inline In list:
+					.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
 				//- .entryState(data-entryState= entry.entryState) Status: #{entry.entryState}
 			//- if (entry.entryState == "Published")
 			//- 	.entrySettingsBlock
@@ -79,7 +82,6 @@ block content
 block scripts
 	script(src='/js/space__editing.js')
 	script(src='/js/customSelect.js')
-
 
 
 //- You create a template and start curating
