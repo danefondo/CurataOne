@@ -68,7 +68,6 @@ const dashboardController = {
 			// 		});
 			// 	}
 			// }
-			console.log(entry.entryTitle)
 			res.render('entry__editing', {
 				entry,
 				curata
