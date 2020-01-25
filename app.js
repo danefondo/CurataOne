@@ -7,6 +7,7 @@ const session = require('express-session');
 const enforce = require('express-sslify');
 const passport = require('passport');
 const config = require('./config/database');
+const MongoStore = require('connect-mongo')(session);
 
 // Curata -- modularized content
 
@@ -63,7 +64,6 @@ app.use(bodyParser.json());
 // Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 /*====== AUTHENTICATION ======*/
 
 app.use(function(req, res, next) {
@@ -75,7 +75,10 @@ app.use(function(req, res, next) {
 app.use(session({
   secret: 'keyboard cat',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  })
 }));
 
 // Passport Config
