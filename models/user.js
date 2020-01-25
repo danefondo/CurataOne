@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
 	lastLogin: Date,
 	verificationToken: String,
 	resetToken: String,
+	resetTokenExpires: Number,
 	verifiedStatus: Boolean,
 	defaultCurataId: String,
 	likedSpaces: [String],

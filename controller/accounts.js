@@ -105,14 +105,7 @@ const accountController = {
 				resetToken: token
 			});
 
-			if (!user) {
-				/*
-				return res.status(400).json({
-				errors: [{
-					param: 'email', msg: "Email already exists"
-				}]
-			});
-				*/
+			if (!user || Date.now() > user.resetTokenExpires) {
 				return res.status(400).json({
 					err: 'Invalid password reset link'
 				});
@@ -120,6 +113,7 @@ const accountController = {
 
 			user.password = await accountUtil.hashPassword(password)
 			user.resetToken = null;
+			user.resetTokenExpires = null;
 
 			await user.save();
 			res.status(200).json({
@@ -150,6 +144,7 @@ const accountController = {
 			});
 
 			user.resetToken = token;
+			user.resetTokenExpires = Date.now() + 1800000;
 
 			await user.save();
 

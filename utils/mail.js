@@ -29,7 +29,7 @@ module.exports = {
 		  to: email,
 		  subject: 'Password reset to Curata One',
 		  html: '',
-		  text: `To reset your Curata One password, click on this link ${link}`
+		  text: `To reset your Curata One password, click on this link ${link}. The reset link expires in 30 minutes.`
 		};
 		mailgun.messages().send(data, function (error, body) {
 		  console.log(body);
