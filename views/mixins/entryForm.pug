@@ -1,5 +1,5 @@
 mixin entryForm(curata, entry={})
-	.entryContainer__space
+	.entryContainer__space(id=entry.id)
 		.entryDetails
 			.entryComponentTitle Category
 			.entryDetailsGroup.entryDetailsGroupSpecial.flex
@@ -15,6 +15,18 @@ mixin entryForm(curata, entry={})
 					//- 		option(value=list.id) #{list.listName}
 					//- 	else
 					//- 		option(value=list.id) Untitled list
+				if (entry.entryCategory)
+					if (entry.entryCategory.length)
+						.dropdown.selector__space
+							span.currentCategorySelection(data-categoryid=entry.entryCategoryId) #{entry.entryCategory}
+							.list
+								ul.optionList
+									li.option(value="" data-display-text="Select category: ") None
+									each category in curata.categories
+										if (category.entryCategoryName && category.entryCategoryName.length)
+											li.option(data-value=category.id data-display-text=category.entryCategoryName) #{category.entryCategoryName}
+										else
+											li.option(data-value=category.id data-display-text) Untitled category
 				.entryNewCategory__space +
 				.entryCreateCategoryBlock__space
 					input.entryNewCategoryText__space(placeholder="Write your category")
@@ -26,7 +38,7 @@ mixin entryForm(curata, entry={})
 			.entryComponentTitle Summary
 			.entryDetailsGroup
 				.mainEditor
-					textarea.postDescription.entryInput__space(maxlength="100" placeholder="Write a short summary of less than 100 characters.") !{entry.entryText}
+					textarea.postDescription.entryInput__space(maxlength="100" placeholder="Write a short summary of less than 100 characters.") #{entry.entryText}
 			.entryComponentTitle Link
 			.entryDetailsGroup
 				.linkContainer
@@ -46,5 +58,10 @@ mixin entryForm(curata, entry={})
 							img.file-upload-image(src=entry.entryImageURL, alt='your image')
 							.image-title-wrap
 								button.remove-image(type='button')
-									| Remove 
-									span.image-title Uploaded Image
+									span.image-pre-title Remove 
+									if (entry.entryImageName) 
+										if (entry.entryImageName.length)
+											span.image-title #{entry.entryImageName}
+									else
+										span.image-title Untitled Image
+									span.image-uploading-title.hidden Uploading image...

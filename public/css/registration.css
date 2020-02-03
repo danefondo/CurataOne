@@ -14,7 +14,7 @@
 .registrationBlock__registerPage {
 	width: 100%;
     height: 100%;
-    background-color: #1d323c;
+    background-color: #142229;
 }
 
 .registration-form {
@@ -261,7 +261,7 @@ form.signin-form .submit {
 }
 
 .account-manager {
-	background-color: #1d323c;
+	background-color: #142229;
 	width: 100%;
 	min-height: 100%;
 	display: flex;
@@ -439,11 +439,11 @@ form.signin-form .submit {
 }
 
 .container__registerPage {
-	background-color: #1d323c;
+	background-color: #142229;
 }
 
 .body__registerPage {
-	background-color: #1d323c;
+	background-color: #142229;
 }
 
 .signUpBackup__loginPage {
@@ -555,7 +555,7 @@ form.signin-form .submit {
 .inputErrorContainer {
 	padding: 10px;
 	color: red;
-	background-color: #1d323c;
+	background-color: transparent;
 }
 
 .successMessage {

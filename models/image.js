@@ -6,6 +6,7 @@ const imageSchema = new mongoose.Schema({
 	componentId: String,
 	imageKey: String,
 	imageURL: String,
+	imageName: String,
 	curataId: String
 });
 

@@ -24,22 +24,21 @@ block heading
 	- var coreURL = 'dashboard';
 	.helperNavigation
 		.topnav-container
-			a.goBack.navlink(href= '/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId) &larr;
+			a.goBack.navlink(href= '/' + coreURL + '/curatas/' + curata.id) &larr;
 			.entryMetaTitle Editing entry
 			.statusMessage.inline
-			if (entry.entryState == "Trashed")
-				span.inTrash This entry is in the trash. Click 'Untrash' to restore entry.
 			if (entry.entryState !== "Trashed")
 				.floatRight
 					//- a.navlink(href='/my-curations') &#63;
 					.settingsButton.inline
 						+SettingsIcon
-					a.showPreview.inline(href= '/' + coreURL + '/drafts/' + entry.id, target= '_blank') Preview
 					if (entry.entryState == "Draft") 
+						a.showPreview.inline(href= '/' + coreURL + '/drafts/' + entry.id, target= '_blank') Preview
 						.publishEntry.inline Publish
 					if (entry.entryState == "Published")
 						a.viewLive(target= "_blank" href= '/browse/users/' + user.id + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id) View live
 			else
+				span.inTrash This entry is in the trash. Click 'Untrash' to restore entry.
 				.floatUntrash
 					.untrashEntry.buttonGrey.inline
 						+TrashIcon
@@ -63,6 +62,10 @@ block content
 				.closeEntrySettings.inline X
 			.entrySettingsContent
 				.entrySettingsBlock
+					.entryCurrentListContainer__space
+						.entryCurrentList__space.inline In list:
+						.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
+				.entrySettingsBlock
 					.entryState(data-entryState= entry.entryState) Status: #{entry.entryState}
 				if (entry.entryState == "Published")
 					.entrySettingsBlock
@@ -83,12 +86,11 @@ block content
 	//- if (!entry) scenario
 	if (entry.entryState !== "Trashed")
 		.sectionArea.recalculatedWidth
-			.TemplateHolder(id= entry.id)
+			.TemplateHolder
 				+entryForm(curata, entry)
-				
 	else
 		.sectionArea
-			.TemplateHolder(id= entry.id)
+			.TemplateHolder
 				.entryDetails
 					.entryComponentTitle Title
 					.entryDetailsGroup
@@ -128,9 +130,6 @@ block content
 									form.imageForm(action= "/' + coreURL + '/UploadSingleImage" method="POST" enctype= "multipart/form-data")
 										label.uploadFile
 											input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
-
-
-
 block scripts
 	script(src='/js/space__editing.js')
 	script(src='/js/customSelect.js')

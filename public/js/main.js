@@ -28,7 +28,6 @@ initRevertToDraft()
 initGoToEditTemplate()
 initPublishAndCreateEntry()
 enableDisablePublish()
-initSaveAsDraft()
 initQuestionBlocks()
 initExpandable()
 initImageTitleAdding()
@@ -76,7 +75,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	let deletionModal = $('.emptyModal');
 	let lastUsedEditorComponentId;
 
-	let entryId = $('.TemplateHolder').attr('id');
+	let entryId = $('.entryContainer__space').attr('id');
 	let tempId = $('.TemplateId').attr('id');
 	let userId = $('.userId').attr('id');
 	let username = $('.userId').attr('data-username');
@@ -1335,13 +1334,6 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 		}
 	}
 
-	function initSaveAsDraft() {
-		// Save as draft and simply exit to the general list
-
-		// in one place you view the publicly listed entries
-			// in the other place you can manage all but filter by draft/published
-	}
-
 
 	function initQuestionBlocks() {
 		$('.collapsible').off('click');
@@ -1825,7 +1817,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 				initQuestionBlocks();
 
 				let componentId = $(this).closest('.Component').attr('id');
-				let entryId = $('.TemplateHolder').attr('id');
+				let entryId = $('.entryContainer__space').attr('id');
 
 				let componentOrder = $(this).closest('.Component').index();
 				let itemOrder = $('#tempQuestionId').index();
@@ -1945,7 +1937,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	        data.append( 'image', this.loader.file );
 	        let curataId = $('.curataId').attr('id');
 	        let componentId = lastUsedEditorComponentId;
-	        let entryId = $('.TemplateHolder').attr('id');
+	        let entryId = $('.entryContainer__space').attr('id');
 	        let dateUpdated = new Date();
 	        data.append('curataId', curataId);
 	        data.append('componentId', componentId);
@@ -2369,7 +2361,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 			let dateUpdated = new Date();
 
 			let element = $(this);
-			let entryId = $('.TemplateHolder').attr('id');
+			let entryId = $('.entryContainer__space').attr('id');
 			let component = element.closest('.Component');
 			let componentId;
 			if (component && component.length) {
@@ -2722,7 +2714,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	// 	$('.QuestionTitle').bind('input change', function() {
 	// 		enableDisablePublish();
 	// 		let ComponentId = $(this).closest('.Component').attr('id');
-	// 		let EntryId = $('.TemplateHolder').attr('id');
+	// 		let EntryId = $('.entryContainer__space').attr('id');
 	// 		let QuestionId = $(this).closest('.questionBlock').attr('id');
 	// 		let QuestionTitle = $(this).val();
 

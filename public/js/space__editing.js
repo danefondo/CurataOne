@@ -7,7 +7,7 @@
  	let creatingEntry = false;
 
 	let curataId = $('.curataId').attr('id');
-	let entryId = $('.TemplateHolder').attr('id');
+	let entryId = $('.entryContainer__space').attr('id');
 
 	function initCurataDropdown() {
 		// reapply upon creating new component
@@ -38,8 +38,6 @@
 	function initFullPageEditorLink() {
 
 	}
-
-
 
 	function initMakeDefaultCurata() {
 		$('.makeDefault').off('click');
@@ -118,10 +116,12 @@
 		$('.cancelListCreating').off('click');
 		$('.cancelListCreating').on('click', function() {
 			creationModal.hide();
+			restoreURL();
 		})
 		$('.modalBackground').off('click');
 		$('.modalBackground').on('click', function() {
 			creationModal.hide();
+			restoreURL();
 		})
 
 		// Press esc key to hide
@@ -130,7 +130,8 @@
 		  	if (creationModal.length) {
 		  		let modalState = creationModal.css('display');
 			  	if (modalState == "block") {
-			  		creationModal.hide();
+					  creationModal.hide();
+					  restoreURL();
 			  	}
 		  	}
 		  }
@@ -150,12 +151,12 @@
 	function clearEntryCreation() {
 		$('.entryInput__space').off('input');
 		$('.createEntryModal__space').find('input, textarea').val('');
-		$('.modalEntryId').removeAttr('id');
+		$('.entryContainer__space').removeAttr('id');
 		$('.selected').removeClass('selected');
 		$('.doNotSortMe').addClass('selected');
 		let noneSelection = $('.noneSelection__space').attr('data-display-text');
-		$('.dropdown').find('.current').text(noneSelection);
-		$('.dropdown').find('.current').removeAttr('data-categoryId');
+		$('.dropdown').find('.currentCategorySelection').text(noneSelection);
+		$('.dropdown').find('.currentCategorySelection').removeAttr('data-categoryId');
 		let noCategory = $('.noneSelection__space').val();
 		$('.selector__space').val(noCategory).trigger('change');
 		let image = $('.imageBlock');
@@ -168,34 +169,140 @@
 		initInputListening();
 	}
 
-	function initSaveOrCreateDraft() {
-		$('.entrySaveAsDraft__space').off('click');
-		$('.entrySaveAsDraft__space').on('click', function() {
+	function checkIfModal() {
+		let modalCheck = $('.modalEntryId').length;
+		return modalCheck;
+	}
+
+	function initSaveDraft() {
+		let saveDraftButton = $('.entrySaveDraft__space');
+
+		let hiddenCheck = saveDraftButton.hasClass('hidden');
+		if (hiddenCheck) {
+			saveDraftButton.removeClass('hidden');
+		}
+
+		saveDraftButton.off('click');
+		saveDraftButton.on('click', function() {
 			let entryCheck = checkIfEntryExists();
 			if (entryCheck) {
-				updateDraft();
-				$('.emptyModal').hide();
-				clearEntryCreation();
-			} else {
-				createNewDraft();
-				$('.emptyModal').hide();
-				clearEntryCreation();
+				updateEntry();
 			}
+
+			let modalCheck = checkIfModal();
+			if (modalCheck) {
+				$('.emptyModal').hide();
+				clearEntryCreation();
+			} 
 		});
 	}
-	initSaveOrCreateDraft();
 
+	function initEntryModalFunctions(listId, entryId) {
+		let fullPageLink = $('<a>', {'class': 'createEntryModalActionButton__space entryFull__space block hide' , 'href': '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'});
+
+		fullPageLink.text("Full page editor");
+		
+		let clearEntry = $('.entryClear__space');
+		if (clearEntry.is(":visible")) {
+			$('.createEntryModalActionButton__space').toggle();
+		}
+		
+		$('.entryFull__space').replaceWith(fullPageLink);
+		
+		let draftDeleter = $('<div>', {'class': 'directDeleteDraft__space createEntryModalActionButton__space hide'});
+		draftDeleter.text("Delete draft");
+		$('.entryOptionsContainer__space').append(draftDeleter);
+		
+		initDraftDeleting();
+	}
+
+	function appendDraft() {
+		// decide whether should be hidden or not
+		let state = checkCurrentState();
+
+		if (state === "Published") {
+			draftBlock.addClass('hidden');
+		} 
+	}
+
+	function checkCurrentState() {
+		// check if current tab/focus to decide whether to hide appended entry/draft;
+		let state = "Published";
+		return state;
+	}
+
+	function setupEntryData() {
+		let data = {}
+		let entryCreator = $('.entryContainer__space');
+		// what if no list? (e.g. person removes manually, doesn't load properly, but there should always be some list, e.g. then it takes from default list in database) -- just check on backend
+		let dateCreated = new Date();
+		let listId = $('.entryCurrentListSelector__space').data('listid') || $('.listId').data('listid');
+		let currentCategoryObject = entryCreator.find('.currentCategorySelection');
+		let entryCategory = currentCategoryObject.text();
+		let entryCategoryId = currentCategoryObject.attr('data-categoryid');
+		let entryTitle = entryCreator.find('.entryTitle__space').val();
+		let entryText = entryCreator.find('.postDescription').val();
+		let entryLink = entryCreator.find('.entryLink').val();
+
+		let imageExists = checkIfImageExists();
+
+		// check on backend if any such variable is in data or not
+		if (imageExists) {
+			let imageBlock = entryCreator.find('.imageBlock');
+			let imageKey = imageBlock.attr('data-image-key');
+			let imageURL = imageBlock.attr('data-image-url');
+			data.imageKey = imageKey;
+			data.imageURL = imageURL;
+		} 
+
+		data.entryCategory = entryCategory;
+		data.entryCategoryId = entryCategoryId;
+		data.entryTitle = entryTitle;
+		data.entryText = entryText;
+		data.entryLink = entryLink;
+		data.dateCreated = dateCreated;
+		data.curataId = curataId;
+		data.listId = listId;
+
+		return data;
+	}
+
+	function postCreatingDraftSuccessFunctions(response, listId) {
+		console.log("Yoho! Successfully created new entry!");
+		let newEntry = $('<div>', {'class': 'entry__liveCurata', 'id': response.entryId});
+		let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'})
+		entryTitleBlock.text(response.entry.entryTitle || "Untitled entry");
+		newEntry.append(entryTitleBlock);
+		if (response.entry.entryImageKey && response.entry.entryImageURL) {
+			let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
+			entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
+			entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
+			entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
+			newEntry.append(entryImageBlock);
+		}
+		console.log("listid: ", listId);
+		$('#' + listId).append(newEntry);
+		deletionModal.hide();
+		clearEntryCreation();
+		$('.statusMessage').text("Draft created.");
+		creatingEntry = false;
+		// find appropriate list by id
+		// create divs w/content
+		// append div to list
+	}
+
+	// modal only
 	function initCreateEntry() {
 		$('.createEntry__space').off('click');
 		$('.createEntry__space').on('click', function() {
 
-			let entryButton = $(this);
-			let entryCreator = entryButton.closest('.createEntryModal__space');
-
 			let entryCheck = checkIfEntryExists();
 			if (entryCheck) {
+				let entryButton = $(this);
+				let entryCreator = entryButton.closest('.createEntryModal__space');
+	
 				let listId = $('.entryCurrentListSelector__space').attr('data-listId');
-				let entryId = $('.modalEntryId').attr('id');
+				let entryId = $('.entryContainer__space').attr('id');
 				$.ajax({
 					type: 'POST',
 					url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/publish',
@@ -225,64 +332,20 @@
 				return console.log("Previous entry or draft creation is still in progress.");
 			} else {
 				// if entry already exists but is draft, just send call to publish and then return to add dynamically
+				$('.statusMessage').text("Creating draft...");
 				creatingEntry = true;
-				let data = {}
-				let creationTime = new Date();
-
-				let entryCategory = entryCreator.find('.current').text();
-				let listId = $('.entryCurrentListSelector__space').attr('data-listId');
-				let entryTitle = entryCreator.find('.EntryTitle').val();
-				let entryDescription = entryCreator.find('.postDescription').val();
-				let entryLink = entryCreator.find('.entryLink').val();
-
-				let imageExists = checkIfImageExists();
-
-				// check on backend if any such variable is in data or not
-				if (imageExists) {
-					let imageBlock = entryCreator.find('.imageBlock');
-					let imageKey = imageBlock.attr('data-image-key');
-					let imageURL = imageBlock.attr('data-image-url');
-					data.imageKey = imageKey;
-					data.imageURL = imageURL;
-				} 
-
-				data.entryCategory = entryCategory;
-				data.entryTitle = entryTitle;
-				data.entryDescription = entryDescription;
-				data.entryLink = entryLink;
-				data.creationTime = creationTime;
-				data.curataId = curataId;
-
-				data.listId = listId;
+				let data = setupEntryData();
+				let listId = data.listId;
 
 				$.ajax({
 					data: data,
 					type: 'POST',
 					url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/newEntry',
 					success: function(response) {
-						console.log("Yoho! Successfully created new entry!");
-						let newEntry = $('<div>', {'class': 'entry__liveCurata', 'id': response.entryId});
-						let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'})
-						entryTitleBlock.text(response.entry.entryTitle || "Untitled entry");
-						newEntry.append(entryTitleBlock);
-						if (response.entry.entryImageKey && response.entry.entryImageURL) {
-							let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
-							entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
-							entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
-							entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
-							newEntry.append(entryImageBlock);
-						}
-						console.log("listid: ", listId);
-						$('#' + listId).append(newEntry);
-						deletionModal.hide();
-						clearEntryCreation();
-						creatingEntry = false;
-						// find appropriate list by id
-						// create divs w/content
-						// append div to list
+						postCreatingDraftSuccessFunctions(response, listId);
 					},
 					error: function(err) {
-						console.log("Arrghh! Failed to create entry!");
+						$('.statusMessage').text("Failed to create draft.");
 						creatingEntry = false;
 					}
 				})
@@ -291,10 +354,44 @@
 	}
 	initCreateEntry();
 
+	function createNewDraft() {
+		$('.statusMessage').text("Creating draft...");
+		creatingEntry = true;
+		let data = setupEntryData();
+		let listId = data.listId;
+
+		$.ajax({
+			data: data,
+			type: 'POST',
+			url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/newDraft',
+			success: function(response) {
+				// check context, if full editor or quick-editor
+				let entryId = response.entryId;
+				$('.entryContainer__space').attr('id', entryId);
+
+				let modalCheck = checkIfModal();
+				if (modalCheck) {
+					appendDraft();
+					initEntryModalFunctions(listId, entryId);
+					hideShowMoreOptions();
+				} else {
+					checkIfBlankEntry();
+				}
+				checkIfBlankEntry();
+				changeURL(entryId, listId)
+				updateEntry();
+				$('.statusMessage').text("Draft created.");
+				creatingEntry = false;
+			},
+			error: function(err) {
+				$('.statusMessage').text("Failed to create draft.");
+				creatingEntry = false;
+			}
+		})
+	}
+
 	function checkIfEntryExists() {
-		let modalId = $('.modalEntryId').attr('id');
-		let templateId = $('.TemplateHolder').attr('id');
-		let entryId = modalId || templateId;
+		let entryId = $('.entryContainer__space').attr('id');
 		let returnValue;
 
 		if (typeof entryId !== typeof undefined && entryId !== false) {
@@ -317,71 +414,65 @@
 		return imageCheck;
 	}
 
-	function createNewDraft() {
-		creatingEntry = true;
-		let data = {}
-		let entryCreator = $('.createEntryModal__space');
+	function checkIfBlankEntry() {
+		let publishButton = $('.publishEntry');
+		let publishAttr = publishButton.attr('disabled');
 
-		// what if no list? (e.g. person removes manually, doesn't load properly, but there should always be some list, e.g. then it takes from default list in database) -- just check on backend
-		let dateCreated = new Date();
-		let listId = $('.entryCurrentListSelector__space').data('listid') || $('.listId').data('listid');
-		console.log(listId+'sdfadsf')
-		let currentCategoryObject = entryCreator.find('.current');
-		let entryCategory = currentCategoryObject.text();
-		let entryCategoryId = currentCategoryObject.attr('data-categoryid');
-		let entryTitle = entryCreator.find('.entryTitle__space').val();
-		let entryDescription = entryCreator.find('.postDescription').val();
-		let entryLink = entryCreator.find('.entryLink').val();
+		if (publishAttr) {
+			convertIntoEditor();
+		}
+	}
 
-		let imageExists = checkIfImageExists();
+	function changeURL(entryId, listId) {
+		if (history.pushState) {
+			window.history.pushState('object or string', 'Title', '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing');
+		} else {
+			// support for browsers not supporting pushState
+			document.location.href = '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing';
+		}
+	} 
 
-		// check on backend if any such variable is in data or not
-		if (imageExists) {
-			let imageBlock = entryCreator.find('.imageBlock');
-			let imageKey = imageBlock.attr('data-image-key');
-			let imageURL = imageBlock.attr('data-image-url');
-			data.imageKey = imageKey;
-			data.imageURL = imageURL;
-		} 
 
-		data.entryCategory = entryCategory;
-		data.entryCategoryId = entryCategoryId;
-		data.entryTitle = entryTitle;
-		data.entryDescription = entryDescription;
-		data.entryLink = entryLink;
-		data.dateCreated = dateCreated;
-		data.curataId = curataId;
-		data.listId = listId;
-
-		$.ajax({
-			data: data,
-			type: 'POST',
-			url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/newDraft',
-			success: function(response) {
-				console.log('another response', response);
-				console.log("Yoho! Successfully created draft!");
-				let fullPageLink = $('<a>', {'class': 'createEntryModalActionButton__space entryFull__space block hide' , 'href': '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + response.entryId + '/editing'})
-				fullPageLink.text("Full page editor")
-				let clearEntry = $('.entryClear__space');
-				if (clearEntry.is(":visible")) {
-					$('.createEntryModalActionButton__space').toggle();
-				}
-				$('.entryFull__space').replaceWith(fullPageLink);
-				$('.TemplateHolder').attr('id', response.entryId);
-				$('.modalEntryId').attr('id', response.entryId);
-				let draftDeleter = $('<div>', {'class': 'directDeleteDraft__space createEntryModalActionButton__space hide'});
-				draftDeleter.text("Delete draft");
-				$('.entryOptionsContainer__space').append(draftDeleter);
-				hideShowMoreOptions();
-				initDraftDeleting();
-				creatingEntry = false;
-				updateDraft();
-			},
-			error: function(err) {
-				console.log("Arrghh! Failed to create draft!");
-				creatingEntry = false;
+	function restoreURL() {
+		let url = window.location.href;
+		let origin = window.location.origin;
+		let dashboardPath = '/' + coreURL + '/curatas/' + curataId;
+		let dashboardURL = origin + dashboardPath;
+		if (url !== dashboardURL) {
+			if (history.pushState) {
+				window.history.pushState('object or string', 'Title', dashboardPath);
+			} else {
+				// support for browsers not supporting pushState
+				document.location.href = dashboardPath;
 			}
-		})
+		}
+	}
+
+	// CONVERTING NEW ENTRY INTO DRAFT WITH INDICATORS
+	// - upon creating draft, activate and enable Publish button (disabled by default)
+	// - show and activate Preview button
+	// - give Preview button a href link
+	// - show and activate Move to Trash button
+	// - show draft 'status' section in Settings section
+	// - push url
+	// - push different url's, in one case for the 'quick-editor' url, other the full page editor
+
+	function convertIntoEditor() {
+		let publishButton = $('.publishEntry');
+		let previewButton = $('.showPreview');
+		let trashSection = $('.entrySettingsDelete');
+		let entryId = $('.entryContainer__space').attr('id');
+
+		publishButton.removeAttr('disabled');
+		publishButton.css('opacity', '');
+		publishButton.css('cursor', 'pointer');
+
+		previewButton.removeClass('hidden');
+		previewButton.attr('href', '/dashboard/drafts/' + entryId);
+		trashSection.removeClass('hidden');
+
+		$('.settingsDraftBlock').removeClass('hidden');
+
 	}
 
 	function initDraftDeleting() {
@@ -390,7 +481,7 @@
 			
 			let clickObject = $(this);
 			let data = {};
-			let entryId = $('.modalEntryId').attr('id');
+			let entryId = $('.entryContainer__space').attr('id');
 			let listId = $('.entryCurrentListSelector__space').attr('data-listId');
 
 			data.entryId = entryId;
@@ -415,53 +506,41 @@
 		})
 	}
 
-	function updateDraft() {
-		let data = {}
+	function showOrUpdateLinkPreview() {
+		let container = $('.linkContainer');
+		let link = container.find('.entryLink').val();
+		let linkPreview = container.find('.entryLinkPreview');
+		let parsedLink = (link.indexOf('://') === -1) ? 'http://' + link : link;
+
+		let hiddenCheck = linkPreview.hasClass('hidden');
+		if (hiddenCheck) {
+			linkPreview.removeClass('hidden');
+		}
+
+		linkPreview.attr('href', parsedLink);
+	}
+
+	function updateEntry() {
+		$('.statusMessage').text("Saving...");
+
+		let data = setupEntryData();
+
 		let entryCreator = $('.entryContainer__space');
-		let modalId = $('.modalEntryId').attr('id');
-		let templateId = $('.TemplateHolder').attr('id');
-		let entryId = modalId || templateId;
-
-		// what if no list? (e.g. person removes manually, doesn't load properly, but there should always be some list, e.g. then it takes from default list in database) -- just check on backend
-		let dateCreated = new Date();
-		let listId = $('.entryCurrentListSelector__space').data('listid') || $('.listId').data('listid');
-		let currentCategoryObject = entryCreator.find('.current');
-		let entryCategory = currentCategoryObject.text();
-		let entryCategoryId = currentCategoryObject.attr('data-categoryid');
-		let entryTitle = entryCreator.find('.entryTitle__space').val();
-		let entryDescription = entryCreator.find('.postDescription').val();
-		let entryLink = entryCreator.find('.entryLink').val();
-
-		let imageExists = checkIfImageExists();
-
-		// check on backend if any such variable is in data or not
-		if (imageExists) {
-			let imageBlock = entryCreator.find('.imageBlock');
-			let imageKey = imageBlock.attr('data-image-key');
-			let imageURL = imageBlock.attr('data-image-url');
-			data.imageKey = imageKey;
-			data.imageURL = imageURL;
-		} 
-
-		data.entryCategory = entryCategory;
-		data.entryCategoryId = entryCategoryId;
-		data.entryTitle = entryTitle;
-		data.entryDescription = entryDescription;
-		data.entryLink = entryLink;
-		data.dateCreated = dateCreated;
-		data.curataId = curataId;
-		data.listId = listId;
+		let entryId = entryCreator.attr('id');
 		data.entryId = entryId;
+		let listId = data.listId;
+
+		showOrUpdateLinkPreview()
 
 		$.ajax({
 			data: data,
 			type: 'POST',
 			url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/updateEntry',
 			success: function(response) {
-				console.log("Yoho! Updated entry!");
+				$('.statusMessage').text("Saved.");
 			},
 			error: function(err) {
-				console.log("Arrghh! Failed to update draft!");
+				$('.statusMessage').text("Save failed.");
 			}
 		})
 	}
@@ -469,20 +548,19 @@
 	// #2
 	let typingTimer;                //timer identifier
 
-	function createOrUpdateDraft() {
-		let doneTypingInterval = 2000;  //time in ms (5 seconds)
+	function createOrUpdateEntry() {
+		let doneTypingInterval = 2000;  //time in ms 
 		if (typingTimer) {
 			clearTimeout(typingTimer);
 		}
-		console.log("Checking if entry exists.");
 		if (creatingEntry == true) {
-			return console.log("Previous entry or draft creation is still in progress.");
+			return;
 		} else {
 			typingTimer = setTimeout(function() {
 				let entryExists = checkIfEntryExists();
 				console.log('entry status', entryExists)
 				if (entryExists) {
-					updateDraft();
+					updateEntry();
 				} else {
 					createNewDraft();
 				}
@@ -490,48 +568,21 @@
 		}
 	}
 
-	// #1
 	function initInputListening() {
 		$('.entryInput__space').off('input');
 		$('.entryInput__space').on('input', function() {
-			createOrUpdateDraft();
+			createOrUpdateEntry();
 		})
 
-	    // $('.selector__space').on('change', function() {
-	    // 	createOrUpdateDraft();
-	    // });
-
-	    // image input listening??
+		$('.selector__space').off('change');
+		$('.selector__space').on('change', function() {
+			let entryCheck = checkIfEntryExists();
+			if (entryCheck) {
+				updateEntry();
+			}
+		});
 	}
 	initInputListening();
-
-	// 5106128
-
-	// upon CLEAR turn off all listening
-
-	// create entry, setup entryId, then save reference
-
-	// if entry does not exist, create one and initialize it as draft
-		// then set entry id
-		// then update full editor button
-		// then create save draft & exit button
-
-		// handle clear for all cases
-		// handle case if attempt create without category
-		// fix entry category change listening updates
-		// handle case if attempt upload without image
-		// fix textarea not working
-		// fix textarea being wrong size
-
-		// make drafts section
-		// make drafts appear there
-
-		// make option to VIEW entries/drafts -- from which where you can also easily access full-page mode
-		// make option to trash entries/drafts
-
-		// make option to delete entries/drafts
-
-		// handle case for empty list (always have some list existing)
 
 	function checkIfMainImageExists() {
 		let imageCheck = $('.imageBlock').attr('data-image-key');
@@ -574,6 +625,7 @@
 			// const file = files[0];
 
 			let file = $(this).prop('files')[0];
+			let imageName = $(this).prop('files')[0].name;
 
 			const imageBlock = $(this).closest('.imageBlock');
 			const dateUpdated = new Date();
@@ -581,6 +633,7 @@
 			let uploadData = {};
 			uploadData.imageBlock = imageBlock;
 			uploadData.dateUpdated = dateUpdated;
+			uploadData.imageName = imageName;
 
 			if (file === null) {
 				$('.createEntry__space').text("Create entry");
@@ -617,18 +670,39 @@
 
 	}
 
+	function toggleImageTitle() {
+		$('.image-pre-title').toggle();
+		$('.image-title').toggle();
+		$('.image-uploading-title').toggle();
+
+		let imageUploadingButton = $('.remove-image');
+		if (!imageUploadingButton.hasClass('disabled'))  { 
+			imageUploadingButton.css('opacity', '0.6');
+			imageUploadingButton.css('cursor', 'not-allowed');
+			imageUploadingButton.addClass('disabled');
+		} 
+		else { 
+			imageUploadingButton.css('opacity', '');
+			imageUploadingButton.css('cursor', 'pointer');
+			imageUploadingButton.removeClass('disabled');
+		}
+		
+	}
+
 	function readURL(input) {
 	  if (input.files && input.files[0]) {
 
 	    var reader = new FileReader();
 
 	    reader.onload = function(e) {
-	      $('.image-upload-wrap').hide();
+			$('.image-upload-wrap').hide();
 
-	      $('.file-upload-image').attr('src', e.target.result);
-	      $('.file-upload-content').show();
+			$('.file-upload-image').attr('src', e.target.result);
+			$('.file-upload-content').show();
 
-	      $('.image-title').html(input.files[0].name);
+			toggleImageTitle();
+
+			$('.image-title').html(input.files[0].name);
 	    };
 
 	    reader.readAsDataURL(input.files[0]);
@@ -640,10 +714,10 @@
 	}
 
 	function removeUpload(obj) {
-		console.log("Hello.");
-		let entryId = $('.modalEntryId').attr('id');
+		console.log("Beginning image delete.");
+		let entryId = $('.entryContainer__space').attr('id');
 		if (typeof entryId == typeof undefined || entryId == false) {
-			return alert("Entry does not exist yet or entry id is not available.");
+			return console.log("Entry does not exist yet or entry id is not available.");
 		}
 		$('.createEntry__space').text("Saving...");
 		$('.createEntry__space').css("background-color", "#b39ddb");
@@ -669,6 +743,7 @@
 				$('.file-upload-input').replaceWith($('.file-upload-input').clone());
 				$('.file-upload-content').hide();
 				$('.image-upload-wrap').show();
+				disableImageDelete();
     			enableImageUpload();
 				$('.createEntry__space').text("Create entry");
 				$('.createEntry__space').css("background-color", "#673ab7");
@@ -685,7 +760,7 @@
 
 	function saveFileReference(uploadData) {
 
-		let entryId = $('.modalEntryId').attr('id');
+		let entryId = $('.entryContainer__space').attr('id');
 
 		if (typeof entryId !== typeof undefined && entryId !== false) {
 			uploadData.entryId = entryId;
@@ -701,12 +776,15 @@
 				processData: false,
 				contentType: 'application/json',
 				success: function(data) {
+					console.log("Successfully uploaded image.");
 					let imageKey = uploadData.fileName;
 					let imageURL = uploadData.fileURL;
 					imageBlock.attr('data-image-key', imageKey);
 					imageBlock.attr('data-image-url', imageURL);
 					$('.createEntry__space').text("Create entry");
 					$('.createEntry__space').css("background-color", "#673ab7");
+					toggleImageTitle();
+					enableImageDelete();
 				},
 				error: function(err) {
 					console.log("Could not save file reference.", err);
@@ -715,42 +793,24 @@
 				}
 			})
 		} else {
-
 			// create entry, setup entryId, then save reference
-			let data = {}
-			let entryCreator = $('.createEntryModal__space');
-			let dateCreated = new Date();
+			creatingEntry = true;
+			$('.statusMessage').text("Creating draft...");
+			let data = setupEntryData();
+			let listId = data.listId;
 
-			let listId = $('.entryCurrentListSelector__space').attr('data-listId');
-			let currentCategoryObject = entryCreator.find('.current');
-			let entryCategory = currentCategoryObject.text();
-			let entryCategoryId = currentCategoryObject.attr('data-categoryid');
-			let entryTitle = entryCreator.find('.entryTitle__space').val();
-			let entryDescription = entryCreator.find('.postDescription').val();
-			let entryLink = entryCreator.find('.entryLink').val();
 			let imageKey = uploadData.fileName;
 			let imageURL = uploadData.fileURL;
-
-			data.entryCategory = entryCategory;
-			data.entryCategoryId = entryCategoryId;
-			data.entryTitle = entryTitle;
-			data.entryDescription = entryDescription;
-			data.entryLink = entryLink;
 			data.imageKey = imageKey;
 			data.imageURL = imageURL;
-			data.dateCreated = dateCreated;
-			data.curataId = curataId;
-
-			data.listId = listId;
 
 			$.ajax({
 				data: data,
 				type: 'POST',
 				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/newDraft',
 				success: function(response) {
-					console.log("firstdata", response);
 					console.log("Yoho! Successfully created draft!");
-					$('.modalEntryId').attr('id', response.entryId);
+					$('.entryContainer__space').attr('id', response.entryId);
 					entryId = response.entryId;
 
 					uploadData.entryId = entryId;
@@ -759,6 +819,14 @@
 					let imageBlock = uploadData.imageBlock;
 					delete uploadData.imageBlock;
 
+					hideShowMoreOptions();
+					initDraftDeleting();
+					updateEntry();
+					initSaveDraft();
+					checkIfBlankEntry();
+					$('.statusMessage').text("Draft created.");
+					creatingEntry = false;
+
 					$.ajax({
 						url: '/' + coreURL + '/saveFileReference',
 						type: 'POST',
@@ -766,7 +834,6 @@
 						processData: false,
 						contentType: 'application/json',
 						success: function(data) {
-							console.log("seconddata", data);
 							console.log("Successfully uploaded image.");
 							$('.createEntry__space').text("Create entry");
 							$('.createEntry__space').css("background-color", "#673ab7");
@@ -774,6 +841,8 @@
 							let imageURL = uploadData.fileURL;
 							imageBlock.attr('data-image-key', imageKey);
 							imageBlock.attr('data-image-url', imageURL);
+							toggleImageTitle();
+							enableImageDelete();
 						},
 						error: function(err) {
 							console.log("Could not save file reference.", err);
@@ -783,9 +852,10 @@
 					})
 				},
 				error: function(err) {
-					console.log("Arrghh! Failed to create draft!");
 					$('.createEntry__space').text("Create entry");
 					$('.createEntry__space').css("background-color", "#673ab7");
+					$('.statusMessage').text("Failed to create draft.");
+					creatingEntry = false;
 				}
 			})
 
@@ -845,45 +915,45 @@
 
 
 
-	function initEntryLinkSave() {
-		$('.entryLink').off('input change');
-		$('.entryLink').on('input change', function() {
+	// function initEntryLinkSave() {
+	// 	$('.entryLink').off('input change');
+	// 	$('.entryLink').on('input change', function() {
 
-			let link = $(this).val();
-			let container = $(this).closest('.linkContainer');
-			let linkPreview = container.find('.entryLinkPreview');
-			let parsedLink = (link.indexOf('://') === -1) ? 'http://' + link : link;
-			let dateUpdated = new Date();
+			// let link = $(this).val();
+			// let container = $(this).closest('.linkContainer');
+			// let linkPreview = container.find('.entryLinkPreview');
+			// let parsedLink = (link.indexOf('://') === -1) ? 'http://' + link : link;
+			// let dateUpdated = new Date();
 
-			let hiddenCheck = linkPreview.hasClass('hidden');
-			if (hiddenCheck) {
-				linkPreview.removeClass('hidden');
-			}
+			// let hiddenCheck = linkPreview.hasClass('hidden');
+			// if (hiddenCheck) {
+			// 	linkPreview.removeClass('hidden');
+			// }
 
-			linkPreview.attr('href', parsedLink);
-			// linkPreview.text(parsedLink);
+			// linkPreview.attr('href', parsedLink);
+			// // linkPreview.text(parsedLink);
 
-			$.ajax({
-			  data: {
-			    entryLink: parsedLink,
-			    entryId: entryId,
-			    dateUpdated: dateUpdated
-			  },
-			  type: 'POST',
-			  url: '/' + coreURL + '/UpdateEntryLink',
-			  success: function(Item){
-			    console.log("Entry link successfully updated.")
-			    // Display success message?
+	// 		$.ajax({
+	// 		  data: {
+	// 		    entryLink: parsedLink,
+	// 		    entryId: entryId,
+	// 		    dateUpdated: dateUpdated
+	// 		  },
+	// 		  type: 'POST',
+	// 		  url: '/' + coreURL + '/UpdateEntryLink',
+	// 		  success: function(Item){
+	// 		    console.log("Entry link successfully updated.")
+	// 		    // Display success message?
 
-			  },
-			  error: function(err){
-			    console.log("Entry link update failed: ", err);
-			    // Display error message?
-			  }
-			});
-		})
-	}
-	initEntryLinkSave();
+	// 		  },
+	// 		  error: function(err){
+	// 		    console.log("Entry link update failed: ", err);
+	// 		    // Display error message?
+	// 		  }
+	// 		});
+	// 	})
+	// }
+	// initEntryLinkSave();
 
 	function initEntryLinkExit() {
 		$('.EntryLink').off('keyup');
@@ -907,37 +977,37 @@
 	initEntryLinkExit();
 
 
-	function initDescriptionListening(descElement, ajaxURL, ajaxType, group) {
-		descElement.on('input selectionchange propertychange', function() {
+	// function initDescriptionListening(descElement, ajaxURL, ajaxType, group) {
+	// 	descElement.on('input selectionchange propertychange', function() {
 
-			let content = $(this).val();
-			let data = {};
-			const dateUpdated = new Date();
+	// 		let content = $(this).val();
+	// 		let data = {};
+	// 		const dateUpdated = new Date();
 
-			if (group == "entryDescription") {
-				data.entryText = content;
-				data.entryId = entryId;
-				data.dateUpdated = dateUpdated;
-			}
+	// 		if (group == "entryDescription") {
+	// 			data.entryText = content;
+	// 			data.entryId = entryId;
+	// 			data.dateUpdated = dateUpdated;
+	// 		}
 
-			$.ajax({
-				data: data,
-				type: ajaxType,
-				url: '' + ajaxURL,
-				success: function(data) {
-					console.log("Update successful");
-				},
-				error: function(err) {
-					console.log("Update failed:", err);
-				}
-			})
+	// 		$.ajax({
+	// 			data: data,
+	// 			type: ajaxType,
+	// 			url: '' + ajaxURL,
+	// 			success: function(data) {
+	// 				console.log("Update successful");
+	// 			},
+	// 			error: function(err) {
+	// 				console.log("Update failed:", err);
+	// 			}
+	// 		})
 
-		})
-	}
+	// 	})
+	// }
 
-	let entryDescription = $('.postDescription')
-	let entryDescriptionURL = '/' + coreURL + '/UpdateEntryText'
-	initDescriptionListening(entryDescription, entryDescriptionURL, 'POST', 'entryDescription')
+	// let entryDescription = $('.postDescription')
+	// let entryDescriptionURL = '/' + coreURL + '/UpdateEntryText'
+	// initDescriptionListening(entryDescription, entryDescriptionURL, 'POST', 'entryDescription')
 
 
  });

@@ -28,6 +28,7 @@ let ExpiredUser = require('../models/expiredAccount');
 const validator = require('../controller/validator')
 
 const dashboardController = require('../controller/dashboard');
+const entryController = require('../controller/entry');
 
 aws.config.update({
     accessKeyId: "AKIARKLMM5TMEHGOSNJC",
@@ -159,6 +160,7 @@ router.post('/saveFileReference', validator.imageValidate, async function(req, r
 	}
 	let imageKey = req.body.fileName;
 	let imageURL = req.body.fileURL;
+	let imageName = req.body.imageName;
 	let dateUpdated = req.body.dateUpdated;
 	let entryId = req.body.entryId;
 	let curataId = req.body.curataId;
@@ -175,6 +177,7 @@ router.post('/saveFileReference', validator.imageValidate, async function(req, r
 		image.entryId = entryId;
 		image.imageKey = imageKey;
 		image.imageURL = imageURL;
+		image.imageName = imageName;
 		image.curataId = curataId;
 
 		await image.save();
@@ -186,6 +189,7 @@ router.post('/saveFileReference', validator.imageValidate, async function(req, r
 		entry.lastUpdated = dateUpdated;
 		entry.entryImageKey = imageKey;
 		entry.entryImageURL = imageURL;
+		entry.entryImageName = imageName;
 		await entry.save();
 		res.json({
 			imageKey: imageKey,
@@ -608,11 +612,21 @@ router.get('/curatas/curate', ensureAuthenticated, function(req, res) {
 	res.render('curate');
 })
 
-router.get('/curatas/:curataId', ensureAuthenticated, dashboardController.getCurata);
+router.get('/curatas/:curataId', ensureAuthenticated, dashboardController.canUserViewCurata, dashboardController.getCurata);
 
 router.get('/curatas/:curataId/lists/:listId/entries/:id/editing', ensureAuthenticated, dashboardController.editCurata);
 
 router.get('/curatas/:curataId/lists/:listId/entries/new', ensureAuthenticated, dashboardController.newCurata);
+
+
+// ==== ENTRIES: Creating, updating, trashing, deleting. ==== //
+
+router.post('/curatas/:curataId/lists/:listId/entries/newDraft', ensureAuthenticated, entryController.createNewDraft);
+
+router.post('/curatas/:curataId/lists/:listId/entries/:entryId/updateEntry', ensureAuthenticated, entryController.updateEntry);
+
+router.post('/UpdateEntryText', ensureAuthenticated, entryController.updateEntryText);
+
 
 
 // Create new curata with list and template
@@ -1427,33 +1441,6 @@ router.post('/UpdateComponentContent', function(req, res) {
 });
 
 
-router.post('/UpdateEntryText', function(req, res) {
-	
-	let entryText = req.body.entryText;
-	let entryId = req.body.entryId;
-	let dateUpdated = req.body.dateUpdated;
-
-	// access component by id
-	Entry.findOneAndUpdate(
-		{"_id": entryId},
-		{$set: {"entryText": entryText, "lastUpdated":  dateUpdated}}).exec(function(err, entry) {
-			if (err) {
-				return console.log("Entry content update failed: ", err);
-			} else {
-				entry.save(function(err) {
-					if (err) {
-						return console.log("Entry save failed: ", err);
-					} else {
-						console.log("Entry content successfully updated: ", entry);
-						res.status(200).end();
-					}
-				});
-			}
-		}
-	)
-});
-
-
 /* == Create new list item */
 
 router.post('/UpdateChecklist', function(req, res) {
@@ -1846,73 +1833,6 @@ router.post('/UntrashEntry', function(req, res) {
 		});
 	})
 })
-
-router.post('/curatas/:curataId/lists/:listId/entries/newDraft', ensureAuthenticated, function(req, res) {
-
-	let userId = req.user._id;
-	let dateCreated = req.body.dateCreated;
-	let curataId = req.body.curataId;
-	let listId = req.body.listId;
-
-	let entryTitle = req.body.entryTitle;
-	let entryDescription = req.body.entryDescription;
-	let entryLink = req.body.entryLink;
-
-	if (!listId) {
-		if (curataId) {
-			Curata.findById(curataId, function(err, curata) {
-				listId = curata.defaultListId || curata.curataList[0];
-			})
-		} else {
-			console.log("No Curata Id available.");
-		}
-	}
-
-	let entry = new Entry();
-	entry.entryState = "Draft";
-	entry.curataListId = listId;
-	entry.curataId = curataId;
-	entry.dateCreated = dateCreated;
-	entry.creator.creator_id = userId;
-	entry.owner.owner_id = userId;
-	entry.contributors.push(userId);
-	entry.entryTitle = entryTitle;
-	entry.entryDescription = entryDescription;
-	entry.entryLink = entryLink;
-
-	if (req.body.imageKey && req.body.imageURL) {
-		let imageKey = req.body.imageKey;
-		let imageURL = req.body.imageURL;
-		entry.entryImageKey = imageKey;
-		entry.entryImageURL = imageURL;
-	}
-
-	entry.save(function(err){
-		if (err) { 
-			return console.log("Entry saving error: ", err);
-		}
-
-		curataList.findById(listId, function(err, list) {
-			list.entries.push(entry._id);
-
-			list.save(function(err) {
-				if (err) {
-					return console.log("curataList save failed: ", err);
-				}
-
-				let entryId = entry._id;
-				let userId = req.user._id;
-				res.json({
-					entry: entry,
-					entryId: entryId
-				});
-			});
-		});
-	});
-})
-
-router.post('/curatas/:curataId/lists/:listId/entries/:entryId/updateEntry', ensureAuthenticated, dashboardController.updateEntry);
-
 
 router.post('/curatas/:curataId/lists/:listId/newDraft', ensureAuthenticated, function(req, res) {
 

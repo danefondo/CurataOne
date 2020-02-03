@@ -106,9 +106,10 @@ const accountController = {
 			});
 
 			if (!user || Date.now() > user.resetTokenExpires) {
-				return res.status(400).json({
-					err: 'Invalid password reset link'
-				});
+				// return res.status(400).json({
+				// 	err: 'Invalid password reset link'
+				// });
+				return res.redirect(req.originalUrl);
 			}
 
 			user.password = await accountUtil.hashPassword(password)

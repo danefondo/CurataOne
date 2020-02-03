@@ -5,16 +5,6 @@ include images/filledArrow
 include images/externalLink
 include mixins/entryForm
 
-	//- function initCurataAlphabetSort() {
-	//- 	$(".sortAlpha").click(function() {
-	//- 		let list = $('.curatasList');
-	//- 		list.children().detach().sort(function(a, b) {
-	//- 			return $(a).find('.curataLink').text().localeCompare($(b).find('.curataLink').text());
-	//- 		}).appendTo(list);
-	//- 	});
-	//- }
-	//- initCurataAlphabetSort();
-
 block heading
 	- var coreURL = 'dashboard';
 block content
@@ -102,7 +92,7 @@ block content
 	//- 										button.remove-image(type='button')
 	//- 											| Remove 
 	//- 											span.image-title Uploaded Image
-	//- 			.entrySaveAsDraft__space Save as draft & exit
+	//- 			.entrySaveDraft__space Save as draft & exit
 	//- 			.createEntry__space Create entry
 	.emptyModal
 		.modalBackground
@@ -113,6 +103,7 @@ block content
 					a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + curata.id + '/lists/' + curata.curataList[0].id + '/entries/new') Full page editor
 					.entryClear__space.createEntryModalActionButton__space.hide Clear
 					.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
+				.statusMessage.inline
 				.entryCurrentListContainer__space
 					.entryCurrentList__space.inline In list:
 					.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
@@ -122,7 +113,7 @@ block content
 				.modalEntryId
 				+entryForm(curata)
 				.entryActions__space
-					.entrySaveAsDraft__space Save as draft & exit
+					.entrySaveDraft__space.hidden Save draft & exit
 					.createEntry__space Create entry
 	//- if public, show | if not, display message
 	.curataId(id= curata.id)

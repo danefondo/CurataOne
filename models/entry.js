@@ -62,6 +62,7 @@ const entrySchema = new mongoose.Schema({
 	entryLink: String,
 	entryImageURL: String,
 	entryImageKey: String,
+	entryImageName: String,
 	imageFeaturedState: String,
 	//- State to check whether private special access public or public for all
 	// entryComponents: [entryComponentSchema],
@@ -80,6 +81,7 @@ const entrySchema = new mongoose.Schema({
 	lastUpdated: Date,
 	// serves as category
 	entryCategory: String,
+	entryCategoryId: String,
 	entryTags: [String],
 	linkedTemplateId: String,
 	curataListId: String,

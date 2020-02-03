@@ -6,7 +6,7 @@
  	// let userId = $('.userId').attr('id');
 	// let username = $('.userId').attr('data-username');
 
-	// let entryId = $('.TemplateHolder').attr('id');
+	// let entryId = $('.entryContainer__space').attr('id');
 	// let curataId = $('.curataId').attr('id');
 
 	// let coreURL = 'dashboard';

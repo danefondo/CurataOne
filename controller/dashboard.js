@@ -16,7 +16,7 @@ const dashboardController = {
 				return res.render('404');
 			}
 			
-			const curata = await utils.getCurata(curataId);
+			const { curata } = req;
 			if (!curata) {
 				return res.render('404');
 			}
@@ -97,60 +97,14 @@ const dashboardController = {
 		}
 	},
 
-	async updateEntry(req, res) {
-		let userId = req.user._id;
-		let entryId = req.body.entryId;
-		let dateCreated = req.body.dateCreated;
-		let curataId = req.body.curataId;
-		let listId = req.body.listId;
-		let entryTitle = req.body.entryTitle;
-		let entryDescription = req.body.entryDescription;
-		let entryLink = req.body.entryLink;
-	
-		if (!listId) {
-			if (curataId) {
-				Curata.findById(curataId, function(err, curata) {
-					listId = curata.defaultListId || curata.curataList[0];
-				})
-			} else {
-				console.log("No Curata Id available.");
-			}
+	async canUserViewCurata(req, res, next) {
+		const curata = await utils.getCurata(req.params.curataId);
+		if (curata.owner.owner_id == req.user._id) {
+			req.curata = curata;
+			return next();
 		}
-
-		try {
-			const entry = await Entry.findById(entryId);
-			if (!entry) {
-				return res.status('404').json({
-					message: "Entry does not exist"
-				});
-			}
-			entry.curataListId = listId;
-			entry.curataId = curataId;
-			entry.dateCreated = dateCreated;
-			entry.entryTitle = entryTitle;
-			entry.entryDescription = entryDescription;
-			entry.entryLink = entryLink;
-	
-			if (req.body.imageKey && req.body.imageURL) {
-				let imageKey = req.body.imageKey;
-				let imageURL = req.body.imageURL;
-				entry.entryImageKey = imageKey;
-				entry.entryImageURL = imageURL;
-			}
-	
-			await entry.save();
-			res.json({
-				entry: entry,
-				entryId: entryId
-			});
-		} catch (error) {
-			console.log("error", error);
-			res.status('500').json({
-				message: "An error occurred while updating your entry" 
-			});
-		}
+		res.redirect(302, '/');
 	}
-
 }
 
 module.exports = dashboardController;

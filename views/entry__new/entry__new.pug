@@ -31,8 +31,8 @@ block heading
 			.floatRight
 				.settingsButton.inline
 					+SettingsIcon
-				//- a.showPreview.inline(href= '/' + coreURL + '/drafts/' + entry.id, target= '_blank') Preview
-				.publishEntry.inline Publish
+				a.showPreview.inline.hidden(target= '_blank') Preview
+				.publishEntry.inline(disabled style="opacity: 0.6; cursor: not-allowed;") Publish
 			//- .floatUntrash
 			//- 	.untrashEntry.buttonGrey.inline
 			//- 		+TrashIcon
@@ -58,6 +58,16 @@ block content
 				.entryCurrentListContainer__space
 					.entryCurrentList__space.inline In list:
 					.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
+			.entrySettingsBlock.settingsDraftBlock.hidden
+				.entryState(data-entryState= "Draft") Status: Draft
+		.entrySettingsDelete.hidden
+			.entrySettingsBlock
+				.trashEntry.buttonGrey.inline
+					+TrashIcon
+					span Move to trash
+				.untrashEntry.buttonGrey.inline.hidden
+					+TrashIcon
+					span Untrash
 				//- .entryState(data-entryState= entry.entryState) Status: #{entry.entryState}
 			//- if (entry.entryState == "Published")
 			//- 	.entrySettingsBlock
