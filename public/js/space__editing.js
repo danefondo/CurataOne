@@ -231,6 +231,7 @@
 		return state;
 	}
 
+	
 	function setupEntryData() {
 		let data = {}
 		let entryCreator = $('.entryContainer__space');
