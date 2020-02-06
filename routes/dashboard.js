@@ -627,7 +627,8 @@ router.post('/curatas/:curataId/lists/:listId/entries/:entryId/updateEntry', ens
 
 router.post('/UpdateEntryText', ensureAuthenticated, entryController.updateEntryText);
 
-
+router.post('/trashEntry', ensureAuthenticated, entryController.trashEntry);
+router.post('/UntrashEntry', ensureAuthenticated, entryController.untrashEntry);
 
 // Create new curata with list and template
 router.post('/createNewCurata', ensureAuthenticated, function(req, res){
@@ -1751,63 +1752,7 @@ router.post('/PublishEntry', function(req, res) {
 	})
 })
 
-router.post('/TrashEntry', function(req, res) {
-
-	let entryId = req.body.entryId;
-	let userId = req.user._id;
-
-	Entry.findById(entryId, function(err, entry) {
-		if (err) {
-			return console.log("Could not find entry: ", err);
-		}
-
-		entry.entryState = "Trashed";
-
-		entry.save(function(err){
-			if (err) { 
-				return console.log("Entry save failed: ", err);
-			}
-
-			let entryId = entry._id;
-			let curataId = entry.curataId;
-			let listId = entry.curataListId;
-			res.json({
-				entry: entry,
-				redirectTo: '/dashboard/curatas/' + curataId
-			});
-		});
-
-	})
-})
-
 router.post('/DraftEntry', function(req, res) {
-
-	let entryId = req.body.entryId;
-	let userId = req.user._id;
-
-	Entry.findById(entryId, function(err, entry) {
-		if (err) {
-			return console.log("Could not find entry: ", err);
-		}
-
-		entry.entryState = "Draft";
-
-		entry.save(function(err){
-			if (err) { 
-				return console.log("Entry save failed: ", err);
-			}
-
-			let entryId = entry._id;
-			let curataId = entry.curataId;
-			let listId = entry.curataListId;
-			res.json({
-				entry: entry
-			});
-		});
-	})
-})
-
-router.post('/UntrashEntry', function(req, res) {
 
 	let entryId = req.body.entryId;
 	let userId = req.user._id;

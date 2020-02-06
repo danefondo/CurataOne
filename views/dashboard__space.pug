@@ -3,118 +3,17 @@ extends layout__dashboard
 include entryDesigns/entryOne
 include images/filledArrow
 include images/externalLink
-include mixins/entryForm
+include images/TrashIcon
+
+include dashboardModals/newEntryModal
+include dashboardModals/trashedEntryModal
 
 block heading
 	- var coreURL = 'dashboard';
 block content
 	- var coreURL = 'dashboard';
-	//- .emptyModal
-	//- 	.modalBackground
-	//- 	.createEntryModal__space
-	//- 		.cancelListCreating x
-	//- 		.sectionArea
-	//- 			.listChoicesTitle__space Choose list
-	//- 			.list__switchList__space Switch List
-	//- 			ul.listChoices__space
-	//- 				if (curata.curataList && curata.curataList.length)
-	//- 					each list in curata.curataList
-	//- 						.listChoicesContainer__space(data-id= list.id)
-	//- 							.listChoice__space
-	//- 								.listChoiceLink__space
-	//- 									if (list.listName && list.listName.length)
-	//- 										.listName__space #{list.listName}
-	//- 									else
-	//- 										.listName__space Untitled list
-	//- 									.addEntry__space + add new entry
-	//- .contentPreviewModal
-	//- 	.modalBackground
-	//- 	.createEntryModal__space
-	//- 		.createEntryModalActions__space
-	//- 			.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
-	//- 			.entryFull__space.createEntryModalActionButton__space.hide Full page editor
-	//- 			//- a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Full page editor
-	//- 			.entryClear__space.createEntryModalActionButton__space.hide Clear
-	//- 			.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
-	//- 			.cancelListCreating x
-	//- 		.sectionArea
-	//- 			.entryCurrentListContainer__space
-	//- 				.entryCurrentList__space.inline In list:
-	//- 				.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
-	//- 			.entryContainerTitle__space(style="margin-top:0px;") New entry
-	//- 			.modalEntryId
-	//- 			.entryContainer__space
-	//- 				.entryDetails
-	//- 					.entryComponentTitle Category
-	//- 					.entryDetailsGroup.entryDetailsGroupSpecial.flex
-	//- 						select
-	//- 							option(value="" data-display-text="Select category: ") None
-	//- 							each category in curata.categories
-	//- 								if (category.entryCategoryName && category.entryCategoryName.length)
-	//- 									option(value=category.id) #{category.entryCategoryName}
-	//- 								else
-	//- 									option(value=category.id) Untitled category
-	//- 							//- each list in curata.curataList
-	//- 							//- 	if (list.listName && list.listName.length)
-	//- 							//- 		option(value=list.id) #{list.listName}
-	//- 							//- 	else
-	//- 							//- 		option(value=list.id) Untitled list
-	//- 						.entryNewCategory__space + Category
-	//- 						.entryCreateCategoryBlock__space
-	//- 							input.entryNewCategoryText__space(placeholder="Write your category")
-	//- 							.entryNewCategoryCreate__space Create
-	//- 							.entryNewCategoryCancel__space X
-	//- 					.entryComponentTitle Entry title
-	//- 					.entryDetailsGroup
-	//- 						input.entryTitle__space.entryInput__space(placeholder= "Entry title")
-	//- 					.entryComponentTitle Summary
-	//- 					.entryDetailsGroup
-	//- 						.mainEditor
-	//- 							textarea.postDescription.entryInput__space(maxlength="100" placeholder="Write a short summary of less than 100 characters.")
-	//- 					.entryComponentTitle Link
-	//- 					.entryDetailsGroup
-	//- 						.linkContainer
-	//- 							input.entryLink.entryInput__space(placeholder="http://example.com")
-	//- 							a.entryLinkPreview.hidden(href="#" target="_blank")
-	//- 								+externalLink
-	//- 					.entryComponentTitle Image
-	//- 					.entryDetailsGroup
-	//- 						.mainImage(id= "imageArea_")
-	//- 							.file-upload.imageBlock(data-type="mainImage")
-	//- 								form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
-	//- 									input#file-input.file-upload-input.entryInput__space(type='file', name='image', accept='image/jpg')
-	//- 									.drag-text
-	//- 										button.file-upload-btn(type='button') Add Image
-	//- 										h3 Or just drag and drop a file
-	//- 								.file-upload-content
-	//- 									img.file-upload-image(src='#', alt='your image')
-	//- 									.image-title-wrap
-	//- 										button.remove-image(type='button')
-	//- 											| Remove 
-	//- 											span.image-title Uploaded Image
-	//- 			.entrySaveDraft__space Save as draft & exit
-	//- 			.createEntry__space Create entry
-	.emptyModal
-		.modalBackground
-		.createEntryModal__space
-			.createEntryModalActions__space
-				.entryOptionsContainer__space
-					.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
-					a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + curata.id + '/lists/' + curata.curataList[0].id + '/entries/new') Full page editor
-					.entryClear__space.createEntryModalActionButton__space.hide Clear
-					.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
-				.statusMessage.inline
-				.entryCurrentListContainer__space
-					.entryCurrentList__space.inline In list:
-					.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
-				.cancelListCreating x
-			.sectionArea
-				//- .entryContainerTitle__space(style="margin:30px auto 20px auto; color: #ccc;") New entry
-				.modalEntryId
-				+entryForm(curata)
-				.entryActions__space
-					.entrySaveDraft__space.hidden Save draft & exit
-					.createEntry__space Create entry
+	+newEntryModal(curata)
+	+trashedEntryModal(curata)
 	//- if public, show | if not, display message
 	.curataId(id= curata.id)
 	if user
@@ -149,6 +48,12 @@ block content
 			.navlinksContainer__liveCurata
 				.newList__space + New list
 				.openListChooser__space + New entry
+		.stateNavigation
+			.navlinksContainer__liveCurata
+				.entryStateSelector.currentState.inline(data-stateType="Published") Published
+				.entryStateSelector.inline(data-stateType="Draft") Drafts
+				.entryStateSelector.inline(data-stateType="Trashed") Trash
+				.entryStateSelector.inline Submits
 				//- if (curata.curataList && curata.curataList.length && curata.curataList.length > 1)
 				//- 	.openListChooser__space + New entry
 				//- else
@@ -162,34 +67,60 @@ block content
 				if (lists && lists.length)
 					each list in lists
 						- var publishedExist = "false";
+						//- 1. Check if list has content
 						if (list.entries && list.entries.length)
-							// handle case if there are no published entries
+							//- handle case if there are no published entries
 							- for (var i = 0; i < list.entries.length; i++)
 								if (list.entries[i].entryState == "Published")
 									- i += 9999999
 									- publishedExist = "true";
+							//- 1.1. If list has PUBLISHED content, show list
 							if (publishedExist == "true")
 								.listContainer__liveCurata
 									p.listTitle__liveCurata #{list.listName}
 									.list__liveCurata(id= list.id)
 										each entry in list.entries
+											//- 1.1.1 Show published content in list
 											if (entry.entryState == "Published")
-												.entry__liveCurata(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id)
-													//- if (entry.entryLink)
-													//- 	a.entryTitle__liveCurata(href= entry.entryLink target="_blank") Link
+												.entry__liveCurata(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState)
 													if (entry.entryTitle)
 															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
 													else
 															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled entry
 													if (entry.entryImageURL)
 														.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
-							//- else
-							//- 	.nothingPublished__liveCurata
-							//- 		p There are no published entries in this list.
-						//- else 
-						//- 	.noEntries__liveCurata You have no entries
+											//- 1.1.2 Don't show unpublished content in list
+											else
+												.entry__liveCurata.hidden(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState)
+													if (entry.entryTitle)
+															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
+													else
+															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled entry
+													if (entry.entryImageURL)
+														.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+							//- 1.2. If list has NO published content, don't show list
+							else 
+								.listContainer__liveCurata.hidden
+									p.listTitle__liveCurata #{list.listName}
+									.list__liveCurata(id= list.id)
+										each entry in list.entries
+											//- 1.2.1 Also HIDE entries NOT published
+											.entry__liveCurata.hidden(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState)
+												if (entry.entryTitle)
+														a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
+												else
+														a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled entry
+												if (entry.entryImageURL)
+													.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
 				else 
 					.noLists__liveCurata Curata is empty.
 block scripts
 	script(src='/js/space__editing.js')
 	script(src='/js/customSelect.js')
+
+
+//- Page logic:
+	//- if lists exists
+		//- per list, if list has content
+			//- if any content is published
+				//- show list block, list title and published entries inside

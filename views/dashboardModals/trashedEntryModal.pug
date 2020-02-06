@@ -1,0 +1,16 @@
+include ../dashboardForms/trashedForm
+mixin trashedEntryModal(curata, entry={})
+	.trashedModal.anyModal
+		.modalBackground
+		.createEntryModal__space
+			.createEntryModalActions__space
+				.modalUntrash
+					.untrashEntry.buttonGrey.inline
+						img.untrashIcon.inline(src= '/images/untrashIcon.png')
+						img.greyUntrashIcon(src= '/images/greyUntrashIcon.png')
+						span Untrash
+				.cancelListCreating(style="margin-left:auto;") x
+			.sectionArea
+				//- .entryContainerTitle__space(style="margin:30px auto 20px auto; color: #ccc;") New entry
+				.modalEntryId
+				+trashedForm(curata)

@@ -1096,6 +1096,42 @@ p.noDefaultCurataTextSmall {
   background-color: #efefef;
 }
 
+.untrashIcon {
+  height: 22px;
+  vertical-align: sub;
+}
+
+.untrashIcon:hover ~ .untrashText,
+.greyUntrashIcon:hover ~ .untrashText {
+  color: #808080;
+}
+
+.untrashEntry span {
+  line-height: 42px;
+  display: inline-block;
+  font-weight: bold;
+  color: #333;
+  margin-left: 2px;
+}
+
+.greyUntrashIcon {
+  display: none;
+  height: 22px;
+  vertical-align: sub;
+}
+
+.untrashEntry:hover .untrashText{
+  color: #808080;
+}
+
+.untrashEntry:hover .greyUntrashIcon {
+  display: inline !important;
+}
+
+.untrashEntry:hover .untrashIcon {
+  display: none !important;
+}
+
 .trashedIndicator {
   position: absolute;
   top: 19px;
@@ -1248,9 +1284,22 @@ p.noDefaultCurataTextSmall {
 
 .floatUntrash {
   float: right;
+}
+
+.modalUntrash {
   line-height: 42px;
-  margin-right: 25px;
-  padding: 8px;
+  margin-left: 30px;
+  padding-top: 0px;
+  padding-left: 0;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  margin-top: 13px;
+}
+
+.modalUntrash span {
+  font-size: 18px;
+  margin-left: 3px;
+  margin-top: 1px;
 }
 
 .inTrash {
@@ -2223,7 +2272,7 @@ h2.CheckOthers {
   display: inline-block;
 }
 
-.cancelDeleteEntry, .trashEntry, .untrashEntry, .permaDeleteList {
+.cancelDeleteEntry, .trashEntry, .permaDeleteList {
   background: transparent;
   padding: 0px;
   margin: 0px;
@@ -2233,6 +2282,27 @@ h2.CheckOthers {
   display: flex;
   justify-content: center;
   color: #424242;
+}
+
+.deleteEntry {
+}
+
+.deleteEntryText {
+  color: darkred;
+  cursor: pointer;
+}
+
+.deleteEntryText:hover {
+  color: #B71C1C;
+}
+
+.untrashEntry {
+  cursor: pointer;
+  padding: 0px;
+}
+
+.untrashEntry span:hover {
+  color: #808080;
 }
 
 .cancelDeleteEntry:hover, .trashEntry:hover, .untrashEntry:hover, .permaDeleteList:hover {
@@ -2708,7 +2778,7 @@ h2.CheckOthers {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .curataList, .entriesList, .List {
@@ -2745,7 +2815,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 .button-filled{
-  float: right;  
+  /* float: right;   */
   display: inline-block;
   font-weight: 600;
   color: white;
@@ -2766,7 +2836,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 /*New code: adding button-outline style*/
 .button-outline{
-  float:right;  
+  /* float:right;   */
   display: inline-block;
   border-radius: 2px;
   border:none;
@@ -2808,7 +2878,9 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   padding: 25px;
 }
 
-.emptyModal, .emptyConfirmModal {
+.emptyModal,
+.emptyConfirmModal,
+.trashedModal {
   display: none;
 }
 
@@ -2838,7 +2910,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   padding-top: 30px;
   margin-left: auto;
   margin-right: auto;
-  margin-left: -30px;
+  margin-left: auto;
+  text-align: center;
 }
 
 .modifiedActionGroup {
@@ -3483,7 +3556,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 
-.helperNavigation {
+.helperNavigation,
+.stateNavigation {
   padding: 4px 15px;
   background-color: #fff;
   border-bottom: 1px solid #eee;
@@ -3492,6 +3566,10 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   align-items: center;
   height: 44px;
   position: relative;
+}
+
+.stateNavigation {
+  background-color: #fbfbfb;
 }
 
 .templateTitleInstruction, .listTitleInstruction {
@@ -4133,6 +4211,12 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   margin-bottom: 10px;
 }
 
+.trashedNoImageText {
+  font-size: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .file-upload-btn:hover {
   background: #1AA059;
   color: #ffffff;
@@ -4181,6 +4265,10 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   color: #222;
 }
 
+.image-uploading-title {
+  display: none;
+}
+
 .drag-text {
   text-align: center;
   padding: 60px 40px;
@@ -4204,19 +4292,38 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   padding: 20px;
 }
 
-.remove-image {
+.remove-image, 
+.imageNameBlock {
   width: 200px;
   margin: 0;
-  color: #fff;
-  background: #cd4535;
   border: none;
   padding: 10px;
   border-radius: 4px;
-  border-bottom: 4px solid #b02818;
   transition: all .2s ease;
   outline: none;
   text-transform: uppercase;
   font-weight: 700;
+}
+
+.remove-image {
+  background: #cd4535;
+  border-bottom: 4px solid #b02818;
+  color: #fff;
+}
+
+.imageNameBlock {
+  -webkit-writing-mode: horizontal-tb !important;
+  text-rendering: auto;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  font: 600 11px;
+  padding-top: 0px;
 }
 
 .remove-image:hover {
@@ -4492,6 +4599,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     max-width: 150px;
     display: inline-block;
     border: 1px solid #eee;
+    margin-left: auto;
 }
 
 .createEntry__space:hover {

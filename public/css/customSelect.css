@@ -2,7 +2,8 @@ select {
   display: none;
 }
 
-.dropdown {
+.dropdown,
+.trashDropdown {
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#40FFFFFF', endColorstr='#00FFFFFF', GradientType=0);
@@ -38,6 +39,10 @@ select {
   width: 55%;
 /*  width: 83%;*/
 }
+.trashDropdown {
+  cursor: text;
+}
+
 .dropdown:focus {
   background-color: #f1f1f1;
 }
@@ -130,12 +135,17 @@ select {
   background: #f6f6f6;
 }
 
-.dropdown .currentCategorySelection {
+.dropdown .currentCategorySelection,
+.trashDropdown .currentCategorySelection {
   font-weight: bold;
 /*  color: #444;*/
   color: #555;
 /*  font-size: 18px;*/
   font-size: 20px;
+}
+
+.trashDropdown .currentCategorySelection {
+  cursor: text;
 }
 
 .by {

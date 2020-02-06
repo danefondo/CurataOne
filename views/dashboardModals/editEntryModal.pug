@@ -1,0 +1,85 @@
+	//- .emptyModal
+	//- 	.modalBackground
+	//- 	.createEntryModal__space
+	//- 		.cancelListCreating x
+	//- 		.sectionArea
+	//- 			.listChoicesTitle__space Choose list
+	//- 			.list__switchList__space Switch List
+	//- 			ul.listChoices__space
+	//- 				if (curata.curataList && curata.curataList.length)
+	//- 					each list in curata.curataList
+	//- 						.listChoicesContainer__space(data-id= list.id)
+	//- 							.listChoice__space
+	//- 								.listChoiceLink__space
+	//- 									if (list.listName && list.listName.length)
+	//- 										.listName__space #{list.listName}
+	//- 									else
+	//- 										.listName__space Untitled list
+	//- 									.addEntry__space + add new entry
+	//- .contentPreviewModal
+	//- 	.modalBackground
+	//- 	.createEntryModal__space
+	//- 		.createEntryModalActions__space
+	//- 			.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
+	//- 			.entryFull__space.createEntryModalActionButton__space.hide Full page editor
+	//- 			//- a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Full page editor
+	//- 			.entryClear__space.createEntryModalActionButton__space.hide Clear
+	//- 			.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
+	//- 			.cancelListCreating x
+	//- 		.sectionArea
+	//- 			.entryCurrentListContainer__space
+	//- 				.entryCurrentList__space.inline In list:
+	//- 				.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
+	//- 			.entryContainerTitle__space(style="margin-top:0px;") New entry
+	//- 			.modalEntryId
+	//- 			.entryContainer__space
+	//- 				.entryDetails
+	//- 					.entryComponentTitle Category
+	//- 					.entryDetailsGroup.entryDetailsGroupSpecial.flex
+	//- 						select
+	//- 							option(value="" data-display-text="Select category: ") None
+	//- 							each category in curata.categories
+	//- 								if (category.entryCategoryName && category.entryCategoryName.length)
+	//- 									option(value=category.id) #{category.entryCategoryName}
+	//- 								else
+	//- 									option(value=category.id) Untitled category
+	//- 							//- each list in curata.curataList
+	//- 							//- 	if (list.listName && list.listName.length)
+	//- 							//- 		option(value=list.id) #{list.listName}
+	//- 							//- 	else
+	//- 							//- 		option(value=list.id) Untitled list
+	//- 						.entryNewCategory__space + Category
+	//- 						.entryCreateCategoryBlock__space
+	//- 							input.entryNewCategoryText__space(placeholder="Write your category")
+	//- 							.entryNewCategoryCreate__space Create
+	//- 							.entryNewCategoryCancel__space X
+	//- 					.entryComponentTitle Entry title
+	//- 					.entryDetailsGroup
+	//- 						input.entryTitle__space.entryInput__space(placeholder= "Entry title")
+	//- 					.entryComponentTitle Summary
+	//- 					.entryDetailsGroup
+	//- 						.mainEditor
+	//- 							textarea.postDescription.entryInput__space(maxlength="100" placeholder="Write a short summary of less than 100 characters.")
+	//- 					.entryComponentTitle Link
+	//- 					.entryDetailsGroup
+	//- 						.linkContainer
+	//- 							input.entryLink.entryInput__space(placeholder="http://example.com")
+	//- 							a.entryLinkPreview.hidden(href="#" target="_blank")
+	//- 								+externalLink
+	//- 					.entryComponentTitle Image
+	//- 					.entryDetailsGroup
+	//- 						.mainImage(id= "imageArea_")
+	//- 							.file-upload.imageBlock(data-type="mainImage")
+	//- 								form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
+	//- 									input#file-input.file-upload-input.entryInput__space(type='file', name='image', accept='image/jpg')
+	//- 									.drag-text
+	//- 										button.file-upload-btn(type='button') Add Image
+	//- 										h3 Or just drag and drop a file
+	//- 								.file-upload-content
+	//- 									img.file-upload-image(src='#', alt='your image')
+	//- 									.image-title-wrap
+	//- 										button.remove-image(type='button')
+	//- 											| Remove 
+	//- 											span.image-title Uploaded Image
+	//- 			.entrySaveDraft__space Save as draft & exit
+	//- 			.createEntry__space Create entry

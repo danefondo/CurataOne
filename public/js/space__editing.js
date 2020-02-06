@@ -1,6 +1,8 @@
  $(document).ready(function () { 
 
- 	let deletionModal = $('.emptyModal');
+	let deletionModal = $('.emptyModal');
+	let trashedModal = $('.trashedModal');
+	let anyModal = $('.anyModal');
  	let userId = $('.userId').attr('id');
 	let username = $('.userId').attr('data-username');
  	const coreURL = 'dashboard';
@@ -91,13 +93,13 @@
 	}
 	initPreviewButton();
 
-	function hideShowMoreOptions() {
+	function initHideShowMoreOptions() {
 		$('.entryShowHideMoreOptions__space').off('click');
 		$('.entryShowHideMoreOptions__space').on('click', function() {
 			$('.createEntryModalActionButton__space').toggle();
 		})
 	}
-	hideShowMoreOptions();
+	initHideShowMoreOptions();
 
 	// to show contents
 		// click entry
@@ -116,11 +118,13 @@
 		$('.cancelListCreating').off('click');
 		$('.cancelListCreating').on('click', function() {
 			creationModal.hide();
+			anyModal.hide();
 			restoreURL();
 		})
 		$('.modalBackground').off('click');
 		$('.modalBackground').on('click', function() {
 			creationModal.hide();
+			anyModal.hide();
 			restoreURL();
 		})
 
@@ -131,6 +135,7 @@
 		  		let modalState = creationModal.css('display');
 			  	if (modalState == "block") {
 					  creationModal.hide();
+					  anyModal.hide();
 					  restoreURL();
 			  	}
 		  	}
@@ -167,6 +172,7 @@
 		$('.image-upload-wrap').show();
 		enableImageUpload();
 		initInputListening();
+		turnOffSaveDraftAndExit();
 	}
 
 	function checkIfModal() {
@@ -174,13 +180,14 @@
 		return modalCheck;
 	}
 
-	function initSaveDraft() {
+	function initSaveDraftAndExit() {
 		let saveDraftButton = $('.entrySaveDraft__space');
 
 		let hiddenCheck = saveDraftButton.hasClass('hidden');
 		if (hiddenCheck) {
 			saveDraftButton.removeClass('hidden');
 		}
+		$('.createEntry__space').css("margin-left", "unset");
 
 		saveDraftButton.off('click');
 		saveDraftButton.on('click', function() {
@@ -197,6 +204,41 @@
 		});
 	}
 
+	function turnOffSaveDraftAndExit() {
+		$('.createEntry__space').css("margin-left", "auto");
+		let saveDraftButton = $('.entrySaveDraft__space');
+	
+		let hiddenCheck = saveDraftButton.hasClass('hidden');
+		if (!hiddenCheck) {
+			saveDraftButton.addClass('hidden');
+		}
+		saveDraftButton.off('click');
+	}
+
+
+	function initEntryTrashing() {
+		// when trashed:
+			// change entry state
+			// close and clear current modal, whether view mode or create mode
+			// then for viewing trashed entry, I can have another modal without doing magical changes with javascript that I can open quickly
+		trashedModal.show();
+		$('.entryOptionsContainer__space').hide();
+		$('.statusMessage').hide();
+		$('.entryCurrentListContainer__space').hide();
+		$('.cancelListCreating').css("margin-left", "auto");
+		// convert all inputs to non-editable, view-only content
+		// 
+	}
+
+	function initUpdatingDraftDiv() {
+		// on typing entries, any changes to content should be reflected, including if it later has meta data stored inside it (as also  with different entry designs, sometimes summary or other details are shown, other times not)
+		// turn this off when clearing modal
+		// turn this off when creating/publishing
+		// turn this off when saving draft & closing
+
+		// actually at the end of typing, push update manually
+	}
+
 	function initEntryModalFunctions(listId, entryId) {
 		let fullPageLink = $('<a>', {'class': 'createEntryModalActionButton__space entryFull__space block hide' , 'href': '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'});
 
@@ -204,6 +246,7 @@
 		
 		let clearEntry = $('.entryClear__space');
 		if (clearEntry.is(":visible")) {
+			// hide all modal action buttons (idientified by class below)
 			$('.createEntryModalActionButton__space').toggle();
 		}
 		
@@ -215,23 +258,38 @@
 		
 		initDraftDeleting();
 	}
+	
 
-	function appendDraft() {
+	function appendDraft(response, listId) {
+
+		let newEntry = $('<div>', {'class': 'entry__liveCurata', 'data-entrystate': 'Draft', 'id': response.entryId});
+		let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'})
+		entryTitleBlock.text(response.entry.entryTitle || "Untitled entry");
+		newEntry.append(entryTitleBlock);
+		if (response.entry.entryImageKey && response.entry.entryImageURL) {
+			let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
+			entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
+			entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
+			entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
+			newEntry.append(entryImageBlock);
+		}
+
 		// decide whether should be hidden or not
 		let state = checkCurrentState();
 
-		if (state === "Published") {
-			draftBlock.addClass('hidden');
+		if (state !== "Draft") {
+			newEntry.addClass('hidden');
 		} 
+
+		$('#' + listId).append(newEntry);
 	}
 
 	function checkCurrentState() {
 		// check if current tab/focus to decide whether to hide appended entry/draft;
-		let state = "Published";
+		let state = $('.currentState').attr('data-statetype');
 		return state;
 	}
 
-	
 	function setupEntryData() {
 		let data = {}
 		let entryCreator = $('.entryContainer__space');
@@ -355,11 +413,74 @@
 	}
 	initCreateEntry();
 
-	function createNewDraft() {
+	function hideShowListsWithCurrentStateEntries(newState) {
+		// hide all lists
+		// for each list, find entries and their state
+			// if list has any correct match entries, show
+
+		let allLists = $('.listContainer__liveCurata');
+		allLists.hide();
+		allLists.each(function(i, obj) {
+			let listContainer = $(obj);
+			let list = listContainer.children('.list__liveCurata');
+
+			// if list has element with newState attr equivalent, show / remove hidden
+			if (list.children('div[data-entrystate=' + newState + ']').length > 0) {
+				listContainer.removeClass('hidden');
+				listContainer.show();
+			}
+		});
+		
+	}
+
+	function hideShowEntriesByCurrentState(newState) {
+		let allEntries = $('.entry__liveCurata');
+		allEntries.hide();
+		allEntries.each(function(i, obj) {
+			let entry = $(obj);
+			let entryAttr = entry.attr('data-entryState');
+			console.log("attttr", entryAttr);
+			if (entryAttr == newState) {
+				entry.removeClass('hidden');
+				entry.show();
+			}
+		})
+	}
+
+	function initEntryStateChange() {
+		$('.entryStateSelector').off('click');
+		$('.entryStateSelector').on('click', function() {
+			$('.entryStateSelector').removeClass('currentState');
+			let clickObject = $(this);
+			clickObject.addClass('currentState');
+
+			let newState = clickObject.attr('data-stateType');
+
+			hideShowListsWithCurrentStateEntries(newState);
+
+			hideShowEntriesByCurrentState(newState);
+
+		})
+	}
+	initEntryStateChange();
+
+	function createNewDraft(uploadData=0) {
 		$('.statusMessage').text("Creating draft...");
 		creatingEntry = true;
 		let data = setupEntryData();
 		let listId = data.listId;
+
+		let uploadingImage = false;
+		if (uploadData !== 0) {
+			uploadingImage = true;
+		}
+
+		if (uploadingImage) {
+			let imageKey = uploadData.fileName;
+			let imageURL = uploadData.fileURL;
+			data.imageKey = imageKey;
+			data.imageURL = imageURL;
+		}
 
 		$.ajax({
 			data: data,
@@ -372,19 +493,26 @@
 
 				let modalCheck = checkIfModal();
 				if (modalCheck) {
-					appendDraft();
+					appendDraft(response, listId);
 					initEntryModalFunctions(listId, entryId);
-					hideShowMoreOptions();
+					initHideShowMoreOptions();
+					initSaveDraftAndExit();
 				} else {
 					checkIfBlankEntry();
 				}
-				checkIfBlankEntry();
+				
 				changeURL(entryId, listId)
+				//initDraftTrashing();
 				updateEntry();
 				$('.statusMessage').text("Draft created.");
 				creatingEntry = false;
+
+				if (uploadingImage) {
+					saveReference(entryId, uploadData);
+				}
 			},
 			error: function(err) {
+				revertEntryButton();
 				$('.statusMessage').text("Failed to create draft.");
 				creatingEntry = false;
 			}
@@ -637,14 +765,19 @@
 			uploadData.imageName = imageName;
 
 			if (file === null) {
-				$('.createEntry__space').text("Create entry");
-				$('.createEntry__space').css("background-color", "#673ab7");
+				revertEntryButton();
 				return alert('No file selected.');
 			}
 
 			getSignedRequest(file, uploadData);
 
 		});
+	}
+
+	function revertEntryButton() {
+		let createEntryButton = $('.createEntry__space');
+		createEntryButton.text("Create entry");
+		createEntryButton.css("background-color", "#673ab7");		
 	}
 
 	function disableImageUpload() {
@@ -746,17 +879,48 @@
 				$('.image-upload-wrap').show();
 				disableImageDelete();
     			enableImageUpload();
-				$('.createEntry__space').text("Create entry");
-				$('.createEntry__space').css("background-color", "#673ab7");
+				revertEntryButton();
     		},
     		error: function(err) {
-    			console.log("Failed to delete image from database: ", err);
     			enableImageUpload();
-				$('.createEntry__space').text("Create entry");
-				$('.createEntry__space').css("background-color", "#673ab7");
+				imageError("Failed to delete image from database.", err)
     			// Display error not being able to delete note
     		}
     	});
+	}
+
+	function saveFileReferenceSuccess(uploadData, imageBlock) {
+		console.log("Successfully uploaded image.");
+		revertEntryButton();
+		let imageKey = uploadData.fileName;
+		let imageURL = uploadData.fileURL;
+		imageBlock.attr('data-image-key', imageKey);
+		imageBlock.attr('data-image-url', imageURL);
+		toggleImageTitle();
+		enableImageDelete();		
+	}
+
+	function saveReference(entryId, uploadData) {
+		uploadData.entryId = entryId;
+		uploadData.curataId = curataId;
+		
+		let imageBlock = uploadData.imageBlock;
+		delete uploadData.imageBlock;
+		
+		$.ajax({
+			url: '/' + coreURL + '/saveFileReference',
+			type: 'POST',
+			data: JSON.stringify(uploadData),
+			processData: false,
+			contentType: 'application/json',
+			success: function(data) {
+				saveFileReferenceSuccess(uploadData, imageBlock);
+			},
+			error: function(err) {
+				imageError("Could not save file reference.", err);
+			}
+		})
+		
 	}
 
 	function saveFileReference(uploadData) {
@@ -764,107 +928,18 @@
 		let entryId = $('.entryContainer__space').attr('id');
 
 		if (typeof entryId !== typeof undefined && entryId !== false) {
-			uploadData.entryId = entryId;
-			uploadData.curataId = curataId;
-
-			let imageBlock = uploadData.imageBlock;
-			delete uploadData.imageBlock;
-
-			$.ajax({
-				url: '/' + coreURL + '/saveFileReference',
-				type: 'POST',
-				data: JSON.stringify(uploadData),
-				processData: false,
-				contentType: 'application/json',
-				success: function(data) {
-					console.log("Successfully uploaded image.");
-					let imageKey = uploadData.fileName;
-					let imageURL = uploadData.fileURL;
-					imageBlock.attr('data-image-key', imageKey);
-					imageBlock.attr('data-image-url', imageURL);
-					$('.createEntry__space').text("Create entry");
-					$('.createEntry__space').css("background-color", "#673ab7");
-					toggleImageTitle();
-					enableImageDelete();
-				},
-				error: function(err) {
-					console.log("Could not save file reference.", err);
-					$('.createEntry__space').text("Create entry");
-					$('.createEntry__space').css("background-color", "#673ab7");
-				}
-			})
+			saveReference(entryId, uploadData);
 		} else {
-			// create entry, setup entryId, then save reference
-			creatingEntry = true;
-			$('.statusMessage').text("Creating draft...");
-			let data = setupEntryData();
-			let listId = data.listId;
-
-			let imageKey = uploadData.fileName;
-			let imageURL = uploadData.fileURL;
-			data.imageKey = imageKey;
-			data.imageURL = imageURL;
-
-			$.ajax({
-				data: data,
-				type: 'POST',
-				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/newDraft',
-				success: function(response) {
-					console.log("Yoho! Successfully created draft!");
-					$('.entryContainer__space').attr('id', response.entryId);
-					entryId = response.entryId;
-
-					uploadData.entryId = entryId;
-					uploadData.curataId = curataId;
-
-					let imageBlock = uploadData.imageBlock;
-					delete uploadData.imageBlock;
-
-					hideShowMoreOptions();
-					initDraftDeleting();
-					updateEntry();
-					initSaveDraft();
-					checkIfBlankEntry();
-					$('.statusMessage').text("Draft created.");
-					creatingEntry = false;
-
-					$.ajax({
-						url: '/' + coreURL + '/saveFileReference',
-						type: 'POST',
-						data: JSON.stringify(uploadData),
-						processData: false,
-						contentType: 'application/json',
-						success: function(data) {
-							console.log("Successfully uploaded image.");
-							$('.createEntry__space').text("Create entry");
-							$('.createEntry__space').css("background-color", "#673ab7");
-							let imageKey = uploadData.fileName;
-							let imageURL = uploadData.fileURL;
-							imageBlock.attr('data-image-key', imageKey);
-							imageBlock.attr('data-image-url', imageURL);
-							toggleImageTitle();
-							enableImageDelete();
-						},
-						error: function(err) {
-							console.log("Could not save file reference.", err);
-							$('.createEntry__space').text("Create entry");
-							$('.createEntry__space').css("background-color", "#673ab7");
-						}
-					})
-				},
-				error: function(err) {
-					$('.createEntry__space').text("Create entry");
-					$('.createEntry__space').css("background-color", "#673ab7");
-					$('.statusMessage').text("Failed to create draft.");
-					creatingEntry = false;
-				}
-			})
-
+			createNewDraft(uploadData);
 		}
 	}
 
-	function uploadFile(file, signedRequest, url, uploadData) {
+	function imageError(consoleText, err) {
+		console.log(consoleText, err);
+		revertEntryButton();
+	}
 
+	function uploadFile(file, signedRequest, url, uploadData) {
 		$.ajax({
 			url: signedRequest,
 			type: 'PUT',
@@ -875,9 +950,7 @@
 				saveFileReference(uploadData);
 			},
 			error: function(err) {
-				console.log("Could not upload file", err);
-				$('.createEntry__space').text("Create entry");
-				$('.createEntry__space').css("background-color", "#673ab7");
+				imageError("Failed to upload file.", err);
 			}
 		})
 	}
@@ -906,9 +979,7 @@
 				uploadFile(file, signedRequest, responseURL, uploadData);
 			},
 			error: function(err) {
-				console.log("Could not get signed URL.", err);
-				$('.createEntry__space').text("Create entry");
-				$('.createEntry__space').css("background-color", "#673ab7");
+				imageError("Could not get signed URL.", err);
 			}
 		})
 	}

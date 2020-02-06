@@ -1,0 +1,27 @@
+include ../dashboardForms/entryForm
+mixin newEntryModal(curata, entry={})
+	.emptyModal.anyModal
+		.modalBackground
+		.createEntryModal__space
+			.createEntryModalActions__space
+				.entryOptionsContainer__space
+					.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
+					a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + curata.id + '/lists/' + curata.curataList[0].id + '/entries/new') Full page editor
+					.entryClear__space.createEntryModalActionButton__space.hide Clear
+					.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
+				.statusMessage.inline
+				.modalUntrash.hidden
+					.untrashEntry.buttonGrey.inline
+						+TrashIcon
+						span Untrash
+				.entryCurrentListContainer__space
+					.entryCurrentList__space.inline In list:
+					.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
+				.cancelListCreating x
+			.sectionArea
+				//- .entryContainerTitle__space(style="margin:30px auto 20px auto; color: #ccc;") New entry
+				.modalEntryId
+				+entryForm(curata)
+				.entryActions__space
+					.entrySaveDraft__space.hidden Save draft & exit
+					.createEntry__space Create entry

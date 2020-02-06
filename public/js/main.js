@@ -404,7 +404,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	    			entryId: entryId
 	    		},
 	    		type:'POST',
-	    		url: '/' + coreURL + '/TrashEntry',
+	    		url: '/' + coreURL + '/trashEntry',
 	    		success: function(response) {
 	    			// take person to all entries
 	    			window.location.href = response.redirectTo;
@@ -449,7 +449,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	    			entryId: entry_id
 	    		},
 	    		type:'POST',
-	    		url: '/' + coreURL + '/TrashEntry',
+	    		url: '/' + coreURL + '/trashEntry',
 	    		success: function(response) {
 	    			$('.singleList').each(function(i, obj) {
 	    				let dataAttr = $(obj).attr('data-id');
@@ -1964,7 +1964,9 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	        .then( editor => {
 	            const toolbarContainer = document.querySelector( toolbarID );
 
-	            toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+				if (toolbarContainer && toolbarContainer.length) {
+					toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+				}
 
 	            // Multiple editor instances: https://stackoverflow.com/questions/48575534/ckeditor-5-get-editor-instances
 	            // myEditor = editor;

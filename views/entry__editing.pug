@@ -17,7 +17,8 @@ include mixins/link
 include images/TrashIcon
 include images/SettingsIcon
 include images/externalLink
-include mixins/entryForm
+include dashboardForms/entryForm
+include dashboardForms/trashedForm
 
 //- bring in 'Page Key' & 'Page Overview' kind of like... Stackoverflow's report
 block heading
@@ -39,10 +40,13 @@ block heading
 						a.viewLive(target= "_blank" href= '/browse/users/' + user.id + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id) View live
 			else
 				span.inTrash This entry is in the trash. Click 'Untrash' to restore entry.
-				.floatUntrash
+				.floatUntrash.inline
 					.untrashEntry.buttonGrey.inline
-						+TrashIcon
-						span Untrash
+						img.untrashIcon.inline(src= '/images/untrashIcon.png')
+						img.greyUntrashIcon(src= '/images/greyUntrashIcon.png')
+						span.untrashText Untrash
+					.deleteEntry.buttonGrey.inline
+						span.deleteEntryText Delete
 block content
 	- var coreURL = 'dashboard';
 	.curataId(id= entry.curataId)
@@ -53,8 +57,8 @@ block content
 			.content-wrapper
 				.msg-title Are you sure you want to move this entry to the trash?
 				.action-group
-					.cancelTrashEntry.button-outline CANCEL
 					.confirmTrashEntry.button-filled TRASH
+					.cancelTrashEntry.button-outline CANCEL
 	if (entry.entryState !== "Trashed")
 		.settingsSideNav
 			.entrySettingsHeader
@@ -91,45 +95,7 @@ block content
 	else
 		.sectionArea
 			.TemplateHolder
-				.entryDetails
-					.entryComponentTitle Title
-					.entryDetailsGroup
-						if (entry.entryTitle)
-							.EntryTitle #{entry.entryTitle}
-						else
-							.EntryTitle Untitled
-					.entryComponentTitle Description
-					.entryDetailsGroup
-						.mainEditor
-							textarea.postDescription(maxlength="100" placeholder="Write a short summary of less than 100 characters.") !{entry.entryText}
-							//- .editorTools.unreset(id= "toolbar_" +entry.id)
-							//- if (entry.entryText)
-							//- 	.editorText.unreset(id= "editor_" +entry.id) !{entry.entryText}
-							//- else
-							//- 	.editorText.unreset(id= "editor_" +entry.id)
-							//- 		p Write something here...
-					.entryComponentTitle Link
-					.entryDetailsGroup
-						.linkContainer
-							if (entry.entryLink)
-								a.EntryLink(href= entry.entryLink target="_blank") #{entry.entryLink}
-								.removeLink Remove link
-							else
-								.addEntryLink + Add link
-					.entryComponentTitle Image
-					.entryDetailsGroup
-						.mainImage(id= "imageArea_" +entry.id)
-							if (entry.entryImageURL)
-								.imageBlock(data-type= "mainImage" data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
-									.deleteMainImage x
-									form.imageForm(action= "/' + coreURL + '/UploadSingleImage" method="POST" enctype= "multipart/form-data")
-										label.uploadFile
-											input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
-							else 
-								.imageBlock(data-type= "mainImage")
-									form.imageForm(action= "/' + coreURL + '/UploadSingleImage" method="POST" enctype= "multipart/form-data")
-										label.uploadFile
-											input.ImageInput(type= 'file' name= 'image' accept= 'image/*')
+				+trashedForm(curata, entry)
 block scripts
 	script(src='/js/space__editing.js')
 	script(src='/js/customSelect.js')

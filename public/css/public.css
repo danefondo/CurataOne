@@ -33,6 +33,27 @@
 	padding: 10px;
 }
 
+.entryStateSelector {
+	margin-right: 10px;
+	margin-left: 5px;
+    font-size: 17px;
+    font-weight: bold;
+	color: grey;
+	padding: 10px 22px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.entryStateSelector:hover {
+	background-color: #eee;
+    color: #656565;
+}
+
+.currentState {
+	background-color: #eee;
+    color: #656565;
+}
+
 .upvote__liveCurata {
 	float: right;
 	border-radius: 4px;

@@ -59,9 +59,8 @@ mixin entryForm(curata, entry={})
 							.image-title-wrap
 								button.remove-image(type='button')
 									span.image-pre-title Remove 
-									if (entry.entryImageName) 
-										if (entry.entryImageName.length)
-											span.image-title #{entry.entryImageName}
+									if (entry.entryImageName && entry.entryImageName.length) 
+										span.image-title #{entry.entryImageName}
 									else
 										span.image-title Untitled Image
-									span.image-uploading-title.hidden Uploading image...
+									span.image-uploading-title Uploading image...

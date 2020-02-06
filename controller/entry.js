@@ -161,7 +161,62 @@ const entryController = {
 				message: "An error occurred while updating your entry" 
 			});
 		}
-	}
+    },
+
+    async trashEntry(req, res) {
+        try {
+            let entryId = req.body.entryId;
+
+            const entry = await Entry.findById(entryId);
+			if (!entry) {
+				return res.status('404').json({
+					message: "Could not find entry."
+				});
+            }
+            
+            entry.entryState = "Trashed";
+            await entry.save();
+
+            let curataId = entry.curataId;
+            res.json({
+                entry: entry,
+                redirectTo: '/dashboard/curatas/' + curataId
+            });
+        
+        } catch (error) {
+            console.log("error", error);
+			res.status('500').json({
+				message: "An error occurred while trashing your entry" 
+			}); 
+        }
+    },
+
+    async untrashEntry(req, res) {
+        try {
+            let entryId = req.body.entryId;
+
+            const entry = await Entry.findById(entryId);
+			if (!entry) {
+				return res.status('404').json({
+					message: "Could not find entry."
+				});
+            }
+            
+            entry.entryState = "Draft";
+            await entry.save();
+
+            res.json({
+                entry: entry
+            });
+        
+        } catch (error) {
+            console.log("error", error);
+			res.status('500').json({
+				message: "An error occurred while updating your entry" 
+			}); 
+        }
+    }
+
 }
 
 module.exports = entryController;
