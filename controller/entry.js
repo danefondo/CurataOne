@@ -1,6 +1,10 @@
 let Curata = require('../models/curata');
 let Entry = require('../models/entry');
+let entryComponent = require('../models/entryComponent');
 let curataList = require('../models/curataList');
+let curataImage = require('../models/image');
+const aws = require('aws-sdk');
+const s3 = new aws.S3();
 
 const entryController = {
     async updateEntryText(req, res) {
@@ -214,6 +218,82 @@ const entryController = {
 			res.status('500').json({
 				message: "An error occurred while updating your entry" 
 			}); 
+        }
+    },
+
+    async deleteEntry(req, res) {
+
+        let entryId = req.body.entryId;
+        let listId = req.body.listId;
+        let curataId = req.params.curataId;
+
+        try {
+            const entry = await Entry.findByIdAndDelete(entryId);
+            if (!entry) {
+                return res.status(404).json({
+                    errors: "Entry not found"
+                });
+            }
+
+            // delete all items where id == component id
+            await entryComponent.deleteMany({ "entryId": entryId});
+            console.log("Entry components successfully deleted.");
+
+            let images = await curataImage.find({"entryId": entryId});
+            const imageKeys = [];
+            images.forEach(function(image) {
+                // Pull image reference from curataFiles
+                console.log("One imageId to remove: ", image);
+                Curata.findOneAndUpdate(
+                    { _id: curataId },
+                    { $pull: {"curataFiles.images": image._id} },
+                    { new: true },
+                    function(err, removed) {
+                        if (err) { console.log(err) }
+                    }
+                );
+
+                imageKeys.push({
+                    Key: '' + image.imageKey
+                })
+            });
+            if (imageKeys.length) {
+                s3.deleteObjects({
+                Bucket: 'curata',
+                Delete: {
+                    Objects: imageKeys
+                }
+                }, function (err, data) {
+                    if (err) {
+                        console.log("Error: ", err);
+                    } else {
+                        console.log("Successfully deleted image from AWS.");
+                    }
+                })
+            }
+            
+
+            await curataImage.deleteMany({ "entryId": entryId});
+            console.log("Associated images successfully removed.");
+
+            curataList.findOneAndUpdate(
+                { _id: listId },
+                { $pull: {entries: entry._id} },
+                { new: true },
+                function(err, removed) {
+                    if (err) { console.log(err) }
+                });
+
+            res.json({
+                message: "Entry delete successful.",
+                redirectTo: '/dashboard/curatas/' + curataId + '/?entrydelete'
+            });
+
+        } catch(error) {
+            console.log(error);
+            res.status(500).json({
+                errors: "An unknown error occurred."
+            });
         }
     }
 

@@ -1,7 +1,7 @@
  $(document).ready(function () {
 
  	let coreURL = 'dashboard';
- 	let entryId = $('.entryContainer__space').attr('id');
+ 	let entryId = $('.entryContainer__space').attr('data-entryformid');
 	let tempId = $('.TemplateId').attr('id');
 	let userId = $('.userId').attr('id');
 	let username = $('.userId').attr('data-username');

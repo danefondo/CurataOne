@@ -204,83 +204,6 @@ router.post('/saveFileReference', validator.imageValidate, async function(req, r
 
 })
 
-// Delete entry
-router.delete('/curatas/:curataId/lists/:listId/entries/:entryId/deleteEntry', ensureAuthenticated, async function(req, res) {
-
-	let entryId = req.body.entryId;
-	let listId = req.body.listId;
-	let curataId = req.params.curataID;
-
-	try {
-		const entry = await Entry.findByIdAndDelete(entryId);
-		if (!entry) {
-			return res.status(404).json({
-				errors: "Entry not found"
-			});
-		}
-
-		// delete all items where id == component id
-		await entryComponent.deleteMany({ "entryId": entryId});
-		console.log("Entry components successfully deleted.");
-
-		let images = await curataImage.find({"entryId": entryId});
-		const imageKeys = [];
-		images.forEach(function(image) {
-			// Pull image reference from curataFiles
-			console.log("One imageId to remove: ", image);
-			Curata.findOneAndUpdate(
-				{ _id: curataId },
-				{ $pull: {"curataFiles.images": image._id} },
-				{ new: true },
-				function(err, removed) {
-					if (err) { console.log(err) }
-				}
-			);
-
-			imageKeys.push({
-				Key: '' + image.imageKey
-			})
-		});
-		if (imageKeys.length) {
-			s3.deleteObjects({
-			  Bucket: 'curata',
-			  Delete: {
-			  	Objects: imageKeys
-			  }
-			}, function (err, data) {
-				if (err) {
-					console.log("Error: ", err);
-				} else {
-					console.log("Successfully deleted image from AWS.");
-				}
-			})
-		}
-		
-
-		await curataImage.deleteMany({ "entryId": entryId});
-		console.log("Associated images successfully removed.");
-
-		curataList.findOneAndUpdate(
-			{ _id: listId },
-			{ $pull: {entries: entry._id} },
-			{ new: true },
-			function(err, removed) {
-				if (err) { console.log(err) }
-			});
-
-		res.json({
-			message: "Entry delete successful.",
-		});
-
-	} catch(error) {
-		console.log(error);
-		res.status(500).json({
-			errors: "An unknown error occurred"
-		});
-	}
-
-});
-
 
 
 router.get('/sign-s3', function(req, res) {
@@ -627,8 +550,10 @@ router.post('/curatas/:curataId/lists/:listId/entries/:entryId/updateEntry', ens
 
 router.post('/UpdateEntryText', ensureAuthenticated, entryController.updateEntryText);
 
-router.post('/trashEntry', ensureAuthenticated, entryController.trashEntry);
+router.post('/curatas/:curataId/lists/:listId/entries/:entryId/trashEntry', ensureAuthenticated, entryController.trashEntry);
 router.post('/UntrashEntry', ensureAuthenticated, entryController.untrashEntry);
+
+router.delete('/curatas/:curataId/lists/:listId/entries/:entryId/deleteEntry', ensureAuthenticated, entryController.deleteEntry);
 
 // Create new curata with list and template
 router.post('/createNewCurata', ensureAuthenticated, function(req, res){

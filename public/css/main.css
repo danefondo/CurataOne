@@ -1851,8 +1851,8 @@ h2.CheckOthers {
   min-height: 150px;
   background-color: white;
   border-radius: 3px;
-/*  border: 1px solid #e4e4e4; */
-  text-align: center;
+ border: 1px solid #e4e4e4; */
+  /* text-align: center;
   line-height: 150px;
   margin-top: 10px;
 }*/
@@ -1879,7 +1879,8 @@ h2.CheckOthers {
 .passwordCurrent__accountSettings,
 .newListDescription--dashboard__entries,
 .newListTitle--dashboard__entries,
-.entryTitle__space {
+.entryTitle__space,
+.trashTitle__space {
   background: transparent;
   border-radius: 3px;
   box-shadow: none;
@@ -1918,13 +1919,15 @@ h2.CheckOthers {
 .passwordCurrent__accountSettings:focus,
 .newListDescription--dashboard__entries:focus,
 .newListTitle--dashboard__entries:focus,
-.entryTitle__space:focus {
+.entryTitle__space:focus,
+.trashTitle__space:focus {
   background: #fff;
   border: none;
 /*  box-shadow: inset 0 0 0 2px #4725a9;*/
 }
 
-.entryTitle__space {
+.entryTitle__space,
+.trashTitle__space {
   margin-left: 0px;
   padding-left: 5px;
 /*  font-size: 35px;*/
@@ -2023,14 +2026,16 @@ h2.CheckOthers {
   padding-bottom: 5px;
 }
 
-.entryLink {
+.entryLink,
+.trashLink {
   font-size: 20px;
   font-family: 'GothamRounded';
   padding: 4px 5px;
   width: 95%;
 }
 
-.entryLinkPreview {
+.entryLinkPreview,
+.trashLinkPreview {
   display: inline-block;
 /*  margin-top: 20px;*/
   margin-top: 1px;
@@ -2040,7 +2045,8 @@ h2.CheckOthers {
   box-sizing: border-box;
 }
 
-.entryLinkPreview:hover {
+.entryLinkPreview:hover,
+.trashLinkPreview:hover {
   color: #9575CD;
 }
 
@@ -2056,7 +2062,8 @@ h2.CheckOthers {
   stroke: #663ab7;
 }
 
-.entryLinkPreview:hover > .externalLink path {
+.entryLinkPreview:hover > .externalLink path,
+.trashLinkPreview:hover > .externalLink path {
   stroke-width: 3px;
 }
 
@@ -2788,14 +2795,15 @@ h2.CheckOthers {
 }
 
 
-button.button-white.confirmEntryDelete, button.button-white.confirmComponentDelete, {
-  margin-left:50%;
-  margin-top:50px;
-  position:relative;
-  z-index:0;
+button.button-white.confirmEntryDelete, 
+button.button-white.confirmComponentDelete {
+  margin-left: 50%;
+  margin-top: 50px;
+  position: relative;
+  z-index: 0;
 }
 
-.button-white i{
+.button-white i {
     font-size: 1.8rem;
     color:  #B4BAC5;
     line-height: 3rem;
@@ -2805,7 +2813,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 }
 
-.button-white{
+.button-white {
     display: inline-block;
     letter-spacing: 0.1rem;
     font-weight: 600;
@@ -2814,7 +2822,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     background: none;
 }
 
-.button-filled{
+.button-filled {
   /* float: right;   */
   display: inline-block;
   font-weight: 600;
@@ -2857,7 +2865,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 /*New code: css related to dialog starts below*/
 .deleteModal, 
 .createModal,
-.createEntryModal__space {
+.createEntryModal__space,
+.trashedEntryModal {
 /*  position:absolute;*/
   position: fixed;
   z-index:9999;
@@ -4181,7 +4190,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 
 
-.file-upload {
+.file-upload,
+.trash-upload {
   background-color: #ffffff;
 /*  width: 600px;*/
   margin: 0 auto;
@@ -4189,7 +4199,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   box-sizing: border-box;
 }
 
-.file-upload-btn {
+.file-upload-btn,
+.trash-upload-btn {
 /*  width: 100%;*/
   width: 50%;
   margin: 0;
@@ -4224,17 +4235,20 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   cursor: pointer;
 }
 
-.file-upload-btn:active {
+.file-upload-btn:active,
+.trash-upload-btn:active {
   border: 0;
   transition: all .2s ease;
 }
 
-.file-upload-content {
+.file-upload-content,
+.trash-upload-content {
   display: none;
   text-align: center;
 }
 
-.file-upload-input {
+.file-upload-input,
+.trash-upload-content {
   position: absolute;
   margin: 0;
   padding: 0;
@@ -4245,7 +4259,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   cursor: pointer;
 }
 
-.image-upload-wrap {
+.image-upload-wrap,
+.trash-upload-wrap {
 /*  margin-top: 20px;
   border: 4px dashed #1FB264;*/
   position: relative;
@@ -4260,7 +4275,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   border-radius: 3px;
 }
 
-.image-title-wrap {
+.image-title-wrap,
+.trash-image-title-wrap {
   padding: 0 15px 15px 15px;
   color: #222;
 }
@@ -4269,13 +4285,15 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   display: none;
 }
 
-.drag-text {
+.drag-text,
+.trash-drag-text {
   text-align: center;
   padding: 60px 40px;
   color: white;
 }
 
-.drag-text h3 {
+.drag-text h3,
+.trash-drag-text h3 {
 /*  font-weight: 100;
   text-transform: uppercase;*/
 /*  color: #15824B;*/
@@ -4285,7 +4303,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   font-size: 20px;
 }
 
-.file-upload-image {
+.file-upload-image,
+.trash-upload-image {
   max-height: 200px;
   max-width: 200px;
   margin: auto;
@@ -4293,7 +4312,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 }
 
 .remove-image, 
-.imageNameBlock {
+.imageNameBlock,
+.trashImageNameBlock {
   width: 200px;
   margin: 0;
   border: none;
@@ -4311,7 +4331,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   color: #fff;
 }
 
-.imageNameBlock {
+.imageNameBlock,
+.trashImageNameBlock {
   -webkit-writing-mode: horizontal-tb !important;
   text-rendering: auto;
   letter-spacing: normal;
@@ -4451,8 +4472,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   max-width: 650px;
   height: 100%;
   margin: 0 auto;
-/*  margin-top: 20px;*/
-  margin-top: 55px;
+  margin-top: 25px;
   width: 650px;
 }
 
@@ -4516,7 +4536,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 }
 
-.createEntryModal__space {
+.createEntryModal__space,
+.trashedEntryModal {
   width: 780px !important;
   padding: 25px;
   padding-bottom: 45px;
@@ -4560,7 +4581,7 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     color: #333;
 }
 
-.entrySaveDraft__space {
+.entrySaveDraftAndExit__space {
   border-radius: 4px;
   font-size: 20px;
   background-color: #af94e0;
@@ -4578,11 +4599,12 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   margin-left: auto;
 }
 
-.entrySaveDraft__space:hover {
+.entrySaveDraftAndExit__space:hover {
   background-color: #553d82;
 }
 
-.createEntry__space {
+.createEntry__space,
+.entrySaveAndExit__space {
     border-radius: 4px;
     text-transform: capitalize;
     font-size: 20px;
@@ -4602,7 +4624,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
     margin-left: auto;
 }
 
-.createEntry__space:hover {
+.createEntry__space:hover,
+.entrySaveAndExit__space:hover {
   background-color: #7E57C2;
 }
 
@@ -4628,7 +4651,8 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
   background-color: #dcdcdc;
 }
 
-.createEntryModalActions__space {
+.createEntryModalActions__space,
+.createTrashedModalActions__space {
   display: flex;
 }
 
@@ -4661,4 +4685,45 @@ button.button-white.confirmEntryDelete, button.button-white.confirmComponentDele
 
 .directDeleteDraft__space {
   margin-top: 10px;
+}
+
+.dashboardSuccessContainer {
+  padding: 4px 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #009688;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 44px;
+  position: relative;
+  display: none;
+}
+
+.dashboardSuccessLayer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.dashboardSuccessText {
+  padding: 10px;
+  font-weight: bold;
+  margin-left: 5px;
+  color: white;
+}
+
+.dashboardSuccessClose {
+  padding: 7px 11px;
+  transition: .2s ease-in-out;
+  margin: auto 0px auto 0px;
+  font-size: 22px;
+  font-weight: bold;
+  margin-left: auto;
+  color: white;
+  cursor: pointer;
+}
+
+.dashboardSuccessClose:hover {
+  color: #ddd;
 }

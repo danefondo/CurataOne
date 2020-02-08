@@ -1,57 +1,61 @@
 mixin trashedForm(curata, entry={})
-	.entryContainer__space(id=entry.id)
+	.entryContainer__space.trashForm(data-entryformid=entry.id)
 		.entryDetails
 			.entryComponentTitle Category
 			.entryDetailsGroup.entryDetailsGroupSpecial.flex
 				if (entry)
 					if (entry.entryCategory)
 						if (entry.entryCategory.length)
-							.trashDropdown.selector__space
+							.trashDropdown
 								span.currentCategorySelection(data-categoryid=entry.entryCategoryId) #{entry.entryCategory}
 					else
-						.trashDropdown.selector__space
+						.trashDropdown
 							span.currentCategorySelection(data-categoryid=entry.entryCategoryId) Miscellaneous category
 			.entryComponentTitle Entry title
 			.entryDetailsGroup
 				if (entry)
 					if (entry.entryTitle && entry.entryTitle.length)
-						.entryTitle__space.entryInput__space #{entry.entryTitle}
+						.trashTitle__space #{entry.entryTitle}
 					else
-						.entryTitle__space.entryInput__space Untitled entry.
+						.trashTitle__space Untitled entry.
 			.entryComponentTitle Summary
 			.entryDetailsGroup
 				.mainEditor
 					if (entry)
 						if (entry.entryText && entry.entryText.length)
-							.postDescription.entryInput__space #{entry.entryText}
+							.trashDescription #{entry.entryText}
 						else
-							.postDescription.entryInput__space No summary.
+							.trashDescription No summary.
 			.entryComponentTitle Link
 			.entryDetailsGroup
 				.linkContainer
 					if (entry)
 						if (entry.entryLink && entry.entryLink.length)
-							.entryLink.entryInput__space(placeholder="http://example.com") #{entry.entryLink}
-							a.entryLinkPreview.hidden(href=entry.entryLink target="_blank")
+							.trashLink(placeholder="http://example.com") #{entry.entryLink}
+							a.trashLinkPreview(href=entry.entryLink target="_blank")
 								+externalLink
 						else
-							.entryLink.entryInput__space No link
+							.trashLink No link
 			.entryComponentTitle Image
 			.entryDetailsGroup
-				.mainImage(id= "imageArea_")
-					.file-upload.imageBlock(data-type="mainImage" data-image-key= entry.entryImageKey)
+				.trashImage(id= "imageArea_")
+					.file-upload
 						if (entry)
 							if (entry.entryImageKey && entry.entryImageURL)
-								.file-upload-content
-									img.file-upload-image(src=entry.entryImageURL, alt='your image')
-									.image-title-wrap
-										.imageNameBlock
+								.trash-upload-content
+									img.trash-upload-image(src=entry.entryImageURL, alt='your image')
+									.trash-image-title-wrap
+										.trashImageNameBlock
 											if (entry.entryImageName && entry.entryImageName.length) 
-												span.image-title #{entry.entryImageName}
+												span.trash-image-title #{entry.entryImageName}
 											else
-												span.image-title Untitled Image
+												span.trash-image-title Untitled Image
 							else
-								.imageForm
-									#file-input.file-upload-input
-									.drag-text
-										.file-upload-btn.trashedNoImageText No image.
+								.trashImageForm
+									.trash-upload-content
+									.trash-drag-text
+										.trash-upload-btn.trashedNoImageText No image.
+							.trashImageForm.trashImageForm2.hidden
+								.trash-upload-content
+								.trash-drag-text
+									.trash-upload-btn.trashedNoImageText No image.

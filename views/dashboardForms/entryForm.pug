@@ -1,5 +1,5 @@
 mixin entryForm(curata, entry={})
-	.entryContainer__space(id=entry.id)
+	.entryContainer__space.entryForm(data-entryformid=entry.id)
 		.entryDetails
 			.entryComponentTitle Category
 			.entryDetailsGroup.entryDetailsGroupSpecial.flex
@@ -10,11 +10,6 @@ mixin entryForm(curata, entry={})
 							option(value=category.id) #{category.entryCategoryName}
 						else
 							option(value=category.id) Untitled category
-					//- each list in curata.curataList
-					//- 	if (list.listName && list.listName.length)
-					//- 		option(value=list.id) #{list.listName}
-					//- 	else
-					//- 		option(value=list.id) Untitled list
 				if (entry.entryCategory)
 					if (entry.entryCategory.length)
 						.dropdown.selector__space

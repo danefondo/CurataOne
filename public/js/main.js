@@ -75,7 +75,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	let deletionModal = $('.emptyModal');
 	let lastUsedEditorComponentId;
 
-	let entryId = $('.entryContainer__space').attr('id');
+	let entryId = $('.entryContainer__space').attr('data-entryformid');
 	let tempId = $('.TemplateId').attr('id');
 	let userId = $('.userId').attr('id');
 	let username = $('.userId').attr('data-username');
@@ -398,6 +398,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 
 		$('.confirmTrashEntry').off('click');
 		$('.confirmTrashEntry').on('click', function() {
+			let entryId = $('.entryContainer__space').attr('data-entryformid');
 
 	    	$.ajax({
 	    		data: {
@@ -1261,6 +1262,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 		
 		$('.publishEntry').off('click');
 		$('.publishEntry').on('click', function() {
+			let entryId = $('.entryContainer__space').attr('data-entryformid');
 
 	    	$.ajax({
 	    		data: {
@@ -1817,7 +1819,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 				initQuestionBlocks();
 
 				let componentId = $(this).closest('.Component').attr('id');
-				let entryId = $('.entryContainer__space').attr('id');
+				let entryId = $('.entryContainer__space').attr('data-entryformid');
 
 				let componentOrder = $(this).closest('.Component').index();
 				let itemOrder = $('#tempQuestionId').index();
@@ -1937,7 +1939,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	        data.append( 'image', this.loader.file );
 	        let curataId = $('.curataId').attr('id');
 	        let componentId = lastUsedEditorComponentId;
-	        let entryId = $('.entryContainer__space').attr('id');
+	        let entryId = $('.entryContainer__space').attr('data-entryformid');
 	        let dateUpdated = new Date();
 	        data.append('curataId', curataId);
 	        data.append('componentId', componentId);
@@ -2363,7 +2365,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 			let dateUpdated = new Date();
 
 			let element = $(this);
-			let entryId = $('.entryContainer__space').attr('id');
+			let entryId = $('.entryContainer__space').attr('data-entryformid');
 			let component = element.closest('.Component');
 			let componentId;
 			if (component && component.length) {
@@ -2716,7 +2718,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 	// 	$('.QuestionTitle').bind('input change', function() {
 	// 		enableDisablePublish();
 	// 		let ComponentId = $(this).closest('.Component').attr('id');
-	// 		let EntryId = $('.entryContainer__space').attr('id');
+	// 		let EntryId = $('.entryContainer__space').attr('data-entryformid');
 	// 		let QuestionId = $(this).closest('.questionBlock').attr('id');
 	// 		let QuestionTitle = $(this).val();
 

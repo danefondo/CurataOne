@@ -1,5 +1,4 @@
 $(document).ready(function() {
-  create_custom_dropdowns();
 
   const coreURL = 'dashboard';
   let curataId = $('.curataId').attr('id');
@@ -22,78 +21,93 @@ $(document).ready(function() {
       dropdown.find('.selected').addClass('doNotSortMe');
     });
   }
+  create_custom_dropdowns();
 
   // Event listeners
 
   // Open/close
-  $(document).on('click', '.dropdown', function(event) {
-    $('.dropdown').not($(this)).removeClass('open');
-    $(this).toggleClass('open');
-    if ($(this).hasClass('open')) {
-      $(this).find('.option').attr('tabindex', 0);
-      $(this).find('.selected').focus();
-    } else {
-      $(this).find('.option').removeAttr('tabindex');
-      $(this).focus();
-    }
-  });
+
+  function initDropdownOpenClose() {
+    $(document).off('click', '.dropdown');
+    $(document).on('click', '.dropdown', function(event) {
+      $('.dropdown').not($(this)).removeClass('open');
+      $(this).toggleClass('open');
+      if ($(this).hasClass('open')) {
+        $(this).find('.option').attr('tabindex', 0);
+        $(this).find('.selected').focus();
+      } else {
+        $(this).find('.option').removeAttr('tabindex');
+        $(this).focus();
+      }
+    });
+  }
+  initDropdownOpenClose();
 
   // Close when clicking outside
-  $(document).on('click', function(event) {
-    if ($(event.target).closest('.dropdown').length === 0) {
-      $('.dropdown').removeClass('open');
-      $('.dropdown .option').removeAttr('tabindex');
-    }
-    event.stopPropagation();
-  });
+  function initDropdownClose() {
+    $(document).on('click', function(event) {
+      if ($(event.target).closest('.dropdown').length === 0) {
+        $('.dropdown').removeClass('open');
+        $('.dropdown .option').removeAttr('tabindex');
+      }
+      event.stopPropagation();
+    });
+  }
+  initDropdownClose();
 
   // Option click
-  $(document).on('click', '.dropdown .option', function(event) {
-    $(this).closest('.list').find('.selected').removeClass('selected');
-    $(this).addClass('selected');
-    var text = $(this).data('display-text') || $(this).text();
-    let id = $(this).attr('data-value');
-    $(this).closest('.dropdown').find('.currentCategorySelection').text(text);
-    $(this).closest('.dropdown').find('.currentCategorySelection').attr("data-categoryId", id);
-    $(this).closest('.dropdown').prev('select').val($(this).data('value')).trigger('change');
-  });
+  function initDropdownOptions() {
+    $(document).on('click', '.dropdown .option', function(event) {
+      $(this).closest('.list').find('.selected').removeClass('selected');
+      $(this).addClass('selected');
+      var text = $(this).data('display-text') || $(this).text();
+      let id = $(this).attr('data-value');
+      $(this).closest('.dropdown').find('.currentCategorySelection').text(text);
+      $(this).closest('.dropdown').find('.currentCategorySelection').attr("data-categoryId", id);
+      $(this).closest('.dropdown').prev('select').val($(this).data('value')).trigger('change');
+    });
+  }
+  initDropdownOptions();
 
   // Keyboard events
-  $(document).on('keydown', '.dropdown', function(event) {
-    var focused_option = $($(this).find('.list .option:focus')[0] || $(this).find('.list .option.selected')[0]);
-    // Space or Enter
-    if (event.keyCode == 32 || event.keyCode == 13) {
-      if ($(this).hasClass('open')) {
-        focused_option.trigger('click');
-      } else {
-        $(this).trigger('click');
+  function initKeyboardEvents() {
+    $(document).on('keydown', '.dropdown', function(event) {
+      var focused_option = $($(this).find('.list .option:focus')[0] || $(this).find('.list .option.selected')[0]);
+      // Space or Enter
+      if (event.keyCode == 32 || event.keyCode == 13) {
+        if ($(this).hasClass('open')) {
+          focused_option.trigger('click');
+        } else {
+          $(this).trigger('click');
+        }
+        return false;
+        // Down
+      } else if (event.keyCode == 40) {
+        if (!$(this).hasClass('open')) {
+          $(this).trigger('click');
+        } else {
+          focused_option.next().focus();
+        }
+        return false;
+        // Up
+      } else if (event.keyCode == 38) {
+        if (!$(this).hasClass('open')) {
+          $(this).trigger('click');
+        } else {
+          var focused_option = $($(this).find('.list .option:focus')[0] || $(this).find('.list .option.selected')[0]);
+          focused_option.prev().focus();
+        }
+        return false;
+      // Esc
+      } else if (event.keyCode == 27) {
+        if ($(this).hasClass('open')) {
+          $(this).trigger('click');
+        }
+        return false;
       }
-      return false;
-      // Down
-    } else if (event.keyCode == 40) {
-      if (!$(this).hasClass('open')) {
-        $(this).trigger('click');
-      } else {
-        focused_option.next().focus();
-      }
-      return false;
-      // Up
-    } else if (event.keyCode == 38) {
-      if (!$(this).hasClass('open')) {
-        $(this).trigger('click');
-      } else {
-        var focused_option = $($(this).find('.list .option:focus')[0] || $(this).find('.list .option.selected')[0]);
-        focused_option.prev().focus();
-      }
-      return false;
-    // Esc
-    } else if (event.keyCode == 27) {
-      if ($(this).hasClass('open')) {
-        $(this).trigger('click');
-      }
-      return false;
-    }
-  });
+    });
+  }
+  initKeyboardEvents();
 
 
   function initCreateNewCategory() {
