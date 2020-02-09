@@ -35,7 +35,7 @@ select {
           user-select: none;
   white-space: nowrap;
   width: -webkit-fill-available;
-  border-bottom: 3px solid #eee;
+  /* border-bottom: 3px solid #eee; */
   width: 55%;
 /*  width: 83%;*/
 }

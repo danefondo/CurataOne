@@ -169,13 +169,34 @@
 
 	// can define divs in variables and reuse here and call by need
 	function clearEntryCreation() {
+		// 1. Identify and check that correct modal and form
+		// 2. Clear all input fields
+		// 3. Clear textarea
+		// 4. Clear category
+		// 5. Clear image
+		// 6. Clear link input and link
+		// 7. Remove 'save & exit' or 'save draft & exit'
+		// 8. Remove 'trash' button
+		// 9. Remove 'preview' or 'view live' button
+		// 10. Reset list to default
+		// 11. Remove saved indicator
+		// 12. Reset 'full page editor' link
+		// 13. Remove entryId from modal form
+		let createEntryModal = $('.createEntryModal__space');
 		let entryFormBlock = $('.entryForm');
+
 		let entryInput = entryFormBlock.find('.entryInput__space');
 		entryInput.off('input');
-		let createEntryModal = entryFormBlock.find('.createEntryModal__space');
+
+		let linkPreview = createEntryModal.find('.entryLinkPreview');
+
 		createEntryModal.find('input, textarea').val('');
-		let entryContainer = entryFormBlock.find('.entryContainer__space');
-		entryContainer.removeAttr('data-entryformid');
+		createEntryModal.find('.entryLinkPreview').removeAttr('href');
+		let hiddenCheck = linkPreview.hasClass('hidden');
+		if (!hiddenCheck) {
+			linkPreview.addClass('hidden');
+		}
+		entryFormBlock.removeAttr('data-entryformid');
 		$('.selected').removeClass('selected');
 		$('.doNotSortMe').addClass('selected');
 		let noneSelection = $('.noneSelection__space').attr('data-display-text');
@@ -185,6 +206,7 @@
 		let noCategory = $('.noneSelection__space').val();
 		let selectorSpace = entryFormBlock.find('.selector__space');
 		selectorSpace.val(noCategory).trigger('change');
+
 		let image = entryFormBlock.find('.imageBlock');
 		image.removeAttr('data-image-key');
 		image.removeAttr('data-image-url');
@@ -196,6 +218,7 @@
 		let fileUploadWrap = entryFormBlock.find('.image-upload-wrap');
 		fileUploadWrap.show();
 		enableImageUpload();
+
 		initInputListening();
 		turnOffSaveDraftAndExit();
 		$('.directTrashDraft__space').remove();
@@ -208,6 +231,7 @@
 		
 		let listId = $('.entryCurrentListSelector__space').attr('data-listid');
 		$('.entryFull__space').attr('href', '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/new');
+		$('.statusMessage').css("color", "#777");
 		$('.statusMessage').text("");
 	}
 
@@ -520,7 +544,15 @@
 	}
 	initEntryStateChange();
 
+	function initPreviewIcon(entryId) {
+		console.log("how he f am i herre")
+		$('.entryCurrentListContainer__space').css('margin-left', '10px');
+		$('.entryPreviewLink').removeClass('hidden');
+		$('.entryPreviewLink').attr('href', '/dashboard/drafts/' + entryId);		
+	}
+
 	function createNewDraft(uploadData=0) {
+		console.log("wtf");
 		$('.statusMessage').css("color", "#777");
 		$('.statusMessage').text("Creating draft...");
 		creatingEntry = true;
@@ -554,6 +586,7 @@
 					initEntryModalFunctions(listId, entryId);
 					initHideShowMoreOptions();
 					initSaveDraftAndExit();
+					initPreviewIcon(entryId);
 				} else {
 					checkIfBlankEntry();
 				}

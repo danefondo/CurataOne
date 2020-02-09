@@ -2090,7 +2090,7 @@ h2.CheckOthers {
 
   border: 1px solid #eee;
   width: 94%;
-  border-bottom: 3px solid #eee;
+  /* border-bottom: 3px solid #eee; */
 }
 
 .entryDetailsGroupSpecial {
@@ -2956,7 +2956,7 @@ button.button-white.confirmComponentDelete {
 .modalBackground__deleteAccount,
 .modalBackground__deleteSpace,
 .modalBackground__changePassword {
-  background-color: darkgrey;
+  background-color: white;
   opacity: 0.5;
   top: 0;
   z-index: 1003;
@@ -4546,7 +4546,7 @@ button.button-white.confirmComponentDelete {
   box-sizing: border-box;
   height: 85%;
   border-radius: 4px;
-  background-color: #fbfbfb;
+  background-color: #ffffff;
   top: 5%;
 }
 
@@ -4662,7 +4662,8 @@ button.button-white.confirmComponentDelete {
   margin-left: 4px;
   margin-right: 4px;
 /*  background-color: #efefef;*/
-  background-color: white;
+  /* background-color: white; */
+  background-color:#673ab7;
 /*  color: #555;*/
   color: #888;
   border-radius: 3px;
@@ -4726,4 +4727,14 @@ button.button-white.confirmComponentDelete {
 
 .dashboardSuccessClose:hover {
   color: #ddd;
+}
+
+.entryPreviewLink {
+  margin-left: auto;
+  box-sizing: border-box;
+}
+
+.entryPreview {
+  height: 26px;
+  padding: 5px;
 }

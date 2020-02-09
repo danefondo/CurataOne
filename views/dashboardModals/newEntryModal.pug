@@ -8,13 +8,16 @@ mixin newEntryModal(curata, entry={})
 					.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
 					a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + curata.id + '/lists/' + curata.curataList[0].id + '/entries/new') Full page editor
 					.entryClear__space.createEntryModalActionButton__space.hide Clear
-					.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
+				.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
+				.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
 				.statusMessage.inline(style="line-height: 38px;")
 				.modalUntrash.hidden
 					.untrashEntry.buttonGrey.inline
 						img.untrashIcon.inline(src= '/images/untrashIcon.png')
 						img.greyUntrashIcon(src= '/images/greyUntrashIcon.png')
 						span Untrash
+				a.entryPreviewLink.hidden(target='_blank')
+					img.entryPreview(src="/images/eye-icon.png")
 				.entryCurrentListContainer__space
 					.entryCurrentList__space.inline In list:
 					.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
