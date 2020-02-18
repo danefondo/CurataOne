@@ -1,11 +1,11 @@
 include ../dashboardForms/trashedForm
 mixin trashedEntryModal(curata, entry={})
-	.trashedModal.anyModal
+	.trashedModal.anyModal(data-modaltype="trashedModal")
 		.modalBackground
 		.trashedEntryModal
 			.createTrashedModalActions__space
 				.modalUntrash
-					.untrashEntry.buttonGrey.inline
+					.untrashEntry.createEntryModalActionButton__space.hidebuttonGrey.inline
 						img.untrashIcon.inline(src= '/images/untrashIcon.png')
 						img.greyUntrashIcon(src= '/images/greyUntrashIcon.png')
 						span.untrashText Untrash

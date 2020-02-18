@@ -1,5 +1,5 @@
-mixin entryForm(curata, entry={})
-	.entryContainer__space.entryForm(data-entryformid=entry.id)
+mixin editForm(curata, entry={})
+	.entryContainer__space.editForm(data-entryformid=entry.id)
 		.entryDetails
 			.entryComponentTitle Entry title
 			.entryDetailsGroup
@@ -19,7 +19,7 @@ mixin entryForm(curata, entry={})
 				.mainImage(id= "imageArea_")
 					.file-upload.imageBlock(data-type="mainImage" data-image-key= entry.entryImageKey)
 						form.image-upload-wrap.imageForm(action= "/' + coreURL + '/sign-s3" method="POST" enctype= "multipart/form-data")
-							input#file-input.file-upload-input(type='file', name='image', accept='image/jpg')
+							input#edit-file-input.file-upload-input(type='file', name='image', accept='image/jpg')
 							.drag-text
 								button.file-upload-btn(type='button') Add Image
 								h3 Or just drag and drop a file

@@ -8,79 +8,101 @@
  	const coreURL = 'dashboard';
 	let creatingEntry = false;
 	let entryBeingUpdated = false;
-
-	let entryContainerSpace = $('.entryForm');
-	let trashContainer = $('.trashForm');
+	let draftExit = false;
 
 	let curataId = $('.curataId').attr('id');
-	let entryId = entryContainerSpace.attr('data-entryformid');
 
-	function initCurataDropdown() {
-		// reapply upon creating new component
-		$('.currentCurataSwitch').off('click');
-		$('.currentCurataSwitch').on('click', function(){
-		    $('.curataSwitcher').toggleClass('drop-down--active');
-		});
+	let stillEditingNewEntry = false;
+
+	let currentModal;
+	let currentModalForm;
+	let currentModalType;
+	let currentEntryState;
+
+	// if not modal
+	// set entire view as modal for info access
+	function setModalFormAndType() {
+		currentModal = $('.currentModal');
+
+		if (currentModal.length) {
+			currentModalType = currentModal.attr('data-modaltype');
+
+			if (currentModalType == "newEntryModal")  {
+				currentModalForm = $('.entryForm');
+			} else if (currentModalType == "editEntryModal")  {
+				currentModalForm = $('.editForm');
+			} else if (currentModalType == "trashedModal") {
+				currentModalForm = $('.trashForm');
+			}
+
+		} else {
+			currentModal = undefined;
+			currentModalType = undefined;
+			currentModalForm = undefined;
+		}
 	}
-	initCurataDropdown();
 
-	function initDropdownClosing() {
-
-		$('.DropdownX').on('click', function(event) {
-			event.stopPropagation();
-		})
-
-		$('.curataSwitcher').on('click', function(event) {
-			event.stopPropagation();
-		})
-
-		$(document).on('click', function() {
-			$('.DropdownX').removeClass('is-expanded');
-			$('.curataSwitcher').removeClass('drop-down--active');
-		})
+	function resetCurrentModal() {
+		currentModal = undefined;
+		currentModalType = undefined;
+		currentModalForm = undefined;
 	}
-	initDropdownClosing();
+
+	// function getModalElement() {
+	// 	let modal;
+	// 	let modalType = checkModalType();
+
+	// 	if (modalType == "new")  {
+	// 		modal = '.newEntryModal'
+	// 	} else if (modalType == "edit")  {
+	// 		modal = '.editEntryModal'
+	// 	} else if (modalType == "trash") {
+	// 		modal = '.trashedEntryModal'
+	// 	}
+	// 	// submits next
+	// 	return modal;
+	// }
+
+	// function getFormElement() {
+	// 	let form;
+	// 	let modalType = checkModalType();
+
+	// 	if (modalType == "new")  {
+	// 		form = '.entryForm'
+	// 	} else if (modalType == "edit")  {
+	// 		form = '.editForm'
+	// 	} else if (modalType == "trash") {
+	// 		form = '.trashForm'
+	// 	}
+	// 	// submits next
+	// 	return form;
+	// }
+
+	// function checkModalType() {
+	// 	let currentModal = $('.currentModal');
+	// 	console.log("current", currentModal);
+	// 	let modalType;
+	// 	if (currentModal.length) {
+	// 		console.log("made it");
+	// 		modalType = currentModal.attr('data-modaltype');
+	// 	}
+	// 	return modalType
+	// }
 
 	function initFullPageEditorLink(listId, entryId) {
-		let fullPageLink = $('<a>', {'class': 'createEntryModalActionButton__space entryFull__space block hide' , 'href': '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing'});
 
-		fullPageLink.text("Full page editor");
+		let fullPageLink = '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/editing';
 		
-		let clearEntry = $('.entryClear__space');
-		if (clearEntry.is(":visible")) {
-			// hide all modal action buttons (idientified by class below)
-			$('.createEntryModalActionButton__space').toggle();
-		}
+		// let clearEntry = currentModal.find('.entryClear__space');
+		// if (clearEntry.is(":visible")) {
+		// 	// hide all modal action buttons (idientified by class below)
+		// 	currentModal.find('.createEntryModalActionButton__space').toggle();
+		// }
 		
-		$('.entryFull__space').replaceWith(fullPageLink);
+		currentModal.find('.entryFull__space').attr('href', fullPageLink)
+
+		// initHideShowMoreOptions();
 	}
-
-	function initMakeDefaultCurata() {
-		$('.makeDefault').off('click');
-		$('.makeDefault').on('click', function() {
-			let btn = this
-			let curataId = $('.currentCurataSwitch').attr('id');
-
-	    	$.ajax({
-	    		data: {
-	    			curataId: curataId
-	    		},
-	    		type:'POST',
-	    		url: '/' + coreURL + '/makeDefaultCurata',
-	    		success: function(response) {
-	    			$(btn).removeClass('makeDefault').addClass('defaultCurata');
-	    			$(btn).text('Default Curata');
-	    			$('.dashboardBtn').attr('href', '/' + coreURL + '/curatas/' + curataId);
-	    		},
-	    		error: function(err) {
-	    			console.log("Failed to make Curata default: ", err);
-	    			// Display error not being able to publish
-	    		}
-	    	});
-		})
-	}
-	initMakeDefaultCurata();
-
 
 	$('.createEntryModal__space').bind('mousewheel DOMMouseScroll', function(e) {
 	    var scrollTo = null;
@@ -108,12 +130,16 @@
 	initPreviewButton();
 
 	function initHideShowMoreOptions() {
-		$('.entryShowHideMoreOptions__space').off('click');
-		$('.entryShowHideMoreOptions__space').on('click', function() {
-			$('.createEntryModalActionButton__space').toggle();
+		showHide = currentModal.find('.entryShowHideMoreOptions__space');
+
+		let buttons = currentModal.find('.createEntryModalActionButton__space');
+
+		showHide.off('click');
+		showHide.on('click', function() {
+			buttons.toggle();
 		})
+
 	}
-	initHideShowMoreOptions();
 
 	// to show contents
 		// click entry
@@ -121,24 +147,61 @@
 		// open modal
 		// load entry contents (ideally preloaded)
 
+	function runModalCloseFunctions(isEditing=0) {
+		anyModal.removeClass('currentModal');
+		anyModal.hide();
+		turnOffClearEntry();
+		if (isEditing == 0) {
+			clearModals();
+		}
+		if (currentModalType !== "newEntryModal") {
+			clearModals();
+		}
+		resetCurrentModal();		
+	}	
+
+	function runModalOpenFunctions(modal) {
+		// show modal
+		modal.show();
+		anyModal.removeClass('currentModal');
+		modal.addClass('currentModal');
+		currentModal = modal;
+
+		setModalFormAndType()
+		initClearEntry();
+		initHideShowMoreOptions();
+		initCreateEntry();
+		checkIfMainImageExists();
+		enableImageDelete();
+		initEntryLinkExit();
+		initUntrashEntry();
+		initEntryDeleting();
+		initInputListening();
+	}
+
 	function initAddNewList() {
-		let creationModal = $('.emptyModal');
+		let creationModal = $('.newEntryModal');
 
 		$('.openListChooser__space').off('click');
 		$('.openListChooser__space').on('click', function() {
-			creationModal.show();
+			runModalOpenFunctions(creationModal);
+			// handle case when modal gets closed but editing was still happening
+			stillEditingNewEntry = true;
+			let entryId = creationModal.find('.entryForm').attr('data-entryformid');
+			let listId = creationModal.find('.entryCurrentListSelector__space').attr('data-listid');
+			if (typeof entryId !== typeof undefined && entryId !== false) {
+				changeURL(entryId, listId);
+			}
 		})
 
 		$('.cancelListCreating').off('click');
 		$('.cancelListCreating').on('click', function() {
-			creationModal.hide();
-			anyModal.hide();
+			runModalCloseFunctions(stillEditingNewEntry);
 			restoreURL();
 		})
 		$('.modalBackground').off('click');
 		$('.modalBackground').on('click', function() {
-			creationModal.hide();
-			anyModal.hide();
+			runModalCloseFunctions(stillEditingNewEntry);
 			restoreURL();
 		})
 
@@ -148,9 +211,8 @@
 		  	if (creationModal.length) {
 		  		let modalState = creationModal.css('display');
 			  	if (modalState == "block") {
-					  creationModal.hide();
-					  anyModal.hide();
-					  restoreURL();
+					runModalCloseFunctions(stillEditingNewEntry);
+					restoreURL();
 			  	}
 		  	}
 		  }
@@ -160,15 +222,20 @@
 	initAddNewList();
 
 	function initClearEntry() {
-		$('.entryClear__space').off('click');
-		$('.entryClear__space').on('click', function() {
-			clearEntryCreation();
+		currentModal.find('.entryClear__space').off('click');
+		currentModal.find('.entryClear__space').on('click', function() {
+			clearEntry();
 		})
 	}
-	initClearEntry();
+
+	function turnOffClearEntry() {
+		currentModal.find('.entryClear__space').off('click');
+	}
+
+	// so long as no same IDs exist simultaneously, should be possible to have just one clearEntryCreation and simply decide by the highst level unique hierarchy.
 
 	// can define divs in variables and reuse here and call by need
-	function clearEntryCreation() {
+	function clearEntry() {
 		// 1. Identify and check that correct modal and form
 		// 2. Clear all input fields
 		// 3. Clear textarea
@@ -182,75 +249,80 @@
 		// 11. Remove saved indicator
 		// 12. Reset 'full page editor' link
 		// 13. Remove entryId from modal form
-		let createEntryModal = $('.createEntryModal__space');
-		let entryFormBlock = $('.entryForm');
+		// 14. Revert URL if closing
+		// 15. Change URL if just reverting to /entries/new
 
-		let entryInput = entryFormBlock.find('.entryInput__space');
-		entryInput.off('input');
+		turnOffInputListening();
 
-		let linkPreview = createEntryModal.find('.entryLinkPreview');
+		let linkPreview = currentModal.find('.entryLinkPreview');
 
-		createEntryModal.find('input, textarea').val('');
-		createEntryModal.find('.entryLinkPreview').removeAttr('href');
+		currentModal.find('input, textarea').val('');
+		currentModal.find('.entryLinkPreview').removeAttr('href');
 		let hiddenCheck = linkPreview.hasClass('hidden');
 		if (!hiddenCheck) {
 			linkPreview.addClass('hidden');
 		}
-		entryFormBlock.removeAttr('data-entryformid');
-		$('.selected').removeClass('selected');
-		$('.doNotSortMe').addClass('selected');
-		let noneSelection = $('.noneSelection__space').attr('data-display-text');
-		let categoryDropdown = entryFormBlock.find('.dropdown');
+		currentModalForm.removeAttr('data-entryformid');
+		currentModalForm.find('.selected').removeClass('selected');
+		currentModalForm.find('.doNotSortMe').addClass('selected');
+		let noneSelection = currentModalForm.find('.noneSelection__space').attr('data-display-text');
+		let categoryDropdown = currentModalForm.find('.dropdown');
 		categoryDropdown.find('.currentCategorySelection').text(noneSelection);
 		categoryDropdown.find('.currentCategorySelection').removeAttr('data-categoryId');
-		let noCategory = $('.noneSelection__space').val();
-		let selectorSpace = entryFormBlock.find('.selector__space');
+		let noCategory = currentModalForm.find('.noneSelection__space').val();
+		let selectorSpace = currentModalForm.find('.selector__space');
 		selectorSpace.val(noCategory).trigger('change');
 
-		let image = entryFormBlock.find('.imageBlock');
+		let image = currentModalForm.find('.imageBlock');
 		image.removeAttr('data-image-key');
 		image.removeAttr('data-image-url');
-		let fileUploadInput = entryFormBlock.find('.file-upload-input');
+		let fileUploadInput = currentModalForm.find('.file-upload-input');
 		let fileUploadClone = fileUploadInput.clone();
 		fileUploadInput.replaceWith(fileUploadClone);
-		let fileUploadContent = entryFormBlock.find('.file-upload-content');
+		let fileUploadContent = currentModalForm.find('.file-upload-content');
 		fileUploadContent.hide();
-		let fileUploadWrap = entryFormBlock.find('.image-upload-wrap');
+		let fileUploadWrap = currentModalForm.find('.image-upload-wrap');
 		fileUploadWrap.show();
 		enableImageUpload();
 
-		initInputListening();
 		turnOffSaveDraftAndExit();
-		$('.directTrashDraft__space').remove();
+
+		stillEditingNewEntry = false;
 		
-		let clearEntry = $('.entryClear__space');
-		if (clearEntry.is(":visible")) {
-			// hide all modal action buttons (idientified by class below)
-			$('.createEntryModalActionButton__space').toggle();
-		}
+		// let clearEntry = currentModal.find('.entryClear__space');
+		// if (clearEntry.is(":visible")) {
+		// 	// hide all modal action buttons (idientified by class below)
+		// 	currentModal.find('.createEntryModalActionButton__space').toggle();
+		// }
+
+		currentModal.find('.entrySaveDraftAndExit__space').addClass('hidden');
 		
-		let listId = $('.entryCurrentListSelector__space').attr('data-listid');
-		$('.entryFull__space').attr('href', '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/new');
+		let listId = currentModal.find('.entryCurrentListSelector__space').attr('data-listid');
+		currentModal.find('.entryFull__space').attr('href', '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/new');
 		$('.statusMessage').css("color", "#777");
 		$('.statusMessage').text("");
+		reversePreviewIcon();
+		initInputListening();
+		restoreURL();
+		draftExit = false;
 	}
 
 	function checkIfModal() {
-		let modalCheck = $('.modalEntryId').length;
+		let modalCheck = $('.currentModal').length;
 		return modalCheck;
 	}
 
-	function checkWhichModal() {
-		let result = "N/A";
-		let modalCheck = $('.newEntryModal');
-		if (modalCheck.css('display')  == 'block')  {
-			result = "newEntryModal";
-		}
-		return result;
-	}
+	// prevent preview from making changes to new entry
 
 	function initSaveAndExit() {
-		let saveDraftButton = $('.entrySaveAndExit__space');
+		let saveDraftButton = currentModal.find('.entrySaveAndExit__space');
+		let entryCreateButton = currentModal.find('.createEntry__space');
+
+		if (currentModalType == "editEntryModal") {
+			entryCreateButton.css("margin-left", "10px");
+			saveDraftButton.css("margin-right", "10px !important");
+			saveDraftButton.css("margin-left", "auto !important");
+		}
 
 		let hiddenCheck = saveDraftButton.hasClass('hidden');
 		if (hiddenCheck) {
@@ -266,39 +338,38 @@
 
 			let modalCheck = checkIfModal();
 			if (modalCheck) {
-				$('.anyModal').hide();
-				clearModals();
+				runModalCloseFunctions()
 			} 
+			restoreURL();
 		});
 	}
 
 	function initSaveDraftAndExit() {
-		let saveDraftButton = $('.entrySaveDraftAndExit__space');
+		let saveDraftButton = currentModal.find('.entrySaveDraftAndExit__space');
 
 		let hiddenCheck = saveDraftButton.hasClass('hidden');
 		if (hiddenCheck) {
 			saveDraftButton.removeClass('hidden');
 		}
-		$('.createEntry__space').css("margin-left", "unset");
+		currentModal.find('.createEntry__space').css("margin-left", "unset");
 
 		saveDraftButton.off('click');
 		saveDraftButton.on('click', function() {
+			draftExit = true;
 			let entryCheck = checkIfEntryExists();
 			if (entryCheck) {
 				updateEntry();
 			}
-
-			let modalCheck = checkIfModal();
-			if (modalCheck) {
-				$('.emptyModal').hide();
-				clearEntryCreation();
-			} 
 		});
 	}
 
+	function waitForUpdateToComplete(functionToRun) {
+
+	}
+
 	function turnOffSaveDraftAndExit() {
-		$('.createEntry__space').css("margin-left", "auto");
-		let saveDraftButton = $('.entrySaveDraftAndExit__space');
+		currentModal.find('.createEntry__space').css("margin-left", "auto");
+		let saveDraftButton = currentModal.find('.entrySaveDraftAndExit__space');
 	
 		let hiddenCheck = saveDraftButton.hasClass('hidden');
 		if (!hiddenCheck) {
@@ -316,47 +387,18 @@
 		// actually at the end of typing, push update manually
 	}
 
-	function initAddingTrashButton() {
-		let draftTrasher = $('<div>', {'class': 'directTrashDraft__space createEntryModalActionButton__space hide'});
-		draftTrasher.text("Trash");
-		$('.entryClear__space').after(draftTrasher);
-		
-		initEntryTrashing();
-	}
-
 	function initEntryModalFunctions(listId, entryId) {
+		let trashButton = currentModal.find('.trashEntry__space')
+		if (trashButton.hasClass('hidden')) {
+			trashButton.removeClass('hidden');
+		}
 		initFullPageEditorLink(listId, entryId)
-		initAddingTrashButton();
+		initEntryTrashing();
 	}
 
 	function appendDataToTrash(entryData) {
 		entryData = setupEntryData();
 		entryData.entryId = entryId;
-	}
-
-	function appendDraft(response, listId) {
-
-		let newEntry = $('<div>', {'class': 'entry__liveCurata', 'data-entrystate': 'Draft', 'id': response.entryId});
-		let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'})
-		entryTitleBlock.text(response.entry.entryTitle || "Untitled entry");
-		newEntry.append(entryTitleBlock);
-		if (response.entry.entryImageKey && response.entry.entryImageURL) {
-			let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
-			entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
-			entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
-			entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
-			newEntry.append(entryImageBlock);
-		}
-
-		// decide whether should be hidden or not
-		let state = checkCurrentState();
-
-		if (state !== "Draft") {
-			newEntry.addClass('hidden');
-		} 
-
-		$('#' + listId).append(newEntry);
-		// init box changes updating
 	}
 
 	function checkCurrentState() {
@@ -367,16 +409,16 @@
 
 	function setupEntryData() {
 		let data = {}
-		let entryCreator = $('.entryForm');
+
 		// what if no list? (e.g. person removes manually, doesn't load properly, but there should always be some list, e.g. then it takes from default list in database) -- just check on backend
 		let dateCreated = new Date();
-		let listId = $('.entryCurrentListSelector__space').data('listid') || $('.listId').data('listid');
-		let currentCategoryObject = entryCreator.find('.currentCategorySelection');
+		let listId = currentModal.find('.entryCurrentListSelector__space').data('listid') || $('.listId').data('listid');
+		let currentCategoryObject = currentModal.find('.currentCategorySelection');
 		let entryCategory = currentCategoryObject.text();
 		let entryCategoryId = currentCategoryObject.attr('data-categoryid');
-		let entryTitle = entryCreator.find('.entryTitle__space').val();
-		let entryText = entryCreator.find('.postDescription').val();
-		let entryLink = entryCreator.find('.entryLink').val();
+		let entryTitle = currentModal.find('.entryTitle__space').val();
+		let entryText = currentModal.find('.postDescription').val();
+		let entryLink = currentModal.find('.entryLink').val();
 
 		console.log("entrycat", entryCategory);
 
@@ -384,7 +426,7 @@
 
 		// check on backend if any such variable is in data or not
 		if (imageExists) {
-			let imageBlock = entryCreator.find('.imageBlock');
+			let imageBlock = currentModal.find('.imageBlock');
 			let imageKey = imageBlock.attr('data-image-key');
 			let imageURL = imageBlock.attr('data-image-url');
 			data.imageKey = imageKey;
@@ -400,71 +442,97 @@
 		data.curataId = curataId;
 		data.listId = listId;
 
-		console.log("entrycat2", data.entryCategory);
-
 		return data;
 	}
 
-
-	function postCreatingDraftSuccessFunctions(response, listId) {
-		console.log("Yoho! Successfully created new entry!");
-		let newEntry = $('<div>', {'class': 'entry__liveCurata', 'id': response.entryId});
-		let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'})
-		entryTitleBlock.text(response.entry.entryTitle || "Untitled entry");
-		newEntry.append(entryTitleBlock);
-		if (response.entry.entryImageKey && response.entry.entryImageURL) {
-			let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
-			entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
-			entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
-			entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
-			newEntry.append(entryImageBlock);
+	function addContentAttrToEntryBoxes(entry, newEntry) {
+		if (entry.entryState){
+			newEntry.attr('data-entryState', entry.entryState);
 		}
-		console.log("listid: ", listId);
+		if (entry.entryTitle){
+			newEntry.attr('data-entryTitle', entry.entryTitle);
+		}
+		if (entry.entryText){
+			newEntry.attr('data-entryText', entry.entryText);
+		}
+		if (entry.entryLink){
+			newEntry.attr('data-entryLink', entry.entryLink);
+		}
+		if (entry.entryImageURL){
+			newEntry.attr('data-entryImageURL', entry.entryImageURL);
+		}
+		if (entry.entryImageKey){
+			newEntry.attr('data-entryImageKey', entry.entryImageKey);
+		}
+		if (entry.entryImageName){
+			newEntry.attr('data-entryImageName', entry.entryImageName);
+		}
+		if (entry.entryCategory){
+			newEntry.attr('data-entryCategory', entry.entryCategory);
+		}
+		if (entry.entryCategoryId){
+			newEntry.attr('data-entryCategoryId', entry.entryCategoryId);
+		}
+		return newEntry;
+	}
+
+	function prepareEntryBlock(entry) {
+        let newEntry = $('<div>', {'class': 'entry__liveCurata', 'data-entrystate': entry.entryState, 'id': entry._id});
+        let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'});
+        entryTitleBlock.text(entry.entryTitle || "Untitled entry");
+        newEntry.append(entryTitleBlock);
+		if (entry.entryImageKey && entry.entryImageURL) {
+			let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
+			entryImageBlock.attr("data-image-key", entry.entryImageKey);
+			entryImageBlock.attr("data-image-url", entry.entryImageURL);
+			entryImageBlock.css("background-image", "url(" + entry.entryImageURL + ")");
+			newEntry.append(entryImageBlock);
+        }
+        return newEntry;
+	}
+	
+	function hideEntryIfRespectiveTabNotOpen(entryState, newEntry) {
+		let state = checkCurrentState();
+		if (state !== entryState) {
+			newEntry.addClass('hidden');
+		} 
+		return newEntry;
+	}
+
+
+	function postCreatingEntrySuccessFunctions(response, listId) {
+		let entry = response.entry;
+		let newEntry = prepareEntryBlock(entry);
+
+		newEntry = addContentAttrToEntryBoxes(entry, newEntry)
+		newEntry = hideEntryIfRespectiveTabNotOpen(entry.entryState, newEntry)
+		
+		// append
 		$('#' + listId).append(newEntry);
-		deletionModal.hide();
-		clearEntryCreation();
-		$('.statusMessage').text("Draft created.");
 		creatingEntry = false;
-		// find appropriate list by id
-		// create divs w/content
-		// append div to list
 	}
 
 	// modal only
 	function initCreateEntry() {
-		$('.createEntry__space').off('click');
-		$('.createEntry__space').on('click', function() {
+		currentModal.find('.createEntry__space').off('click');
+		currentModal.find('.createEntry__space').on('click', function() {
 
 			let entryCheck = checkIfEntryExists();
 			if (entryCheck) {
 				let entryButton = $(this);
 				let entryCreator = entryButton.closest('.createEntryModal__space');
 	
-				let listId = $('.entryCurrentListSelector__space').attr('data-listId');
-				let entryId = entryContainerSpace.attr('data-entryformid');
+				let listId = currentModal.find('.entryCurrentListSelector__space').attr('data-listId');
+				let entryId = currentModalForm.attr('data-entryformid');
 				$.ajax({
 					type: 'POST',
 					url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/publish',
 					success: function(response) {
-						console.log("Yoho! Successfully published entry!");
-						let newEntry = $('<div>', {'class': 'entry__liveCurata', 'id': entryId});
-						let entryTitleBlock = $('<a>', {'class': 'entryTitle__liveCurata'})
-						entryTitleBlock.text(response.entry.entryTitle);
-						newEntry.append(entryTitleBlock);
-						if (response.entry.entryImageKey && response.entry.entryImageURL) {
-							let entryImageBlock = $('<div>', {'class': 'curataEntryImage'})
-							entryImageBlock.attr("data-image-key", response.entry.entryImageKey);
-							entryImageBlock.attr("data-image-url", response.entry.entryImageURL);
-							entryImageBlock.css("background-image", "url(" + response.entry.entryImageURL + ")");
-							newEntry.append(entryImageBlock);
-						}
-						console.log("listid: ", listId);
-						$('#' + listId).append(newEntry);
-						deletionModal.hide();
-						clearEntryCreation();
+						postCreatingEntrySuccessFunctions(response, listId);
+						runModalCloseFunctions();
 					},
 					error: function(err) {
-						console.log("Arrghh! Failed to publish entry!");
+						console.log("Failed to publish entry!");
 					}
 				})				
 			} else if (creatingEntry == true) {
@@ -481,7 +549,8 @@
 					type: 'POST',
 					url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/newEntry',
 					success: function(response) {
-						postCreatingDraftSuccessFunctions(response, listId);
+						postCreatingEntrySuccessFunctions(response, listId);
+						runModalCloseFunctions();
 					},
 					error: function(err) {
 						$('.statusMessage').text("Failed to create draft.");
@@ -491,68 +560,25 @@
 			}
 		})
 	}
-	initCreateEntry();
 
-	function hideShowListsWithCurrentStateEntries(newState) {
-		// hide all lists
-		// for each list, find entries and their state
-			// if list has any correct match entries, show
-
-		let allLists = $('.listContainer__liveCurata');
-		allLists.hide();
-		allLists.each(function(i, obj) {
-			let listContainer = $(obj);
-			let list = listContainer.children('.list__liveCurata');
-
-			// if list has element with newState attr equivalent, show / remove hidden
-			if (list.children('div[data-entrystate=' + newState + ']').length > 0) {
-				listContainer.removeClass('hidden');
-				listContainer.show();
-			}
-		});
-		
+	function initPreviewIcon(link, entryState) {
+		currentModal.find('.entryPreviewLink').removeClass('hidden');
+		currentModal.find('.entryPreviewLink').attr('href', link);
+		$('.cancelListCreating').css('margin-left', '0px');	
+		if (entryState == "Draft") {
+			$('.entryPreviewLink').text('Preview');
+		} else {
+			$('.entryPreviewLink').text('View live');
+		}
 	}
 
-	function hideShowEntriesByCurrentState(newState) {
-		let allEntries = $('.entry__liveCurata');
-		allEntries.hide();
-		allEntries.each(function(i, obj) {
-			let entry = $(obj);
-			let entryAttr = entry.attr('data-entryState');
-			console.log("attttr", entryAttr);
-			if (entryAttr == newState) {
-				entry.removeClass('hidden');
-				entry.show();
-			}
-		})
-	}
-
-	function initEntryStateChange() {
-		$('.entryStateSelector').off('click');
-		$('.entryStateSelector').on('click', function() {
-			$('.entryStateSelector').removeClass('currentState');
-			let clickObject = $(this);
-			clickObject.addClass('currentState');
-
-			let newState = clickObject.attr('data-stateType');
-
-			hideShowListsWithCurrentStateEntries(newState);
-
-			hideShowEntriesByCurrentState(newState);
-
-		})
-	}
-	initEntryStateChange();
-
-	function initPreviewIcon(entryId) {
-		console.log("how he f am i herre")
-		$('.entryCurrentListContainer__space').css('margin-left', '10px');
-		$('.entryPreviewLink').removeClass('hidden');
-		$('.entryPreviewLink').attr('href', '/dashboard/drafts/' + entryId);		
+	function reversePreviewIcon(entryId) {
+		currentModal.find('.entryPreviewLink').addClass('hidden');
+		currentModal.find('.entryPreviewLink').removeAttr('href');
+		currentModal.find('.cancelListCreating').css('margin-left', 'auto');	
 	}
 
 	function createNewDraft(uploadData=0) {
-		console.log("wtf");
 		$('.statusMessage').css("color", "#777");
 		$('.statusMessage').text("Creating draft...");
 		creatingEntry = true;
@@ -578,15 +604,17 @@
 			success: function(response) {
 				// check context, if full editor or quick-editor
 				let entryId = response.entryId;
-				entryContainerSpace.attr('data-entryformid', entryId);
+				currentModalForm.attr('data-entryformid', entryId);
 
 				let modalCheck = checkIfModal();
 				if (modalCheck) {
-					appendDraft(response, listId);
+					postCreatingEntrySuccessFunctions(response, listId);
 					initEntryModalFunctions(listId, entryId);
+					console.log('about to call show more options')
 					initHideShowMoreOptions();
 					initSaveDraftAndExit();
-					initPreviewIcon(entryId);
+					let hrefLink = '/dashboard/drafts/' + entryId
+					initPreviewIcon(hrefLink);
 				} else {
 					checkIfBlankEntry();
 				}
@@ -611,7 +639,9 @@
 	}
 
 	function checkIfEntryExists() {
-		let entryId = entryContainerSpace.attr('data-entryformid');
+
+		let entryId = currentModalForm.attr('data-entryformid');
+		console.log("id", entryId)
 		let returnValue;
 
 		if (typeof entryId !== typeof undefined && entryId !== false) {
@@ -635,7 +665,7 @@
 	}
 
 	function checkIfBlankEntry() {
-		let publishButton = $('.publishEntry');
+		let publishButton = currentModal.find('.publishEntry');
 		let publishAttr = publishButton.attr('disabled');
 
 		if (publishAttr) {
@@ -678,10 +708,10 @@
 	// - push different url's, in one case for the 'quick-editor' url, other the full page editor
 
 	function convertIntoEditor() {
-		let publishButton = $('.publishEntry');
-		let previewButton = $('.showPreview');
-		let trashSection = $('.entrySettingsDelete');
-		let entryId = entryContainerSpace.attr('data-entryformid');
+		let publishButton = currentModal.find('.publishEntry');
+		let previewButton = currentModal.find('.showPreview');
+		let trashSection = currentModal.find('.entrySettingsDelete');
+		let entryId = currentModalForm.attr('data-entryformid');
 
 		publishButton.removeAttr('disabled');
 		publishButton.css('opacity', '');
@@ -696,7 +726,7 @@
 	}
 
 	function showOrUpdateLinkPreview() {
-		let container = $('.linkContainer');
+		let container = currentModal.find('.linkContainer');
 		let link = container.find('.entryLink').val();
 		let linkPreview = container.find('.entryLinkPreview');
 		let parsedLink = (link.indexOf('://') === -1) ? 'http://' + link : link;
@@ -709,14 +739,39 @@
 		linkPreview.attr('href', parsedLink);
 	}
 
-	function updateEntry() {
+	function addContentToEntryBox(entry, entryBox) {
+		let entryTitle = entryBox.find('.entryTitle__liveCurata');
+		let entryImage = entryBox.find('.curataEntryImage');
+		if (entryTitle.length) {
+			if (entry.entryTitle) {
+				entryTitle.text(entry.entryTitle);
+			}
+		}
+		if (entryImage.length) {
+			if (entry.entryImageKey && entry.entryImageURL) {
+				entryImage.attr('data-image-key', entry.entryImageKey);
+				entryImage.css('background-image', 'url('+ entry.entryImageURL + ')');
+			}
+		}
+	}
+
+	function syncEntryChangesWithEntryBox(response) {
+		let entry = response.entry;
+		let entryBox = $('#' + entry._id);
+
+		addContentAttrToEntryBoxes(entry, entryBox);
+		addContentToEntryBox(entry, entryBox);
+
+	}
+
+	function updateEntry(modal=0) {
 		$('.statusMessage').css("color", "#777");
 		$('.statusMessage').text("Saving...");
 
 		let data = setupEntryData();
 
-		let entryCreator = entryContainerSpace;
-		let entryId = entryCreator.attr('data-entryformid');
+		let entryId = currentModalForm.attr('data-entryformid');
+		console.log("id2", entryId);
 		data.entryId = entryId;
 		let listId = data.listId;
 
@@ -728,6 +783,13 @@
 			url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/updateEntry',
 			success: function(response) {
 				$('.statusMessage').text("Saved.");
+				if (draftExit) {
+					let modalCheck = checkIfModal();
+					if (modalCheck) {
+						runModalCloseFunctions();
+					} 
+				}
+				syncEntryChangesWithEntryBox(response);
 			},
 			error: function(err) {
 				$('.statusMessage').css("color", "red");
@@ -760,15 +822,14 @@
 	}
 
 	function initInputListening() {
-		let entryFormBlock = $('.entryForm');
 
-		let entryInputSpace = entryFormBlock.find('.entryInput__space');
+		let entryInputSpace = currentModalForm.find('.entryInput__space');
 		entryInputSpace.off('input');
 		entryInputSpace.on('input', function() {
 			createOrUpdateEntry();
 		})
 
-		let selectorSpace = entryFormBlock.find('.selector__space');
+		let selectorSpace = currentModalForm.find('.selector__space');
 
 		selectorSpace.off('change');
 		selectorSpace.on('change', function() {
@@ -778,26 +839,31 @@
 			}
 		});
 	}
-	initInputListening();
+
+	function turnOffInputListening() {
+		let entryInputSpace = currentModalForm.find('.entryInput__space');
+		entryInputSpace.off('input');
+
+		let selectorSpace = currentModalForm.find('.selector__space');
+
+		selectorSpace.off('change');
+	}
 
 	function checkIfMainImageExists() {
-		let entryFormBlock = $('.entryForm');
-		let imageCheck = entryFormBlock.find('.imageBlock').attr('data-image-key');
+		let imageCheck = currentModalForm.find('.imageBlock').attr('data-image-key');
 		if (typeof imageCheck !== typeof undefined && imageCheck !== false) {
-			let imageUploadWrap = entryFormBlock.find('.image-upload-wrap');
+			let imageUploadWrap = currentModalForm.find('.image-upload-wrap');
 			imageUploadWrap.hide();
-			let fileUploadContent = entryFormBlock.find('.file-upload-content');
+			let fileUploadContent = currentModalForm.find('.file-upload-content');
 			fileUploadContent.show();
 			enableImageDelete();
 		} else {
 			enableImageUpload();
 		}
 	}
-	checkIfMainImageExists();
 
 	function enableImageUpload() {
-		let entryFormBlock = $('.entryForm');
-		let imageUploadWrap = entryFormBlock.find('.image-upload-wrap');
+		let imageUploadWrap = currentModalForm.find('.image-upload-wrap');
 
 		imageUploadWrap.off('dragover');
 		imageUploadWrap.on('dragover', function () {
@@ -809,8 +875,8 @@
 			imageUploadWrap.removeClass('image-dropping');
 		});
 
-		let fileUploadButton = entryFormBlock.find('.file-upload-btn');
-		let fileUploadInput = entryFormBlock.find('.file-upload-input');
+		let fileUploadButton = currentModalForm.find('.file-upload-btn');
+		let fileUploadInput = currentModalForm.find('.file-upload-input');
 
 		fileUploadButton.off('click');
 		fileUploadButton.on('click', function() {
@@ -819,9 +885,9 @@
 
 		fileUploadInput.off('change');
 		fileUploadInput.on('change', function() {
-			let createEntryButton = $('.createEntry__space');
+			let createEntryButton = currentModal.find('.createEntry__space');
 			createEntryButton.text("Saving...");
-			createEntryButton.css("background-color", "#b39ddb");
+			createEntryButton.css("background-color", "#d0d2da");
 			createEntryButton.attr('disabled', true);
 
 			readURL(this);
@@ -852,22 +918,20 @@
 	}
 
 	function revertEntryButton() {
-		let createEntryButton = $('.createEntry__space');
+		let createEntryButton = currentModal.find('.createEntry__space');
 		createEntryButton.text("Create entry");
-		createEntryButton.css("background-color", "#673ab7");
+		createEntryButton.css("background-color", "#2b59ff");
 		createEntryButton.prop('disabled', false);		
 	}
 
 	function enableImageDelete() {
-		let entryFormBlock = $('.entryForm');
-		let removeImage = entryFormBlock.find('.remove-image');
+		let removeImage = currentModalForm.find('.remove-image');
 		removeImage.off('click');
 		removeImage.on('click', function() {
 			let obj = this;
 			removeUpload(obj);
 		})
 	}
-	enableImageDelete();
 
 	function disableImageDelete() {
 		$('.remove-image').off('click');
@@ -878,15 +942,14 @@
 	}
 
 	function toggleImageTitle() {
-		let entryFormBlock = $('.entryForm');
-		let imagePreTitle = entryFormBlock.find('.image-pre-title');
-		let imageTitle = entryFormBlock.find('.image-title');
-		let imageUploadingTitle = entryFormBlock.find('.image-uploading-title');
+		let imagePreTitle = currentModalForm.find('.image-pre-title');
+		let imageTitle = currentModalForm.find('.image-title');
+		let imageUploadingTitle = currentModalForm.find('.image-uploading-title');
 		imagePreTitle.toggle();
 		imageTitle.toggle();
 		imageUploadingTitle.toggle();
 
-		let imageUploadingButton = entryFormBlock.find('.remove-image');
+		let imageUploadingButton = currentModalForm.find('.remove-image');
 		if (!imageUploadingButton.hasClass('disabled'))  { 
 			imageUploadingButton.css('opacity', '0.6');
 			imageUploadingButton.css('cursor', 'not-allowed');
@@ -906,14 +969,14 @@
 	    var reader = new FileReader();
 
 	    reader.onload = function(e) {
-			$('.image-upload-wrap').hide();
+			currentModal.find('.image-upload-wrap').hide();
 
-			$('.file-upload-image').attr('src', e.target.result);
-			$('.file-upload-content').show();
+			currentModal.find('.file-upload-image').attr('src', e.target.result);
+			currentModal.find('.file-upload-content').show();
 
 			toggleImageTitle();
 
-			$('.image-title').html(input.files[0].name);
+			currentModal.find('.image-title').html(input.files[0].name);
 	    };
 
 	    reader.readAsDataURL(input.files[0]);
@@ -926,12 +989,12 @@
 
 	function removeUpload(obj) {
 		console.log("Beginning image delete.");
-		let entryId = entryContainerSpace.attr('data-entryformid');
+		let entryId = currentModalForm.attr('data-entryformid');
 		if (typeof entryId == typeof undefined || entryId == false) {
 			return console.log("Entry does not exist yet or entry id is not available.");
 		}
-		$('.createEntry__space').text("Saving...");
-		$('.createEntry__space').css("background-color", "#b39ddb");
+		currentModal.find('.createEntry__space').text("Saving...");
+		currentModal.find('.createEntry__space').css("background-color", "#d0d2da");
 
 		let image = $(obj).closest('.imageBlock')
 		let imageKey = image.attr('data-image-key');
@@ -951,9 +1014,9 @@
     			console.log("Deleted image from database.");
     			image.removeAttr('data-image-key');
     			image.removeAttr('data-image-url');
-				$('.file-upload-input').replaceWith($('.file-upload-input').clone());
-				$('.file-upload-content').hide();
-				$('.image-upload-wrap').show();
+				currentModal.find('.file-upload-input').replaceWith($('.file-upload-input').clone());
+				currentModal.findv('.file-upload-content').hide();
+				currentModal.find('.image-upload-wrap').show();
 				disableImageDelete();
     			enableImageUpload();
 				revertEntryButton();
@@ -1002,7 +1065,7 @@
 
 	function saveFileReference(uploadData) {
 
-		let entryId = entryContainerSpace.attr('data-entryformid');
+		let entryId = currentModalForm.attr('data-entryformid');
 
 		if (typeof entryId !== typeof undefined && entryId !== false) {
 			saveReference(entryId, uploadData);
@@ -1105,25 +1168,27 @@
 	// initEntryLinkSave();
 
 	function initEntryLinkExit() {
-		$('.EntryLink').off('keyup');
-		$('.EntryLink').on('keyup', function(event) {
+
+		let entryLinkInput = currentModal.find('.EntryLink');
+
+		entryLinkInput.off('keyup');
+		entryLinkInput.on('keyup', function(event) {
 			$(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
 		})
 
-		$('.EntryLink').off('keypress');
-		$('.EntryLink').on('keypress', function(event) {
+		entryLinkInput.off('keypress');
+		entryLinkInput.on('keypress', function(event) {
 			if (event.keyCode === 13) {
 				event.preventDefault();
 				$(this).blur();
 			}
 		})
 
-		$('.EntryLink').on('keypress', function(event) {
+		entryLinkInput.on('keypress', function(event) {
 		    if(event.which === 32) 
 		        return false;
 		});
 	}
-	initEntryLinkExit();
 
 
 	// function initDescriptionListening(descElement, ajaxURL, ajaxType, group) {
@@ -1160,9 +1225,9 @@
 
 	function initPublishAndCreateEntry() {
 		
-		$('.publishEntry').off('click');
-		$('.publishEntry').on('click', function() {
-			let entryId = entryContainerSpace.attr('data-entryformid');
+		currentModal.find('.publishEntry').off('click');
+		currentModal.find('.publishEntry').on('click', function() {
+			let entryId = currentModalForm.attr('data-entryformid');
 
 	    	$.ajax({
 	    		data: {
@@ -1187,7 +1252,7 @@
 
 	function create_custom_dropdowns() {
 		let dropdown;
-		$('select').each(function(i, select) {
+		currentModal.find('select').each(function(i, select) {
 		  if (!$(this).next().hasClass('dropdown')) {
 			$(this).after('<div class="dropdown ' + ($(this).attr('class') || '') + '" tabindex="0"><span class="currentCategorySelection"></span><div class="list"><ul class="optionList"></ul></div></div>');
 			dropdown = $(this).next();
@@ -1204,76 +1269,97 @@
 		});
 	  }
 
-	function openPublishedOrDraft(entry, entryId, listId) {
-		$('.newEntryModal').show();
+	function openPublishedOrDraft(entryBox, entryId, listId) {
+		let editModal = $('.editEntryModal');
+		runModalOpenFunctions(editModal)
 		changeURL(entryId, listId);
-		let entryTitle = entry.attr('data-entryTitle');
-		let entryText = entry.attr('data-entryText');
-		let entryLink = entry.attr('data-entryLink');
-		let entryCategory = entry.attr('data-entryCategory');
-		let entryCategoryId = entry.attr('data-entryCategoryId');
-		let entryImageURL= entry.attr('data-entryImageURL');
-		let entryImageKey= entry.attr('data-entryImageKey');
-		let entryImageName = entry.attr('data-entryImageName');
-		entryContainerSpace.attr('data-entryformid', entryId);
+		let entryTitle = entryBox.attr('data-entryTitle');
+		let entryText = entryBox.attr('data-entryText');
+		let entryLink = entryBox.attr('data-entryLink');
+		let entryCategory = entryBox.attr('data-entryCategory');
+		let entryCategoryId = entryBox.attr('data-entryCategoryId');
+		let entryImageURL= entryBox.attr('data-entryImageURL');
+		let entryImageKey= entryBox.attr('data-entryImageKey');
+		let entryImageName = entryBox.attr('data-entryImageName');
+		console.log("entry title", entryTitle);
+
+		let entryContainer = editModal.find('.editForm');
+		entryContainer.attr('data-entryformid', entryId);
 		if (entryTitle) {
-			entryContainerSpace.find('.entryTitle__space').val(entryTitle);
+			entryContainer.find('.entryTitle__space').val(entryTitle);
 		}
 		if (entryText) {
-			entryContainerSpace.find('.postDescription').text(entryText);
+			entryContainer.find('.postDescription').text(entryText);
 		}	
 		if (entryLink) {
-			entryContainerSpace.find('.entryLink').val(entryLink);
-			entryContainerSpace.find('.entryLink').attr("href", entryLink);
+			entryContainer.find('.entryLink').val(entryLink);
+			entryContainer.find('.entryLink').attr("href", entryLink);
 		}	
 		if (entryImageKey && entryImageURL) {
-			entryContainerSpace.find('.imageForm').hide();
-			entryContainerSpace.find('.file-upload-content').show();
-			entryContainerSpace.find('.imageBlock').attr('data-image-key', entryImageKey);
-			entryContainerSpace.find('.file-upload-image').attr('src', entryImageURL);
-			entryContainerSpace.find('.image-title').text(entryImageName);
+			entryContainer.find('.imageForm').hide();
+			entryContainer.find('.file-upload-content').show();
+			entryContainer.find('.imageBlock').attr('data-image-key', entryImageKey);
+			entryContainer.find('.file-upload-image').attr('src', entryImageURL);
+			entryContainer.find('.image-title').text(entryImageName);
 		}		
 		if (entryCategory && entryCategoryId) {
-			$('.currentCategorySelection').attr('data-categoryid', entryCategoryId);
-			$('.currentCategorySelection').text(entryCategory);
+			entryContainer.find('.currentCategorySelection').attr('data-categoryid', entryCategoryId);
+			entryContainer.find('.currentCategorySelection').text(entryCategory);
 		}
-		initSaveAndExit()
-		entryContainerSpace.closest('.sectionArea').find('.createEntry__space').hide();
-		entryContainerSpace.closest('.sectionArea').find('.entrySaveAndExit__space').removeClass('hidden');
+		// also add LIST values & id
 
-		initFullPageEditorLink(listId, entryId);
-		initAddingTrashButton();
+		initEntryTrashing();
 		create_custom_dropdowns();
 	}
 	// ENTRY EDIT PREVIEW FOR DRAFTS, PUBLISHED ENTRIES, TRASH
-	$('.entry__liveCurata').off('click');
-	$('.entry__liveCurata').on('click', function(e) {
-		e.preventDefault();
-		let entry = $(this);
-		let entryId = entry.attr('id');
-		let listId = entry.closest('.list__liveCurata').attr('id');
-		let entryState = entry.attr('data-entrystate');
+	function initContentQuickModal() {
+		$('.entry__liveCurata').off('click');
+		$('.entry__liveCurata').on('click', function(e) {
+			e.preventDefault();
+			let entryBox = $(this);
+			let entryId = entryBox.attr('id');
+			let listId = entryBox.closest('.list__liveCurata').attr('id');
+			let entryState = entryBox.attr('data-entrystate');
+	
+			if (entryState !== "Trashed") {
+				openPublishedOrDraft(entryBox, entryId, listId);
+				// clear button & functionality
+				// initClearEntry(modal, form);
+				if (entryState == "Published") {
+					let liveLink = '/browse/users/' + userId + '/curatas' + curataId + '/lists/' + listId + '/entries/' + entryId;
 
-		if (entryState == "Published") {
-			openPublishedOrDraft(entry, entryId, listId);
-		} else if (entryState == "Draft") {
+					// show view live 
+					initPreviewIcon(liveLink, entryState);
+					// show revert to draft
+					$('.revertToDraft').removeClass ('hidden');
+					currentModal.find('.entrySaveAndExit__space').removeClass('hidden');
+					// show save & exit + activate
+					initSaveAndExit();
+				}  else {
+					let draftLink = '/' + coreURL + '/drafts/' + entryId;
+					// show draft preview
+					initPreviewIcon(draftLink, entryState);
+					// show publish button
+					// show save draft and exit
+				}
+			} else {
+				// show trashed modal
+			}
 
-		} else if (entryState == "Trashed") {
+			// grab content from entryBox
+			// load content in modal
+			// assign entryId
 
-		} else if (entryState == "Submit") {
-
-		}
-
-
-		// grab data
-		// add data, images, category, list
-		// append entryId
-		// full page editor link
-		// trash button
-		// remove 'create entry' button
-		// make editing possible
-		// clear upon close
-	})
+			// exit modal + restoreURL
+	
+			// enable editing
+			// sync updates to entryBox
+			// enable closing
+			// clean upon close
+		})
+	}
+	// init every append
+	initContentQuickModal()
 
 	// CLEAR & CLOSE MODALS FUNCTIONS
 
@@ -1283,11 +1369,11 @@
 
 	function clearTrashedModal() {
 		console.log("Clearing trash modal.");
-		trashContainer.find('.currentCategorySelection').text('Miscellaneous category');
-		trashContainer.find('.trashTitle__space').text('No title');
-		trashContainer.find('.trashDescription').text('No summary');
-		trashContainer.find('.entryLink').text('No link');
-		let imageBlock = trashContainer.find('.imageBlock');
+		currentModalForm.find('.currentCategorySelection').text('Miscellaneous category');
+		currentModalForm.find('.trashTitle__space').text('No title');
+		currentModalForm.find('.trashDescription').text('No summary');
+		currentModalForm.find('.entryLink').text('No link');
+		let imageBlock = currentModalForm.find('.imageBlock');
 		imageBlock.removeAttr('data-image-key');
 		imageBlock.find('.file-upload-image').removeAttr('src');
 		imageBlock.find('.image-title').text('');
@@ -1296,13 +1382,13 @@
 		imageBlock.find('.trashImageForm').hide();
 		imageBlock.find('.trashImageForm2').show();
 		imageBlock.find('.trashImageForm2').removeClass('hidden');
-		trashContainer.removeAttr('data-entryformid');
+		currentModalForm.removeAttr('data-entryformid');
 	}
 
 	function clearModals() {
-		clearTrashedModal();
-		clearPreviewModal();
-		clearEntryCreation();
+		// clearTrashedModal();
+		// clearPreviewModal();
+		clearEntry();
 	}
 
 	// TRASHED FORM FUNCTIONS
@@ -1322,51 +1408,21 @@
 		// 3.1 clear all modals
 		// 3.2 close all modals
 
-	function initEntryDeleting() {
-		$('.deleteEntry').off('click');
-		$('.deleteEntry').on('click', function() {
-			let data = {};
-			let entryId = entryContainerSpace.attr('data-entryformid');
-			if (!entryId) {
-				return console.log("Couldn't find entry to delete.");
-			}
-			let listId = $('.listId').attr('data-listId');
-			data.entryId = entryId;
-			data.listId = listId;
-
-			$.ajax({
-				data: data,
-				type: 'DELETE',
-				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/deleteEntry',
-				success: function(response) {
-					console.log(response.message);
-					let modalCheck = checkIfModal();
-					if (modalCheck) {
-						let entryBox = $('#' + entryId);
-						entryBox.remove();
-						clearModals();
-						anyModal.hide();
-					} else {
-						window.location.href = response.redirectTo;
-					}
-				},
-				error: function(err) {
-					console.log("Failed to delete entry.", err.errors[0]);
-					// display fail message
-				}
-			})			
-		})
-	}
-	initEntryDeleting();
-
 	function initEntryTrashing() {
-		$('.directTrashDraft__space').off('click');
-		$('.directTrashDraft__space').on('click', function() {
+		let trashButton = currentModal.find('.trashEntry__space');
+
+		let hiddenCheck = trashButton.hasClass('hidden');
+		if (hiddenCheck) {
+			trashButton.removeClass('hidden');
+		}
+
+		trashButton.off('click');
+		trashButton.on('click', function() {
 			
 			let clickObject = $(this);
 			let data = {};
-			let entryId = entryContainerSpace.attr('data-entryformid');
-			let listId = $('.entryCurrentListSelector__space').attr('data-listId');
+			let entryId = currentModalForm.attr('data-entryformid');
+			let listId = currentModal.find('.entryCurrentListSelector__space').attr('data-listId');
 
 			data.entryId = entryId;
 			data.listId = listId;
@@ -1386,14 +1442,17 @@
 						trashedEntry.addClass('hidden');
 					} 
 
-					clearEntryCreation();
-					clearPreviewModal();
-
-					let whichModal = checkWhichModal();
-					if (whichModal == "newEntryModal") {
-						clickObject.remove();
+					let clearEntry = currentModal.find('.entryClear__space');
+					if (clearEntry.is(":visible")) {
+						// hide all modal action buttons (idientified by class below)
+						currentModal.find('.createEntryModalActionButton__space').toggle();
 					}
-					anyModal.hide();
+
+					trashButton.hide();
+
+					clickObject.off('click');
+					runModalCloseFunctions();
+					restoreURL();
 
 				},
 				error: function(err) {
@@ -1406,10 +1465,10 @@
 	}
 
 	function initUntrashEntry() {
-		$('.untrashEntry').off('click');
-		$('.untrashEntry').on('click', function() {
+		currentModal.find('.untrashEntry').off('click');
+		currentModal.find('.untrashEntry').on('click', function() {
 
-			let entryId = trashContainer.attr('data-entryformid');
+			let entryId = currentModalForm.attr('data-entryformid');
 			if (!entryId) {
 				return console.log("Couldn't find entry to trash.");
 			}
@@ -1428,8 +1487,7 @@
 					if (state !== "Draft") {
 						entry.addClass('hidden');
 					} 
-					clearModals();
-					anyModal.hide();
+					runModalCloseFunctions();
 	    		},
 	    		error: function(err) {
 	    			console.log("Failed to trash entry: ", err);
@@ -1438,6 +1496,40 @@
 	    	});
 		});
 	}
-	initUntrashEntry();
+
+	function initEntryDeleting() {
+		currentModal.find('.deleteEntry').off('click');
+		currentModal.find('.deleteEntry').on('click', function() {
+			let data = {};
+			let entryId = currentModalForm.attr('data-entryformid');
+			if (!entryId) {
+				return console.log("Couldn't find entry to delete.");
+			}
+			let listId = $('.listId').attr('data-listId');
+			data.entryId = entryId;
+			data.listId = listId;
+
+			$.ajax({
+				data: data,
+				type: 'DELETE',
+				url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/deleteEntry',
+				success: function(response) {
+					console.log(response.message);
+					let modalCheck = checkIfModal();
+					if (modalCheck) {
+						let entryBox = $('#' + entryId);
+						entryBox.remove();
+						runModalCloseFunctions();
+					} else {
+						window.location.href = response.redirectTo;
+					}
+				},
+				error: function(err) {
+					console.log("Failed to delete entry.", err.errors[0]);
+					// display fail message
+				}
+			})			
+		})
+	}
 
  });

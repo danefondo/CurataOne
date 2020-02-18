@@ -1,16 +1,6 @@
 mixin trashedForm(curata, entry={})
 	.entryContainer__space.trashForm(data-entryformid=entry.id)
 		.entryDetails
-			.entryComponentTitle Category
-			.entryDetailsGroup.entryDetailsGroupSpecial.flex
-				if (entry)
-					if (entry.entryCategory)
-						if (entry.entryCategory.length)
-							.trashDropdown
-								span.currentCategorySelection(data-categoryid=entry.entryCategoryId) #{entry.entryCategory}
-					else
-						.trashDropdown
-							span.currentCategorySelection(data-categoryid=entry.entryCategoryId) Miscellaneous category
 			.entryComponentTitle Entry title
 			.entryDetailsGroup
 				if (entry)
@@ -59,3 +49,13 @@ mixin trashedForm(curata, entry={})
 								.trash-upload-content
 								.trash-drag-text
 									.trash-upload-btn.trashedNoImageText No image.
+			.entryComponentTitle Category
+			.entryDetailsGroup.entryDetailsGroupSpecial.flex
+				if (entry)
+					if (entry.entryCategory)
+						if (entry.entryCategory.length)
+							.trashDropdown
+								span.currentCategorySelection(data-categoryid=entry.entryCategoryId) #{entry.entryCategory}
+					else
+						.trashDropdown
+							span.currentCategorySelection(data-categoryid=entry.entryCategoryId) Miscellaneous category

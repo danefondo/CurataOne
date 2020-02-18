@@ -1,26 +1,18 @@
 include ../dashboardForms/entryForm
 mixin newEntryModal(curata, entry={})
-	.emptyModal.anyModal.newEntryModal
+	.emptyModal.anyModal.newEntryModal(data-modaltype="newEntryModal")
 		.modalBackground
 		.createEntryModal__space
 			.createEntryModalActions__space
 				.entryOptionsContainer__space
-					.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
 					a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + curata.id + '/lists/' + curata.curataList[0].id + '/entries/new') Full page editor
 					.entryClear__space.createEntryModalActionButton__space.hide Clear
+					.trashEntry__space.createEntryModalActionButton__space.hide.hidden Trash
 				.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
-				.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide Close options
+				.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide x
 				.statusMessage.inline(style="line-height: 38px;")
-				.modalUntrash.hidden
-					.untrashEntry.buttonGrey.inline
-						img.untrashIcon.inline(src= '/images/untrashIcon.png')
-						img.greyUntrashIcon(src= '/images/greyUntrashIcon.png')
-						span Untrash
 				a.entryPreviewLink.hidden(target='_blank')
 					img.entryPreview(src="/images/eye-icon.png")
-				.entryCurrentListContainer__space
-					.entryCurrentList__space.inline In list:
-					.entryCurrentList__space.entryCurrentListSelector__space.inline(data-listId=curata.curataList[0].id) #{curata.curataList[0].listName}
 				.cancelListCreating x
 			.sectionArea
 				.modalEntryId
@@ -29,3 +21,8 @@ mixin newEntryModal(curata, entry={})
 					.entrySaveDraftAndExit__space.hidden Save draft & exit
 					.entrySaveAndExit__space.hidden Save & exit
 					.createEntry__space Create entry
+//- 1. Create draft
+	// 1.1 Show trash button
+	// 1.2 Activate trash button
+	// 1.3 Show preview button
+	// 1.4 Give preview button a link

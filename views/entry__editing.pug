@@ -90,7 +90,7 @@ block content
 	//- if (!entry) scenario
 	if (entry.entryState !== "Trashed")
 		.sectionArea.recalculatedWidth
-			.TemplateHolder
+			.TemplateHolder.currentModal(data-modaltype="editEntryModal")
 				+entryForm(curata, entry)
 	else
 		.sectionArea

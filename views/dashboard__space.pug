@@ -7,6 +7,7 @@ include images/TrashIcon
 
 include dashboardModals/newEntryModal
 include dashboardModals/trashedEntryModal
+include dashboardModals/editEntryModal
 
 block heading
 	- var coreURL = 'dashboard';
@@ -14,6 +15,7 @@ block content
 	- var coreURL = 'dashboard';
 	+newEntryModal(curata)
 	+trashedEntryModal(curata)
+	+editEntryModal(curata)
 	//- if public, show | if not, display message
 	.curataId(id= curata.id)
 	if user
@@ -121,6 +123,7 @@ block content
 					.noLists__liveCurata Curata is empty.
 block scripts
 	script(src='/js/space__editing.js')
+	script(src='/js/space__generic.js')
 	script(src='/js/customSelect.js')
 	script(src='/js/dashboard.js')
 
