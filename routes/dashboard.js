@@ -2519,6 +2519,7 @@ router.delete('/DeleteImage', function(req, res) {
 					console.log('Entry: ', entry);
 					entry.entryImageKey = undefined;
 					entry.entryImageURL = undefined;
+					entry.entryImageName = undefined;
 					entry.lastUpdated = dateUpdated;
 					entry.save(function(err) {
 						if (err) console.log(err);

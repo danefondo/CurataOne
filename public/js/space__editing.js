@@ -24,7 +24,7 @@
 	function setModalFormAndType() {
 		currentModal = $('.currentModal');
 
-		if (currentModal.length) {
+		//if (currentModal.length) {
 			currentModalType = currentModal.attr('data-modaltype');
 
 			if (currentModalType == "newEntryModal")  {
@@ -35,11 +35,11 @@
 				currentModalForm = $('.trashForm');
 			}
 
-		} else {
+		/*} else {
 			currentModal = undefined;
 			currentModalType = undefined;
 			currentModalForm = undefined;
-		}
+		}*/
 	}
 
 	function resetCurrentModal() {
@@ -148,6 +148,12 @@
 		// load entry contents (ideally preloaded)
 
 	function runModalCloseFunctions(isEditing=0) {
+		if (currentModal == "newEntryModal") {
+			let hiddenCheck = $('.entryStateIndicator').hasClass('hidden');
+			if (!hiddenCheck) {
+				currentModal.find('.entryStateIndicator').addClass('hidden');
+			}			
+		}
 		anyModal.removeClass('currentModal');
 		anyModal.hide();
 		turnOffClearEntry();
@@ -157,7 +163,11 @@
 		if (currentModalType !== "newEntryModal") {
 			clearModals();
 		}
-		resetCurrentModal();		
+		disableDraftingEntry();
+		disableSaveDraftAndExit();
+		disableSaveAndExit();
+		disablePublishAndCreateEntry();
+		// resetCurrentModal();
 	}	
 
 	function runModalOpenFunctions(modal) {
@@ -168,6 +178,11 @@
 		currentModal = modal;
 
 		setModalFormAndType()
+		currentModal.find('.entryStateIndicator').text(currentEntryState);
+		let entryForm = currentModal.find('.entryForm');
+		if (entryForm.attr('data-entryformid')) {
+			initSaveDraftAndExit();
+		}
 		initClearEntry();
 		initHideShowMoreOptions();
 		initCreateEntry();
@@ -176,7 +191,9 @@
 		initEntryLinkExit();
 		initUntrashEntry();
 		initEntryDeleting();
+		initDraftingEntry();
 		initInputListening();
+
 	}
 
 	function initAddNewList() {
@@ -285,7 +302,7 @@
 		fileUploadWrap.show();
 		enableImageUpload();
 
-		turnOffSaveDraftAndExit();
+		disableSaveDraftAndExit();
 
 		stillEditingNewEntry = false;
 		
@@ -296,6 +313,11 @@
 		// }
 
 		currentModal.find('.entrySaveDraftAndExit__space').addClass('hidden');
+
+		let indicatorTest = $('.entryStateIndicator').hasClass('hidden');
+		if (!indicatorTest) {
+			currentModal.find('.entryStateIndicator').addClass('hidden');
+		}	
 		
 		let listId = currentModal.find('.entryCurrentListSelector__space').attr('data-listid');
 		currentModal.find('.entryFull__space').attr('href', '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/new');
@@ -304,6 +326,14 @@
 		reversePreviewIcon();
 		initInputListening();
 		restoreURL();
+		let trashButton = currentModal.find('.trashEntry__space');
+
+		let trashCheck = trashButton.hasClass('hidden');
+		if (!trashCheck) {
+			trashButton.addClass('hidden');
+		}
+
+		trashButton.off('click');
 		draftExit = false;
 	}
 
@@ -329,7 +359,6 @@
 			saveDraftButton.removeClass('hidden');
 		}
 
-		saveDraftButton.off('click');
 		saveDraftButton.on('click', function() {
 			let entryCheck = checkIfEntryExists();
 			if (entryCheck) {
@@ -342,6 +371,16 @@
 			} 
 			restoreURL();
 		});
+	}
+
+	function disableSaveAndExit() {
+		let saveDraftButton = currentModal.find('.entrySaveAndExit__space');
+		let hiddenCheck = saveDraftButton.hasClass('hidden');
+		if (!hiddenCheck) {
+			saveDraftButton.addClass('hidden');
+		}
+		saveDraftButton.off('click');
+
 	}
 
 	function initSaveDraftAndExit() {
@@ -363,11 +402,7 @@
 		});
 	}
 
-	function waitForUpdateToComplete(functionToRun) {
-
-	}
-
-	function turnOffSaveDraftAndExit() {
+	function disableSaveDraftAndExit() {
 		currentModal.find('.createEntry__space').css("margin-left", "auto");
 		let saveDraftButton = currentModal.find('.entrySaveDraftAndExit__space');
 	
@@ -376,6 +411,10 @@
 			saveDraftButton.addClass('hidden');
 		}
 		saveDraftButton.off('click');
+	}
+
+	function waitForUpdateToComplete(functionToRun) {
+
 	}
 
 	function initUpdatingDraftDiv() {
@@ -388,10 +427,10 @@
 	}
 
 	function initEntryModalFunctions(listId, entryId) {
-		let trashButton = currentModal.find('.trashEntry__space')
-		if (trashButton.hasClass('hidden')) {
-			trashButton.removeClass('hidden');
-		}
+		// let trashButton = currentModal.find('.trashEntry__space')
+		// if (trashButton.hasClass('hidden')) {
+		// 	trashButton.removeClass('hidden');
+		// }
 		initFullPageEditorLink(listId, entryId)
 		initEntryTrashing();
 	}
@@ -459,13 +498,13 @@
 			newEntry.attr('data-entryLink', entry.entryLink);
 		}
 		if (entry.entryImageURL){
-			newEntry.attr('data-entryImageURL', entry.entryImageURL);
+			newEntry.attr('data-image-url', entry.entryImageURL);
 		}
 		if (entry.entryImageKey){
-			newEntry.attr('data-entryImageKey', entry.entryImageKey);
+			newEntry.attr('data-image-key', entry.entryImageKey);
 		}
 		if (entry.entryImageName){
-			newEntry.attr('data-entryImageName', entry.entryImageName);
+			newEntry.attr('data-image-name', entry.entryImageName);
 		}
 		if (entry.entryCategory){
 			newEntry.attr('data-entryCategory', entry.entryCategory);
@@ -509,6 +548,7 @@
 		
 		// append
 		$('#' + listId).append(newEntry);
+		initContentQuickModal();
 		creatingEntry = false;
 	}
 
@@ -528,8 +568,12 @@
 					type: 'POST',
 					url: '/' + coreURL + '/curatas/' + curataId + '/lists/' + listId + '/entries/' + entryId + '/publish',
 					success: function(response) {
-						postCreatingEntrySuccessFunctions(response, listId);
+						let entry = $('#' + entryId);
+						entry.attr('data-entrystate', "Published");
+						hideEntryIfRespectiveTabNotOpen("Published", entry);
 						runModalCloseFunctions();
+	
+						$('.entryStateSelector[data-statetype="Published"]').trigger('click');
 					},
 					error: function(err) {
 						console.log("Failed to publish entry!");
@@ -564,7 +608,7 @@
 	function initPreviewIcon(link, entryState) {
 		currentModal.find('.entryPreviewLink').removeClass('hidden');
 		currentModal.find('.entryPreviewLink').attr('href', link);
-		$('.cancelListCreating').css('margin-left', '0px');	
+		currentModal.find('.cancelListCreating').css('margin-left', '0px');	
 		if (entryState == "Draft") {
 			$('.entryPreviewLink').text('Preview');
 		} else {
@@ -605,6 +649,9 @@
 				// check context, if full editor or quick-editor
 				let entryId = response.entryId;
 				currentModalForm.attr('data-entryformid', entryId);
+				if (uploadData !== 0) {
+					uploadData.entryId = entryId;
+				}
 
 				let modalCheck = checkIfModal();
 				if (modalCheck) {
@@ -614,7 +661,13 @@
 					initHideShowMoreOptions();
 					initSaveDraftAndExit();
 					let hrefLink = '/dashboard/drafts/' + entryId
-					initPreviewIcon(hrefLink);
+					initPreviewIcon(hrefLink, "Draft");
+					let entryIndicator = currentModal.find('.entryStateIndicator');
+					let hiddenCheck = entryIndicator.hasClass('hidden');
+					if (hiddenCheck) {
+						entryIndicator.removeClass('hidden');
+						entryIndicator.text("Draft");
+					}
 				} else {
 					checkIfBlankEntry();
 				}
@@ -624,9 +677,8 @@
 				updateEntry();
 				$('.statusMessage').text("Draft created.");
 				creatingEntry = false;
-
 				if (uploadingImage) {
-					saveReference(entryId, uploadData);
+					saveReference(uploadData);
 				}
 			},
 			error: function(err) {
@@ -665,7 +717,7 @@
 	}
 
 	function checkIfBlankEntry() {
-		let publishButton = currentModal.find('.publishEntry');
+		let publishButton = currentModal.find('.publishEntry__space');
 		let publishAttr = publishButton.attr('disabled');
 
 		if (publishAttr) {
@@ -708,7 +760,7 @@
 	// - push different url's, in one case for the 'quick-editor' url, other the full page editor
 
 	function convertIntoEditor() {
-		let publishButton = currentModal.find('.publishEntry');
+		let publishButton = currentModal.find('.publishEntry__space');
 		let previewButton = currentModal.find('.showPreview');
 		let trashSection = currentModal.find('.entrySettingsDelete');
 		let entryId = currentModalForm.attr('data-entryformid');
@@ -863,6 +915,11 @@
 	}
 
 	function enableImageUpload() {
+		console.log("testthis");
+		// problems:
+			// function runs 2-4 times -- prboably due to runmodalopenfunctions having  checkifMainImageExists and then again enableImageDelete
+			// function runs even when closing modal
+			// function fileUploadInput doesn't work post removal of image
 		let imageUploadWrap = currentModalForm.find('.image-upload-wrap');
 
 		imageUploadWrap.off('dragover');
@@ -878,19 +935,25 @@
 		let fileUploadButton = currentModalForm.find('.file-upload-btn');
 		let fileUploadInput = currentModalForm.find('.file-upload-input');
 
+		console.log("ffuB", fileUploadButton);
+		console.log("ffuI", fileUploadInput);
+
 		fileUploadButton.off('click');
 		fileUploadButton.on('click', function() {
 			fileUploadInput.trigger( 'click' );
 		})
-
+		console.log("made it here2");
 		fileUploadInput.off('change');
 		fileUploadInput.on('change', function() {
+			console.log("change change");
 			let createEntryButton = currentModal.find('.createEntry__space');
 			createEntryButton.text("Saving...");
 			createEntryButton.css("background-color", "#d0d2da");
 			createEntryButton.attr('disabled', true);
+			console.log("made it here", this);
+			let entryId = currentModal.find('.editForm').attr('data-entryformid') || currentModal.find('.entryForm').attr('data-entryformid');
 
-			readURL(this);
+			readURL(this, entryId);
 			// setup upload failed instead and set the image later and until then set uploading image
 
 			const files = $(this).files;
@@ -898,6 +961,7 @@
 
 			let file = $(this).prop('files')[0];
 			let imageName = $(this).prop('files')[0].name;
+			console.log("imgname: ", imageName)
 
 			const imageBlock = $(this).closest('.imageBlock');
 			const dateUpdated = new Date();
@@ -906,6 +970,7 @@
 			uploadData.imageBlock = imageBlock;
 			uploadData.dateUpdated = dateUpdated;
 			uploadData.imageName = imageName;
+			uploadData.entryId = entryId;
 
 			if (file === null) {
 				revertEntryButton();
@@ -963,12 +1028,13 @@
 		
 	}
 
-	function readURL(input) {
+	function readURL(input, entryId) {
 	  if (input.files && input.files[0]) {
 
 	    var reader = new FileReader();
 
 	    reader.onload = function(e) {
+			console.log("test?");
 			currentModal.find('.image-upload-wrap').hide();
 
 			currentModal.find('.file-upload-image').attr('src', e.target.result);
@@ -977,6 +1043,11 @@
 			toggleImageTitle();
 
 			currentModal.find('.image-title').html(input.files[0].name);
+
+			let entry = $('#' + entryId);
+			let entryImage = entry.find('.curataEntryImage');
+			entryImage.css('background-image', `url(${e.target.result})`);
+
 	    };
 
 	    reader.readAsDataURL(input.files[0]);
@@ -996,7 +1067,8 @@
 		currentModal.find('.createEntry__space').text("Saving...");
 		currentModal.find('.createEntry__space').css("background-color", "#d0d2da");
 
-		let image = $(obj).closest('.imageBlock')
+		// let image = $(obj).closest('.imageBlock')
+		let image = currentModalForm.find('.imageBlock');
 		let imageKey = image.attr('data-image-key');
 		let isMainImage = "true";
 		let dateUpdated = new Date();
@@ -1013,12 +1085,26 @@
     		success: function(response) {
     			console.log("Deleted image from database.");
     			image.removeAttr('data-image-key');
-    			image.removeAttr('data-image-url');
-				currentModal.find('.file-upload-input').replaceWith($('.file-upload-input').clone());
-				currentModal.findv('.file-upload-content').hide();
+				image.removeAttr('data-image-url');
+				image.removeAttr('data-image-name');
+				image.find('.file-upload-image').removeAttr('src');
+				let entry = $('#' + entryId);
+				entry.attr('data-image-key', '');
+				entry.attr('data-image-url', '');
+				entry.attr('data-image-name', '');
+				let entryImage = entry.find('.curataEntryImage');
+				entryImage.css('background-image', '');
+				entryImage.removeAttr('data-image-key');
+				currentModal.find('.file-upload-input').val('')
+				// let fileUploadInput = currentModal.find('.file-upload-input');
+				// let fileUploadInputClone = fileUploadInput.clone();
+				// fileUploadInput.replaceWith(fileUploadInputClone);
+				currentModal.find('.file-upload-content').hide();
 				currentModal.find('.image-upload-wrap').show();
 				disableImageDelete();
-    			enableImageUpload();
+				console.log("here1");
+				enableImageUpload();
+				console.log("after herer");
 				revertEntryButton();
     		},
     		error: function(err) {
@@ -1034,16 +1120,25 @@
 		revertEntryButton();
 		let imageKey = uploadData.fileName;
 		let imageURL = uploadData.fileURL;
+		let imageName = uploadData.imageName;
 		imageBlock.attr('data-image-key', imageKey);
 		imageBlock.attr('data-image-url', imageURL);
+		imageBlock.attr('data-image-name', imageName);
+		let entryId = uploadData.entryId;
+		console.log(entryId);
+		let entry = $('#' + entryId);
+		entry.attr('data-image-key', imageKey);
+		entry.attr('data-image-url', imageURL);
+		entry.attr('data-image-name', imageName);
+		let entryImage = entry.find('.curataEntryImage');
+		entryImage.css('background-image', `url(${imageURL})`);
+		entryImage.attr('data-image-key', imageKey);
 		toggleImageTitle();
 		enableImageDelete();		
 	}
 
-	function saveReference(entryId, uploadData) {
-		uploadData.entryId = entryId;
+	function saveReference(uploadData) {
 		uploadData.curataId = curataId;
-		
 		let imageBlock = uploadData.imageBlock;
 		delete uploadData.imageBlock;
 		
@@ -1065,10 +1160,11 @@
 
 	function saveFileReference(uploadData) {
 
-		let entryId = currentModalForm.attr('data-entryformid');
+		let entryId = uploadData.entryId;
+		console.log("eid", entryId);
 
 		if (typeof entryId !== typeof undefined && entryId !== false) {
-			saveReference(entryId, uploadData);
+			saveReference(uploadData);
 		} else {
 			createNewDraft(uploadData);
 		}
@@ -1224,10 +1320,16 @@
 	// initDescriptionListening(entryDescription, entryDescriptionURL, 'POST', 'entryDescription')
 
 	function initPublishAndCreateEntry() {
-		
-		currentModal.find('.publishEntry').off('click');
-		currentModal.find('.publishEntry').on('click', function() {
+
+		let publishButton = currentModal.find('.publishEntry__space');
+		let hiddenCheck = publishButton.hasClass('hidden');
+		if (hiddenCheck) {
+			publishButton.removeClass('hidden');
+		}	
+		publishButton.off('click');
+		publishButton.on('click', function() {
 			let entryId = currentModalForm.attr('data-entryformid');
+			let entry = $('#' + entryId);
 
 	    	$.ajax({
 	    		data: {
@@ -1236,7 +1338,13 @@
 	    		type:'POST',
 	    		url: '/' + coreURL + '/PublishEntry',
 	    		success: function(response) {
-	    			window.location.href = response.redirectTo;
+					entry.attr('data-entrystate', "Published");
+					hideEntryIfRespectiveTabNotOpen("Published", entry);
+					runModalCloseFunctions();
+
+					$('.entryStateSelector[data-statetype="Published"]').trigger('click');
+					entry.trigger('click');
+					currentModal.find('.entryStateIndicator').text(currentEntryState);
 	    		},
 	    		error: function(err) {
 	    			console.log("Failed to publish entry: ", err);
@@ -1244,6 +1352,15 @@
 	    		}
 	    	});
 		});
+	}
+
+	function disablePublishAndCreateEntry() {
+		let publishButton = currentModal.find('.publishEntry__space');
+		let hiddenCheck = publishButton.hasClass('hidden');
+		if (!hiddenCheck) {
+			publishButton.addClass('hidden');
+		}	
+		publishButton.off('click');
 	}
 
 	function createAndAppendCategories(entryCategory, entryCategoryId, ) {
@@ -1269,31 +1386,49 @@
 		});
 	  }
 
-	function openPublishedOrDraft(entryBox, entryId, listId) {
-		let editModal = $('.editEntryModal');
-		runModalOpenFunctions(editModal)
-		changeURL(entryId, listId);
-		let entryTitle = entryBox.attr('data-entryTitle');
-		let entryText = entryBox.attr('data-entryText');
-		let entryLink = entryBox.attr('data-entryLink');
-		let entryCategory = entryBox.attr('data-entryCategory');
-		let entryCategoryId = entryBox.attr('data-entryCategoryId');
-		let entryImageURL= entryBox.attr('data-entryImageURL');
-		let entryImageKey= entryBox.attr('data-entryImageKey');
-		let entryImageName = entryBox.attr('data-entryImageName');
-		console.log("entry title", entryTitle);
+	// grabbing data from entryBox attributes
+	function fetchEntryDataForModal(entryBox) {
+		let modalData = {};
 
-		let entryContainer = editModal.find('.editForm');
+		modalData.entryTitle = entryBox.attr('data-entryTitle');
+		modalData.entryText = entryBox.attr('data-entryText');
+		modalData.entryLink = entryBox.attr('data-entryLink');
+		modalData.entryCategory = entryBox.attr('data-entryCategory');
+		modalData.entryCategoryId = entryBox.attr('data-entryCategoryId');
+		modalData.entryImageURL= entryBox.attr('data-image-url');
+		modalData.entryImageKey= entryBox.attr('data-image-key');
+		modalData.entryImageName = entryBox.attr('data-image-name');
+
+		return modalData;
+	}
+
+	function setModalData(modal, modalData) {
+		let entryTitle = modalData.entryTitle;
+		let entryText = modalData.entryText;
+		let entryLink = modalData.entryLink;
+		let entryCategory = modalData.entryCategory;
+		let entryCategoryId = modalData.entryCategoryId;
+		let entryImageURL= modalData.entryImageURL;
+		let entryImageKey= modalData.entryImageKey;
+		let entryImageName = modalData.entryImageName;
+
+		let entryContainer = modal.find('.editForm');
 		entryContainer.attr('data-entryformid', entryId);
 		if (entryTitle) {
 			entryContainer.find('.entryTitle__space').val(entryTitle);
 		}
 		if (entryText) {
-			entryContainer.find('.postDescription').text(entryText);
+			entryContainer.find('.postDescription').val(entryText);
 		}	
 		if (entryLink) {
 			entryContainer.find('.entryLink').val(entryLink);
-			entryContainer.find('.entryLink').attr("href", entryLink);
+			const linkPreview = entryContainer.find('.entryLinkPreview');
+			let hiddenCheck = linkPreview.hasClass('hidden');
+			if (hiddenCheck) {
+				linkPreview.removeClass('hidden');
+			}
+			let parsedLink = (entryLink.indexOf('://') === -1) ? 'http://' + entryLink : entryLink;
+			linkPreview.attr("href", parsedLink);
 		}	
 		if (entryImageKey && entryImageURL) {
 			entryContainer.find('.imageForm').hide();
@@ -1307,6 +1442,23 @@
 			entryContainer.find('.currentCategorySelection').text(entryCategory);
 		}
 		// also add LIST values & id
+	}
+
+	function openTrashedModal(entryBox, entryId, listId) {
+		let trashedModal = $('.trashedModal');
+		let modalData = fetchEntryDataForModal(trashedModal);
+		runModalOpenFunctions(trashedModal);
+		changeURL(entryId, listId);
+	}
+
+	function openPublishedOrDraft(entryBox, entryId, listId) {
+		let editModal = $('.editEntryModal');
+		let modalData = fetchEntryDataForModal(editModal);
+		runModalOpenFunctions(editModal)
+		changeURL(entryId, listId);
+		initFullPageEditorLink(listId, entryId);
+
+		setModalData(editModal, modalData);
 
 		initEntryTrashing();
 		create_custom_dropdowns();
@@ -1320,6 +1472,7 @@
 			let entryId = entryBox.attr('id');
 			let listId = entryBox.closest('.list__liveCurata').attr('id');
 			let entryState = entryBox.attr('data-entrystate');
+			currentEntryState = entryState;
 	
 			if (entryState !== "Trashed") {
 				openPublishedOrDraft(entryBox, entryId, listId);
@@ -1328,22 +1481,20 @@
 				if (entryState == "Published") {
 					let liveLink = '/browse/users/' + userId + '/curatas' + curataId + '/lists/' + listId + '/entries/' + entryId;
 
-					// show view live 
 					initPreviewIcon(liveLink, entryState);
-					// show revert to draft
-					$('.revertToDraft').removeClass ('hidden');
+					$('.revertToDraft').removeClass('hidden');
 					currentModal.find('.entrySaveAndExit__space').removeClass('hidden');
-					// show save & exit + activate
+
 					initSaveAndExit();
 				}  else {
 					let draftLink = '/' + coreURL + '/drafts/' + entryId;
-					// show draft preview
 					initPreviewIcon(draftLink, entryState);
-					// show publish button
-					// show save draft and exit
+					initSaveDraftAndExit();
+					initPublishAndCreateEntry();
 				}
 			} else {
 				// show trashed modal
+				openTrashedModal(entryBox, entryId, listId);
 			}
 
 			// grab content from entryBox
@@ -1360,6 +1511,7 @@
 	}
 	// init every append
 	initContentQuickModal()
+	
 
 	// CLEAR & CLOSE MODALS FUNCTIONS
 
@@ -1442,13 +1594,13 @@
 						trashedEntry.addClass('hidden');
 					} 
 
-					let clearEntry = currentModal.find('.entryClear__space');
-					if (clearEntry.is(":visible")) {
-						// hide all modal action buttons (idientified by class below)
-						currentModal.find('.createEntryModalActionButton__space').toggle();
-					}
+					// let clearEntry = currentModal.find('.entryClear__space');
+					// if (clearEntry.is(":visible")) {
+					// 	// hide all modal action buttons (idientified by class below)
+					// 	currentModal.find('.createEntryModalActionButton__space').toggle();
+					// }
 
-					trashButton.hide();
+					// trashButton.hide();
 
 					clickObject.off('click');
 					runModalCloseFunctions();
@@ -1530,6 +1682,45 @@
 				}
 			})			
 		})
+	}
+
+	function initDraftingEntry() {
+		$('.revertToDraft').on('click', function() {
+
+			let entryId = currentModal.find('[data-entryformid]').attr('data-entryformid');
+			let entry = $('#' + entryId);
+
+			$.ajax({
+				data: {
+					entryId: entryId
+				},
+				type:'POST',
+				url: '/' + coreURL + '/RevertEntryToDraft',
+				success: function(response) {
+					console.log("Reverted entry back to draft.", response)
+					entry.attr('data-entrystate', "Draft");
+					hideEntryIfRespectiveTabNotOpen("Draft", entry);
+					runModalCloseFunctions();
+
+					$('.entryStateSelector[data-statetype="Draft"]').trigger('click');
+					entry.trigger('click');
+					currentModal.find('.entryStateIndicator').text(currentEntryState);
+				},
+				error: function(err) {
+					console.log("Failed to draft entry: ", err);
+					// Display error not being able to publish
+				}
+			});
+		})
+	}
+
+	function disableDraftingEntry() {
+		let revertToDraft = $('.revertToDraft')
+		revertToDraft.off('click');
+		if (!revertToDraft.hasClass('hidden')) {
+			revertToDraft.addClass('hidden');
+		}
+
 	}
 
  });

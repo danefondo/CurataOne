@@ -1,4 +1,6 @@
  $(document).ready(function () {
+	 // If nothing works, check the over-ruling function, maybe it's breaking something.
+	 // https://css-tricks.com/snippets/jquery/make-jquery-contains-case-insensitive/
 
 
  	/*
@@ -4851,11 +4853,19 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 		performEntriesSearch();
 	})
 
+	// Over-ruling function
+	$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+		return function( elem ) {
+			return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+		};
+	});
+
 	function performEntriesSearch() {
 		// Declare variables
 		let input, filter, list, listItems;
 		input = $('#searchEntries');
-		filter = input.val().toUpperCase();
+		filter = input.val();
+		//filter = input.val().toUpperCase();
 		list = $(".entriesList");
 		listItems = list.find('.singleList');
 
@@ -4864,8 +4874,30 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 		$('.listContainer').show();
 		$('.singleList').show();
 		$('.nothingFoundBlock').remove();
+		if (!filter) {
+			$('.singleList').show();
+		}
+		$('.singleList .ribbonList').not(`:contains(${filter})`).parent().hide();
+		$('.listContainer').each(function(i, container) {
+			if (!$(container).find('.singleList:visible').length) {
+				$(container).hide();
+			} else {
+				$(container).show();
+			}
+		})
+		if(!$('.listContainer:visible').length) {
+			let nothingFoundBlock = $('<div>', {"class": "nothingFoundBlock"});
+			let nothingFoundMessage = $('<div>', {"class": "nothingFoundMessage"});
+			nothingFoundMessage.text("Nothing found! Try searching something else.");
+			let nothingFoundImage = $('<img>', {"class": "nothingFoundImage"});
+			nothingFoundImage.attr('src', '/images/ginger-cat-empty.png')
+			nothingFoundBlock.append(nothingFoundMessage);
+			nothingFoundBlock.append(nothingFoundImage);
+			$('.curataList').append(nothingFoundBlock);
+		}
+		
 		listItems.each(function(i, item) {
-			if ($(item).parents('#Lists').length == 1) {
+			/*if ($(item).parents('#Lists').length == 1) {
 				let altBlock = $(item).find('.entriesListTitle').text();
 			    if (altBlock.toUpperCase().indexOf(filter) > -1) {
 			      $(item).closest('.listContainer').show();
@@ -4947,7 +4979,7 @@ NOTE: For every '.on('click')' inside a function, it seems safer to also run .of
 					}
 			      }
 			    }
-			}
+			}*/
 		})
 	}
 

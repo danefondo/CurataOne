@@ -566,7 +566,9 @@ p.noDefaultCurataTextSmall {
   width: 93%;
 }
 
-#searchFilter, #searchEntries {
+#searchFilter, 
+#searchEntries,
+#entrySearch {
     width: 100%;
     margin-top: 35px;
     margin-bottom: 15px;
@@ -581,6 +583,19 @@ p.noDefaultCurataTextSmall {
 
 #searchEntries {
   width: 680px;
+}
+
+.entrySearch {
+  min-width: 50%;
+  border-radius: 3px;
+  border-color: #f5f5f5;
+}
+
+#entrySearch {
+  margin-top: unset;
+  margin-bottom: unset;
+  box-shadow: unset;
+  height: 30px;
 }
 
 .modifiedSearch {
@@ -1013,6 +1028,13 @@ p.noDefaultCurataTextSmall {
 .noEntriesMessage,
 .nothingFoundMessage {
   width: 600px;
+}
+
+.nothingFoundDashboard {
+  background-color: transparent;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25px;
 }
 
 .entriesList {
@@ -4599,7 +4621,7 @@ button.button-white.confirmComponentDelete {
 .entrySaveDraftAndExit__space {
   border-radius: 4px;
   font-size: 20px;
-  background-color: #6586ff;
+  background-color: #2b59ff;
   text-align: center;
   color: white;
   font-weight: bold;
@@ -4615,12 +4637,13 @@ button.button-white.confirmComponentDelete {
 }
 
 .entrySaveDraftAndExit__space:hover {
-  background-color: #849cf5;
+  background-color: #597dff;
 }
 
 .createEntry__space,
 .entrySaveAndExit__space,
-.revertToDraft {
+.revertToDraft,
+.publishEntry__space {
     border-radius: 4px;
     text-transform: capitalize;
     font-size: 20px;
@@ -4641,7 +4664,8 @@ button.button-white.confirmComponentDelete {
     margin-left: auto;
 }
 
-  .entrySaveAndExit__space {
+  .entrySaveAndExit__space,
+  .publishEntry__space {
     /* margin-right: 10px; */
     margin-left: 10px;
   }
@@ -4654,7 +4678,8 @@ button.button-white.confirmComponentDelete {
 
 .createEntry__space:hover,
 .entrySaveAndExit__space:hover,
-.revertToDraft:hover {
+.revertToDraft:hover,
+.publishEntry__space:hover {
   background-color: #597dff;
 }
 
@@ -4766,5 +4791,19 @@ button.button-white.confirmComponentDelete {
   margin-left: auto;
   box-sizing: border-box;
 
+}
+
+.entryStateIndicator {
+  padding: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #888888;
+  background-color: #f3f3f3;
+  line-height: 16px;
+  border-radius: 3px;
+  max-height: 16px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 15px;
 }
 

@@ -5,11 +5,12 @@ mixin editEntryModal(curata, entry={})
 		.createEntryModal__space
 			.createEntryModalActions__space
 				.entryOptionsContainer__space
-					a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + curata.id + '/lists/' + curata.curataList[0].id + '/entries/new') Full page editor
+					a.entryFull__space.createEntryModalActionButton__space.hide(href='/' + coreURL + '/curatas/' + curata.id + '/lists/' + curata.curataList[0].id + '/entries/new' target="_blank") Full page editor
 					.trashEntry__space.createEntryModalActionButton__space.hide Trash
 				.entryShowHideMoreOptions__space.createEntryModalActionButton__space More options
 				.entryShowHideMoreOptions__space.createEntryModalActionButton__space.hide x
 				.statusMessage.inline(style="line-height: 38px;")
+				.entryStateIndicator Published
 				a.entryPreviewLink.hidden(target='_blank') View live
 				.cancelListCreating x
 			.sectionArea

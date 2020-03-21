@@ -120,7 +120,7 @@ block content
 										// if more than 10 in list, display 'go to list to view more' button below
 										each entry in list.entries
 											if (entry.entryTitle)
-												li.singleList(data-id= entry.id)
+												li.singleList(data-id= entry.id, data-name= entry.entryTitle)
 													a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
 													if (entry.entryState == "Draft")
 														.draftIndicator
@@ -158,7 +158,7 @@ block content
 														else
 															.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
 											else
-												li.singleList(data-id= entry.id)
+												li.singleList(data-id= entry.id, data-name= entry.entryTitle)
 													a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
 													if (entry.entryState == "Draft")
 														.draftIndicator
@@ -225,7 +225,7 @@ block content
 										each entry in list.entries
 											if (entry.entryState == "Published")
 												if (entry.entryTitle)
-													li.singleList(data-id= entry.id)
+													li.singleList(data-id= entry.id, data-name= entry.entryTitle)
 														a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
 														.entry-drop-down
 															.entryDropdown.entry-drop-down__button.unsortable
@@ -257,7 +257,7 @@ block content
 															else
 																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
 												else
-													li.singleList(data-id= entry.id)
+													li.singleList(data-id= entry.id, data-name= entry.entryTitle)
 														a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
 														.entry-drop-down
 															.entryDropdown.entry-drop-down__button.unsortable
@@ -317,7 +317,7 @@ block content
 										each entry in list.entries
 											if (entry.entryState == "Draft")
 												if (entry.entryTitle)
-													li.singleList(data-id= entry.id)
+													li.singleList(data-id= entry.id, data-name= entry.entryTitle)
 														a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
 														.draftIndicator
 															p Draft
@@ -348,7 +348,7 @@ block content
 															else
 																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
 												else
-													li.singleList(data-id= entry.id)
+													li.singleList(data-id= entry.id, data-name= entry.entryTitle)
 														a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
 														.draftIndicator
 															p Draft
@@ -406,7 +406,7 @@ block content
 										each entry in list.entries
 											if (entry.entryState == "Trashed")
 												if (entry.entryTitle)
-													li.singleList(data-id= entry.id)
+													li.singleList(data-id= entry.id, data-name= entry.entryTitle)
 														a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') #{entry.entryTitle}
 														.trashedIndicator
 															p Trashed
@@ -437,7 +437,7 @@ block content
 															else
 																.creationDate(data-creationDate= entry.dateCreated) Created: #{moment(entry.dateCreated).format('MMM D, YYYY')}
 												else
-													li.singleList(data-id= entry.id)
+													li.singleList(data-id= entry.id, data-name= entry.entryTitle)
 														a.ribbonList(href='/' + coreURL + '/curatas/' + entry.curataId + '/lists/' + entry.curataListId + '/entries/' + entry.id + '/editing') Untitled entry
 														.trashedIndicator
 															p Trashed

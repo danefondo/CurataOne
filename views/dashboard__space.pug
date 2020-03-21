@@ -52,6 +52,8 @@ block content
 				.dashboardSuccessClose x
 		.helperNavigation
 			.navlinksContainer__liveCurata
+				.entrySearch
+					input#entrySearch(type='text', placeholder='Search for entries by title...')
 				.newList__space + New list
 				.openListChooser__space + New entry
 		.stateNavigation
@@ -88,22 +90,26 @@ block content
 										each entry in list.entries
 											//- 1.1.1 Show published content in list
 											if (entry.entryState == "Published")
-												.entry__liveCurata(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState data-entryTitle=entry.entryTitle data-entryText=entry.entryText  data-entryLink=entry.entryLink data-entryImageURL=entry.entryImageURL data-entryImageKey=entry.entryImageKey data-entryCategory=entry.entryCategory data-entryCategoryId=entry.entryCategoryId data-entryImageName=entry.entryImageName)
+												.entry__liveCurata(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState data-entryTitle=entry.entryTitle data-entryText=entry.entryText  data-entryLink=entry.entryLink data-image-url=entry.entryImageURL data-image-key=entry.entryImageKey data-entryCategory=entry.entryCategory data-entryCategoryId=entry.entryCategoryId data-image-name=entry.entryImageName)
 													if (entry.entryTitle)
 															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
 													else
 															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled entry
 													if (entry.entryImageURL)
 														.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+													else
+														.curataEntryImage
 											//- 1.1.2 Don't show unpublished content in list
 											else
-												.entry__liveCurata.hidden(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState)
+												.entry__liveCurata.hidden(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState data-entryTitle=entry.entryTitle data-entryText=entry.entryText  data-entryLink=entry.entryLink data-image-url=entry.entryImageURL data-image-key=entry.entryImageKey data-entryCategory=entry.entryCategory data-entryCategoryId=entry.entryCategoryId data-image-name=entry.entryImageName)
 													if (entry.entryTitle)
 															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
 													else
 															a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) Untitled entry
 													if (entry.entryImageURL)
 														.curataEntryImage(data-image-key= entry.entryImageKey style='background-image: url(' + entry.entryImageURL + ');')
+													else
+														.curataEntryImage
 							//- 1.2. If list has NO published content, don't show list
 							else 
 								.listContainer__liveCurata.hidden
@@ -111,8 +117,8 @@ block content
 									.list__liveCurata(id= list.id)
 										each entry in list.entries
 											//- 1.2.1 Also HIDE entries NOT published
-											.entry__liveCurata.hidden(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState data-entryTitle=entry.entryTitle data-entryText=entry.entryText  data-entryLink=entry.entryLink data-entryImageURL=entry.entryImageURL data-entryImageKey=entry.entryImageKey
-											data-entryCategory=entry.entryCategory data-entryCategoryId=entry.entryCategoryId data-entryImageName=entry.entryImageName)
+											.entry__liveCurata.hidden(id= entry.id href='/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id data-entryState=entry.entryState data-entryTitle=entry.entryTitle data-entryText=entry.entryText  data-entryLink=entry.entryLink data-image-url=entry.entryImageURL data-image-key=entry.entryImageKey
+											data-entryCategory=entry.entryCategory data-entryCategoryId=entry.entryCategoryId data-image-name=entry.entryImageName)
 												if (entry.entryTitle)
 														a.entryTitle__liveCurata(href= '/browse/users/' + user.id + '/curatas/' + curata.id + '/lists/' + list.id + '/entries/' + entry.id) #{entry.entryTitle}
 												else
